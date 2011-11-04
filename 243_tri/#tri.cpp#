@@ -1,0 +1,24 @@
+#include <cstdio>
+#include "../lib/tools.h"
+int main(){
+    vector<int> primes;
+    int limit = 500000;
+    double max = 10;
+    int number = 0;
+    primeWithin(primes, limit);
+    IntPairVec ifac;
+    for(int i = 2; i < limit; ++i){
+        factor(i, ifac, primes);
+        int value = i;
+        for(unsigned int j = 0; j < ifac.size();++j){
+            value *= (ifac[j].first-1);
+             /= ifac[j].first;
+        }
+        double vx = (double) value / (i-1);
+        if(vx < max){
+            max =vx;
+            number = i;
+            printf("%20.10f, %d\n", max, i);
+        }
+    }
+}
