@@ -8,7 +8,6 @@ void factor(int num, IntPairVec& ifac, const vector<int>& prime);
 bool next_combination(IntVec& cvec, int n, int k);
 bool isPermutation(int im, int in);
 unsigned long long int power(int base, int exp);
-int gcd(int m, int n);
 bool isPalindromic(int num, int base);
 int binary_find(int num, vector<int>& vec);
 void extended_euclid(int a, int b, int& x, int& y, int& gcd);
