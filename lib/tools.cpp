@@ -39,6 +39,7 @@ void primeWithin( vector<int>& vecr, int limit)
 
 bool isPrime( int num )
 {
+    if(num == 1) return false;
     if( num == 2 || num == 3) return true;
     else if( num % 2 == 0) return false;
 
@@ -50,6 +51,7 @@ bool isPrime( int num )
 }
 
 bool isPrime(u64 num, vector<int>& primes){
+    if( num == 1) return false;
     if( num == 2) return true;
     int root = round(sqrt((double) num)+1);
     assert(primes.back() >= root);
