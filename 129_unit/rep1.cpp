@@ -1,6 +1,7 @@
 #include <cstdio>
 #include "../lib/tools.h"
 #include <cstdlib>
+#include <cassert>
 int minrepunit(int num){
     if(num %2 ==0 || num%5 ==0) return 0;
     int sum = 0;
@@ -70,7 +71,6 @@ int main(){
     }
     printf("%I64d\n", sum);
 }
-*/
 int main(){
     u64 sum = 0;
     int limit = 100000;
@@ -94,4 +94,30 @@ int main(){
             if(value % 
         }
     }
+}
+*/
+int main(){
+    int sum = 0;
+    vector<int> primes;
+    primeWithin(primes, 1000000);
+    unsigned int pos =3;
+    int count = 0;
+    for(int i = 3; i; i+=2){
+        //printf("%d\n", i);
+        if(pos == primes.size()-1) break;
+        if(i %5==0) continue;
+        assert(primes[pos] >= i);
+        if(i == primes[pos]){
+            ++pos;
+            continue;
+        }
+        int rep = minrepunit(i);
+        if((i -1) % rep == 0){
+            ++count;
+            sum += i;
+            //printf("num = %d rep =%d\n", i, minrepunit(i));
+            if(count ==25) break;
+        }
+    }
+    printf("%d\n", sum);
 }
