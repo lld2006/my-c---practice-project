@@ -1,0 +1,45 @@
+#include <cstdio>
+#include <cassert>
+#include <cstdlib>
+#include "../lib/tools.h"
+#include "../lib/typedef.h"
+#include <numeric>
+using namespace std;
+
+void markFlag(i64 start, i64 shift, vector<int>& flags){
+    i64 pos =start;
+    while(pos < static_cast<int>(flags.size())){
+        flags[pos] = 1;
+        pos += shift;
+    }
+}
+
+int main(){
+    
+    //unsigned int limit  = 50000000;
+    i64 limit = 100;
+    vector<int> primes;
+    primeWithin(primes, 1.42*limit);
+    vector<int> flags;
+
+    flags.resize(limit+1, 0); //flag of prime, init with 0 
+
+    //int pos = 0;
+    I64PairVec ifac;
+    for(unsigned int n = 2; n <= limit; ++n){
+        i64 value = (i64)n*n*2-1;
+        if(flags[n]== 0){// not determined yet
+            factor(value, ifac, primes);
+            for(unsigned int i = 0; i < ifac.size(); ++i){
+                i64 prime = ifac[i].first;
+                i64 pos = n;
+                i64 pos2 = prime - n;
+                markFlag(pos, prime, flags);
+                assert(pos2 > 0);
+                markFlag(pos2, prime, flags);
+            }
+        }
+    }
+    int count = accumulate(flags.begin(), flags.end(), 0);
+    printf("%d\n", count);
+}

@@ -37,7 +37,7 @@ void primeWithin( vector<int>& vecr, int limit)
         if( vec[i] ) vecr.push_back(2*i+1);
 }
 
-bool isPrime( int num )
+bool isPrime( i64 num )
 {
     if(num == 1) return false;
     if( num == 2 || num == 3) return true;
@@ -103,7 +103,7 @@ bool isRhoPrime(i64 n, int debug){
 }
 
 //prime factors, less than num. so for primes, empty
-void factor(int num, IntPairVec& ifac, const IntVec& prime)
+void factor(i64 num, I64PairVec& ifac, const IntVec& prime)
 {
     //special case, not prime factor for 1
     ifac.clear();
@@ -111,7 +111,7 @@ void factor(int num, IntPairVec& ifac, const IntVec& prime)
         ifac.push_back(IntPair(1,1));
         return;
     }
-    int n1 = num;
+    i64 n1 = num;
     int ubound = sqrt((double) num);
     for(unsigned int i = 0; i < prime.size(); ++i) {
         int nth = 0;
@@ -124,7 +124,7 @@ void factor(int num, IntPairVec& ifac, const IntVec& prime)
         }
         if(n1 == 1 || prime[i] > ubound)break;
     }
-    if(n1 > 1) ifac.push_back(IntPair(n1, 1));
+    if(n1 > 1) ifac.push_back(I64Pair(n1, 1));
 }
 //input is a combination of  0, 1, ..., k-1(distinct) from 0 -- n-1, 
 //return the next combination

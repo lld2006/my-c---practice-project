@@ -2,9 +2,9 @@
 #include "typedef.h"
 using namespace std;
 void primeWithin( vector<int>& vecr, int limit);
-bool isPrime( int i );
+bool isPrime( i64 i );
 bool isPrime(u64 num, vector<int>& primes);
-void factor(int num, IntPairVec& ifac, const vector<int>& prime);
+void factor(i64 num, I64PairVec& ifac, const vector<int>& prime);
 bool next_combination(IntVec& cvec, int n, int k);
 bool isPermutation(int im, int in);
 unsigned long long int power(int base, int exp);
@@ -14,7 +14,7 @@ void extended_euclid(int a, int b, int& x, int& y, int& gcd);
 bool isRhoPrime(i64 n, int debug);
 template <typename itype> 
 itype gcd(itype ia, itype ib){
-    if (ia > ib) return gcd ( ib, ia);
+    if (ia > ib) swap(ia, ib);
     // ia < ib;
     while (ia){
         itype res = ib % ia;
@@ -23,17 +23,22 @@ itype gcd(itype ia, itype ib){
     }
     return ib;
 }
-//template <typename itype> 
-//void powermodule(itype base, itype expo, itype& low, itype& high, itype tbase){
-//    itype rl=1, rh = 0;
-//    itype bl = base, bh = 0;
-//    while(expo){
-//       int remainder = expo %2; 
-//       if(remainder == 1){
-//            result *= cbase;
-//
-//       }
-//       else
-//            cbase *= cbase;
-//    }
-//}
+template <typename itype> 
+itype powermodule(itype base, itype expo, itype module){
+    itype result = 1;
+    itype cbase = base;
+    while(expo){
+       int remainder = expo & 1; 
+       if(remainder){
+            --expo;
+            result *= cbase;
+            result %= module;
+       }
+       else{
+            expo /= 2;
+            cbase *= cbase;
+            cbase %= module;
+       }
+    }
+    return result;
+}
