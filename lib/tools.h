@@ -1,4 +1,5 @@
 #include <vector>
+#include <cmath>
 #include "typedef.h"
 using namespace std;
 void primeWithin( vector<int>& vecr, int limit);
@@ -41,4 +42,15 @@ itype powermodule(itype base, itype expo, itype module){
        }
     }
     return result;
+}
+
+inline int index0(int dim, int i, int j) { return i*dim+j;}
+
+template <typename itype> 
+bool isPerfectSquare(itype num){
+    double val = sqrt(static_cast<double>(num));
+    itype root = round(val);
+    if(root*root == num)
+        return true;
+    return false;
 }

@@ -2,7 +2,8 @@
 #include "../lib/tools.h"
 #include <cstdio>
 #include <cassert>
-
+//need more investigation on this one, Tonelli-shanks algo is OK, but still
+//too slow, need more observations
 const int NOT_FOUND = -1000;
 i64 find_non_residue(i64 prime){
     i64 power = (prime - 1)/2;

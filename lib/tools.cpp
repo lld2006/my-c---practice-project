@@ -12,11 +12,9 @@ void primeWithin( vector<int>& vecr, int limit)
 {
     vecr.clear();
     int odd = (limit+1)/2;
-    vector<int> vec; 
-    vec.resize(odd);
+    vector<int> vec; //for i >=1 number represent 2i+1 assume all prime
+    vec.resize(odd, 1);
     vec[0] = 0;
-    for(int i = 1; i< odd; ++i)
-        vec[i] = 1;   //for i >=1 number represent 2i+1 assume all prime
     int ip= 1;  // prime number from 2 3 5 ....
     int iprime = 3;
     int max = sqrt((double) limit)+1;
@@ -179,12 +177,22 @@ bool isPermutation(int im, int in)
     return true;
 }
 
+//TODO this function is too ugly, need to at least use basic module 2 algo
 
-u64 power(int base, int exp)
+u64 power(int base, int npow)
 {
-    unsigned long long int ret = 1;
-    for(int i= 0; i< exp; ++i)
-        ret *= base;
+    u64 ret = 1;
+    u64 ibase = base;
+    while(npow){
+        int remainder = npow & 1;
+        if(remainder){
+            --npow;
+            ret *= ibase;
+        }else{
+            npow/=2;
+            ibase *= ibase;
+        }
+    }
     return ret;
 }
 
