@@ -177,27 +177,6 @@ bool isPermutation(int im, int in)
     return true;
 }
 
-//TODO this function is too ugly, need to at least use basic module 2 algo
-
-u64 power(int base, int npow)
-{
-    u64 ret = 1;
-    u64 ibase = base;
-    while(npow){
-        int remainder = npow & 1;
-        if(remainder){
-            --npow;
-            ret *= ibase;
-        }else{
-            npow/=2;
-            ibase *= ibase;
-        }
-    }
-    return ret;
-}
-
-
-
 bool isPalindromic(int num, int base) //base generally 10
 {
     vector<int> vec, rvec;

@@ -1,2 +1,2 @@
-prime: prime.cpp
-	g++ -Wall -g prime.cpp -o prime
+set: set.cpp
+	g++ -Wall -g set.cpp -o set
