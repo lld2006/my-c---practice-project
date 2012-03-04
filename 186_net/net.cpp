@@ -5,7 +5,7 @@
 using namespace std;
 //this problem is a practice problem for the disjoint set concept introduced int CLRS
 //without the concept of disjoint set, it is very complicated and lengthy. 
-//with the help of disjoint set, it is easy and clear with pleasure to write the code.
+//with the help of disjoint set, it is easy and clear with pleasure to write the code
 vector<int> vrand;
 int nmod = 1000000;
 int nprimer = 524287;
@@ -25,69 +25,6 @@ int generate_number(int nth){
     return value;
 }
 
-class DisJointSet{
-   public:
-      DisJointSet()
-      {
-          p = 0;
-          value = -1;
-          rank = 0;
-          nsize = 0;
-      }
-      void makeset(int vx)
-      {
-          p = this;
-          value = vx;
-          rank = 0;
-          nsize = 1;
-      }
-
-      DisJointSet* find_set()
-      {
-        if(this != (this->p)){
-            this->p = (this->p)->find_set();
-        }
-        return this->p;
-      }
-
-      void union_set(DisJointSet& y)
-      {
-            return link_set(find_set(), y.find_set());
-      }
-      void link_set(DisJointSet* x, DisJointSet* y)
-      {
-        if( x == y)
-            return;
-        if(x->rank > y->rank){
-            y->p = x;
-            x->nsize += y->nsize;
-        }
-        else{
-            x->p = y;
-            y->nsize += x->nsize;
-            if(x->rank == y->rank)
-                ++(y->rank);
-        }
-      }
-      int set_size(){
-          if(this->p == this->p->p){
-              this->nsize = this->p->nsize;
-          }
-          else
-              this->nsize = (this->p)->set_size();
-
-          return this->nsize;
-      }
-      DisJointSet* parent()
-      {
-          return p;
-      }
-   private:
-     DisJointSet* p;
-     int value;
-     int rank;
-     int nsize;
-};
 
 int main(){
     vector<DisJointSet> vall;

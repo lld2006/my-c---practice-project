@@ -1,0 +1,98 @@
+#include <cstdio>
+#include <cassert>
+#include "../lib/tools.h"
+#include <algorithm>
+
+vector<IntPair> norder;
+vector<vector<int> > vb;
+int convert_input(int n)
+{
+    assert(n>=0 && n<64);
+    vector<int> vr;
+    vr.resize(6, 0);
+    int cnt = 0;
+    while(n > 0){
+        int res = n&1;
+        n/=2;
+        if(res)
+            vr[cnt]=1;
+        ++cnt;
+    }
+    int nx = vr[0];
+    nx = vr[1] & vr[2];
+    nx += vr[0];
+    nx %= 2;
+    vr.erase(vr.begin());
+    vr.push_back(nx);
+    int sum = 0;
+    for(int i = 5; i >= 0; --i){
+        sum*=2;
+        sum += vr[i];
+    }
+    assert(sum >= 0 && sum < 64);
+    return sum;
+}
+class intpairless
+{
+    public:
+    bool operator()(const IntPair& p1, const IntPair& p2)
+    {
+        return p1.first < p2.first;
+    }
+};
+i64 search_table(int pos, const vector<int>& flags)
+{
+    if(pos == 64)
+        return 1;
+    i64 sum = 0;
+    int ni = norder[pos].second;
+    if(flags[ni]>=0)
+        sum += search_table(pos+1, flags);
+    else{
+        vector<int> flags1(flags);
+        flags1[ni]=0;
+        sum += search_table(pos+1, flags1);
+        vector<int> bref=vb[ni];
+        if(bref.empty())
+            return sum;
+        flags1[ni]=1;
+        bool search_next = true;
+        for(unsigned int i = 0; i<bref.size(); ++i){
+            if(flags1[bref[i]] == -1){
+                flags1[bref[i]]= 0;
+                ++pos;
+            }
+            else if(flags1[bref[i]]==0)
+                continue;
+            else{
+                assert(flags1[bref[i]]==1);
+                search_next = false;
+                break;
+            }
+        }
+        if(search_next)
+            sum += search_table(pos, flags1);
+    }
+    return sum;
+}
+int main()
+{
+    vb.resize(64);
+    for(unsigned int ni= 0; ni <vb.size(); ++ni){
+        unsigned int nout = convert_input(ni);
+        if(ni != nout){
+            vb[ni].push_back(nout);
+            vb[nout].push_back(ni);
+        }
+    }
+    norder.resize(64);
+    for(unsigned int ni = 0; ni < vb.size(); ++ni){
+        sort(vb[ni].begin(), vb[ni].end());
+        norder[ni] = IntPair(static_cast<int>(vb[ni].size()), ni);
+    }
+    sort(norder.begin(), norder.end(), intpairless());
+    vector<int> flags;
+    flags.resize(64, -1);
+    i64 sum = search_table(0, flags);
+    printf("%lld\n", sum);
+}
