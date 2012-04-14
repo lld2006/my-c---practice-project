@@ -1,2 +1,2 @@
 acute: acute.cpp
-	g++ -Wall -g acute.cpp -o acute
+	g++ -Wall -g -std=c++0x acute.cpp -o acute

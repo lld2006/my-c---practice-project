@@ -1,2 +1,2 @@
-prime: prime.cpp
-	g++ -Wall -g prime.cpp -o prime
+grid: grid.cpp
+	g++ -Wall -g grid.cpp -o grid

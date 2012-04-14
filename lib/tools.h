@@ -1,6 +1,8 @@
 #include <vector>
 #include <cmath>
 #include "typedef.h"
+#ifndef TOOLS_H
+#define TOOLS_H
 using namespace std;
 void primeWithin( vector<int>& vecr, int limit);
 bool isPrime( i64 i );
@@ -12,6 +14,10 @@ bool isPalindromic(int num, int base);
 int binary_find(int num, vector<int>& vec);
 void extended_euclid(int a, int b, int& x, int& y, int& gcd);
 bool isRhoPrime(i64 n, int debug);
+bool miller_rabin(i64 xn, unsigned int nsampling);
+i64 product_mod(i64 n1, i64 n2, i64 mod);
+i64 powermodule2(i64 base, i64 expo, i64 module);
+void kara_mult(int nsize, int* a, int* b, int* ret);
 inline int index0(int dim, int i, int j) { return i*dim+j;}
 
 
@@ -118,15 +124,14 @@ itype powermodule(itype base, itype expo, itype module){
     while(expo){
        int remainder = expo & 1; 
        if(remainder){
-            --expo;
             result *= cbase;
-            result %= module;
+            if(result >= module)
+                result %= module;
        }
-       else{
-            expo /= 2;
-            cbase *= cbase;
+        cbase *= cbase;
+        expo >>= 1;
+        if(cbase >= module) 
             cbase %= module;
-       }
     }
     return result;
 }
@@ -153,3 +158,4 @@ itype combination(itype n, itype m){
         div *= i;
     return prod / div;
 }
+#endif

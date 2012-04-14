@@ -1,218 +1,142 @@
-#include <tr1/unordered_map>
+//this problem is kind of difficult if the method is not correct.
+//one of the method that might be the genetic algorithm. using mutation
+//and cross overs, the solution maybe found in 2 minutes. still need 
+//to find better method.
+//the following code are not working in a couple of minutes.
+//#include <tr1/unordered_map>
 #include <cstdio>
 #include <vector>
 #include <cstdlib>
 #include <cassert>
+#include <ctime>
 #include <algorithm>
 #include <string>
 #include "../lib/typedef.h"
+#include "../lib/tools.h"
 using namespace std;
-//using std::tr1::unordered_map;
 
-//need to write code using zero-suppressed decision diagram (ZDD)
-//let us use a trick since the answer is unqiue, when number of 
-//correct guess exceed the limit, stop. if two guess have the same pattern, stop.
-
-unsigned int nn , ng; //in c++, static in class is better
+unsigned int nn, ng;//nn is the number of digit, ng is the number of guesses 
 vector<int> vguess; //guess and number of correct guesses
-string vcorrect;
-vector<int> selected;
-typedef std::tr1::unordered_map<std::string, int> hashmap;
-
-string string_sum(const string& va, const string& vb){//special version not applicable for general 
-    // purpose vb is string of 0 1
-    assert(va.size() == vb.size());
-    string result;
-    result.resize(va.size(), '0');
-    for(unsigned int i = 0; i < va.size(); ++i ){
-        assert(vb[i]=='1' || vb[i] =='0');
-        result[i] = (vb[i]=='1'?va[i]+1:va[i]);
-    }
-    return result;
-}
-
-int same_digits(const int a, const int b){
-    int cnt = 0;
-    int indexa = a *nn;
-    int indexb = b *nn;
-    for(unsigned int i = 0; i < nn; ++i)
-        if(vguess[indexa++] == vguess[indexb++])
-            ++cnt;
-    return cnt;
-}
-
-//less or equal than the constrain
-bool string_less(const string& sa, const string & sb){
-    assert(sa.size() == sb.size());
-    for(unsigned int i = 0; i < sa.size(); ++i)
-        if(sa[i] > sb[i]) 
-            return false;
-    return true;
-}
-
-hashmap statmap;
-
-class treenode{
-public: void setstop(){ stop = true; flag.clear();}
-        void setvalue(int val){value = val;}
-        void setparent(int index){parent = index;};
-        const string& get_vector() {return flag;}
-        int  get_value(){return value;}
-        int  get_parent(){return parent;}
-        bool get_stop(){return stop;}
-        treenode(int pindex, int val, const string& vf): parent(pindex)
-                                                      ,value(val) 
-                                                      ,stop(false)
-                                                      ,flag(vf)
-        { }
-        treenode(){
-            parent = -1;
-            value = 0;
-            stop = false;
-            flag.resize(ng, '0');
-        }
-private:
-    int parent; //index of parent
-    int value;
-    bool stop;
-    string flag; //# of correct for all guess, 
-};
-
-int select_next_col(vector<treenode>& parent, const vector<vector<std::string> >& v_level_col)
+vector<int> vcorrect;
+void search_nint(const vector<int>& match, const vector<int>& vc, 
+                 vector<int> vcand, int index, int ncr);
+void search_ni(const vector<int>& match, const vector<int>& vcorrect)
 {
-    hashmap stat;
-    i64 min_branch = 1000000000000, total;
-    int col_sel = -1;
-    for(unsigned int col = 1; col < selected.size(); ++col){
-        stat.clear();
-        if(!selected[col]){
-            int nrmv = 0;
-            int start = (col == 1? 1 : 0);
-            int nsel = 10 -start;
-            total = parent.size()*nsel;
-            for(unsigned int nodei = 0; nodei < parent.size(); ++nodei){
-                if(parent[nodei].get_stop()){
-                    total -= nsel;
+    vector<int> vcand;
+    for (unsigned int ni = 1; ni < ng; ni++) {
+        //lesson vcand should be cleared before next time use
+        vcand.clear();
+        vcand.push_back(ni);
+        search_nint(match, vcorrect, vcand, ni+1, vcorrect[ni]);
+    }
+}
+void search_nint(const vector<int>& match, const vector<int>& vc, 
+                 vector<int> vcand, int index, int ncr)
+{
+    if(index == static_cast<int>(ng)) return;
+    if(ncr <14){
+        for(unsigned int j = index; j < ng; ++j){
+            for(int i = 0; i < static_cast<int>(vcand.size()); ++i){
+                if(match[index0(ng, vcand[i], j)] > 0){
+                    continue; 
+                }else{
+                    vector<int> vcd1(vcand);
+                    vcd1.push_back(j);
+                    search_nint(match, vc, vcd1, j+1, ncr+vcorrect[j]);
+                }
+            }
+        }
+    }else{
+        int total_match = 0;
+        for(unsigned int j = 1; j < ng; ++j){
+            if(find(vcand.begin(), vcand.end(), j) != vcand.end())
+                continue;
+            for(unsigned int i = 0; i <vcand.size(); ++i)
+                total_match += match[index0(ng,j, vcand[i])];
+            if( ncr +vcorrect[j] < 17){ 
+                if(total_match== 0){
+                    vector<int>  vcd1(vcand); 
+                    vcd1.push_back(j);
+                    search_nint(match, vc, vcd1, j+1, ncr+vcorrect[j]);
+                }else{
+                    assert(total_match != 1);
+                    //lazy to write code later if necessary
                     continue;
                 }
-                for(unsigned int num = start; num <= 9; ++num){
-                    string tp = string_sum(parent[nodei].get_vector(), v_level_col[col][num]);
-                    if(string_less(tp, vcorrect)){
-                        hashmap::iterator iter = stat.find(tp);
-                        if(iter == stat.end()){
-                            stat.insert(pair<string, int>(tp, 0));
-                        }else{
-                            ++nrmv;
+            }else if(ncr+vcorrect[j]==17){
+                if(total_match > 1 || total_match == 0) 
+                    continue;
+               printf("j %d   ", j);
+               for(unsigned int i = 0; i < vcand.size(); ++i){
+                    printf("%d  ", vcand[i]);
+                    if(match[index0(ng, j, vcand[i])]==1){
+                        for(unsigned int k = 0; k < nn; ++k){
+                            printf("\n%d  %d %d", k, vguess[j*nn+k], vguess[vcand[i]*nn+k] );
                         }
+                        printf("\n");
+                        exit(1);
                     }
-                }
-            }
-            assert( nrmv < total);
-            if(total - nrmv < min_branch){
-                min_branch = total - nrmv;
-                col_sel = col;
+               } 
+            }else{
+                continue;
             }
         }
     }
-    assert(col_sel >= 0);
-    return col_sel;    
 }
-
 int main(){
     // start reading data
-   FILE* fp;
-   fp = fopen("mind16.txt", "r");
-   fscanf(fp, "%d %d", &nn, &ng );
-   i64 nx;
-   vguess.resize(nn*ng); // all guesses
-   vcorrect.resize(ng, 0);
-   for(unsigned int i = 0; i < ng; ++i){
-    char nc='0';
-    fscanf(fp, "%lld %c", &nx, &nc);
-    vector<int> nt;//temporaray vector
-    vcorrect[i] = nc;
-    nt.resize(nn, 0);
-    int start = 0;
-    while(nx){
-        int nres = nx%10;
-        nt[start++] = nres;
-        nx /= 10;
-    }
-    reverse(nt.begin(), nt.end());
-    copy(nt.begin(), nt.end(), vguess.begin()+i*nn);
-   }
-   fclose(fp);
-   //statistics about all guesses
-   //for(unsigned int i = 0 ; i < ng  -1; ++i)
-   //    for(unsigned int j = i+1; j < ng; ++j){
-   //         int isame = same_digits(i, j);
-   //         printf("%d %d %d\n", i, j, isame);
-   //    }
-   //exit(0);
-    //data reading end
-    vector<vector<treenode> > tree;
-    selected.resize(nn+1, 0);
-    tree.resize(nn+1);
-    tree[0].resize(1);
-    //gather levelized correct guess info.
-    vector<vector<std::string> > v_level_col;
-    v_level_col.resize(nn+1); //0th level is ignored
-    for(unsigned int leveli = 1; leveli <= nn; ++leveli){
-        v_level_col[leveli].resize(10);
-        for(unsigned int i = 0; i < 10; ++i)
-            v_level_col[leveli][i].resize(ng, '0');
-        for(unsigned int ngi = 0; ngi < ng; ++ngi){
-            int index = nn * ngi + leveli - 1;
-            int value = vguess[index];
-            v_level_col[leveli][value][ngi] = '1';
+    FILE* fp;
+    fp = fopen("mind16.txt", "r");
+    fscanf(fp, "%d %d", &nn, &ng );
+    i64 nx;
+    vguess.resize(nn*ng); // all guesses
+    vcorrect.resize(ng, 0);
+    vector<int> nt; //temporaray vector
+    for(unsigned int i = 0; i < ng; ++i){
+        char nc='0';
+        fscanf(fp, "%lld %c", &nx, &nc);
+        vcorrect[i] = nc-'0';
+        nt.clear();
+        nt.resize(nn, 0);
+        int start = 0;
+        while(nx){
+            int nres = nx%10;
+            nt[start++] = nres;
+            nx /= 10;
         }
+        reverse(nt.begin(), nt.end());
+        copy(nt.begin(), nt.end(), vguess.begin()+i*nn);
     }
-    //start levelized tree
-    for(unsigned int level = 1; level <= nn;  ++level){
-        statmap.clear();
-        vector<treenode>& parent(tree[level-1]);
-        vector<treenode>& child(tree[level]);
-        
-        int col = select_next_col(parent, v_level_col);
-        selected[col] = 1;
-        child.reserve(parent.size()*10);
-        for(unsigned int nodei = 0; nodei < parent.size(); ++nodei){
-            if(parent[nodei].get_stop())
-                continue;
-            int start = (col == 1?1:0);
-            for(unsigned num = start; num <= 9; ++num){
-                string tp = string_sum(parent[nodei].get_vector(), v_level_col[col][num]);
-                if(string_less(tp, vcorrect)){
-                    hashmap::iterator iter = statmap.find(tp);
-                    if(iter == statmap.end()){
-                        child.push_back(treenode(nodei, num, tp));
-                        statmap.insert(pair<string, int>(tp, child.size()-1));
-                    }else{
-                        child[iter->second].setstop();
-                    }
-                }
+    fclose(fp); //data reading end
+
+    //initial guess
+    vector<int> match;
+    match.resize(ng*ng, 0);
+    //first update the guess vector, all incorrect guesses are 
+    //marked as -1
+    for(unsigned int i = 1; i < ng; ++i)
+        for(unsigned int j = 0; j < nn; ++j){
+            if(vguess[j] == vguess[i*nn+j])
+                vguess[i*nn+j] = -1;
+        }
+    
+    for(unsigned int i=1; i < ng; ++i){
+        for(unsigned int j= i +1; j <ng; ++j){
+            int nmatch = 0;
+            for(unsigned ni = 0; ni < nn; ++ni){
+                if (vguess[i*nn+ni]!=-1 && vguess[i*nn+ni] == vguess[j*nn+ni]) 
+                    ++nmatch;
             }
-        }
-        printf("col %d size %d\n", col, static_cast<int>(child.size()));
-    }
-    int level = nn;
-    int index = 0;
-    int count = 0;
-    for(unsigned int i = 0; i < tree[level].size(); ++i){
-        if(tree[level][i].get_stop())
-            continue;
-        if(tree[level][i].get_vector() != vcorrect)
-            continue;
-        else{
-            ++count;
-            index = i;
+            match[index0(ng, i, j)] = nmatch;
+            match[index0(ng, i, j)] = nmatch;
         }
     }
-    assert(count == 1);
-    while(level >= 1){
-        printf("%d", tree[level][index].get_value());
-        index = tree[level][index].get_parent();
-        --level;
-    }
-    printf("\n");
+    int mcount = 0;
+    for(unsigned int ix = 1 ; ix <ng; ++ix)
+        for (unsigned int iy = 1; iy < ng; iy++) {
+            if(match[index0(ng, ix, iy)]== 0)
+                ++mcount;
+        }
+    printf("total 0s %d\n", mcount);
+    search_ni(match, vcorrect);
 }

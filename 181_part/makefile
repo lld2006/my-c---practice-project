@@ -1,2 +1,2 @@
-prime: prime.cpp
-	g++ -Wall -g prime.cpp -o prime
+part: part.cpp
+	g++ -Wall -g part.cpp -o part

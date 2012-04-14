@@ -1,3 +1,10 @@
+//this code does not solve the problem. The correct way to solve this problem
+//is to use recursion and complex<int> in c++ which is very convenient for this
+//problem. we can find d_na d_nb very easily for any n up to 50. we need 
+//to store the following informations, displacement relative to current 
+//direction, and direction change after the operation relative to the initial
+//direction, and number of step moves. then we can use some sort of bisection
+//method to search for the nth step.
 enum DIRECTION{NA=-1, PY=0, PX=1, NY=2, NX=3};
 class dragon
 {

@@ -1,12 +1,13 @@
 #include <vector>
-#include "tools.h"
 #include <cmath>
-#include "typedef.h"
 #include <cassert>
 #include <numeric>
 #include <algorithm>
 #include <ctime>
 #include <cstdio>
+#include "typedef.h"
+#include "tools.h"
+#include "int2.h"
 using namespace std;
 void primeWithin( vector<int>& vecr, int limit)
 {
@@ -100,7 +101,7 @@ bool isRhoPrime(i64 n, int debug){
     return true;    
 }
 
-//prime factors, less than num. so for primes, empty
+//prime factors, less than or equal to num. 
 void factor(i64 num, I64PairVec& ifac, const IntVec& prime)
 {
     //special case, not prime factor for 1
@@ -212,17 +213,121 @@ int binary_find(int num, vector<int>& vec){
         return -1;
 }
 
-void extended_euclid(int a, int b, int& x, int& y, int& gcd){
+// a * x + b * y = gcd 
+void extended_euclid(i64 a, i64 b, i64& x, i64& y, i64& gcd){
     if(b == 0){
         gcd = a;
         x = 1;
         y = 0;
     }else{
-       int residue = a % b;
+       i64 residue = a % b;
        extended_euclid(b, residue, x, y, gcd);
-       int tp = x;
+       i64 tp = x;
        x = y;
        y = tp - (a/b) * y;
     }
 }
 
+
+    //multiplier bound at 1e9 
+    //result bound at 1e15;
+/*  
+i64 product_mod(i64 n1, i64 n2, i64 mod)
+{
+    assert(mod < 1e15); //why do you ask for even larger number!
+    i64 low = 1000000000LL;
+    if(n1 < low && n2 <= low)
+        return (n1*n2)%mod;
+    GeneralInteger g1(n1), g2(n2), gx(1);
+    GeneralInteger denom(mod), remainder(1);
+    gx = g1 * g2;
+    gx.divide(denom, remainder);
+    return remainder.to_i64();
+}
+bool witness(i64 xa, i64 xn)
+{
+    i64 xn1 = xn - 1;
+    unsigned int expo = 0;
+    while(xn1 % 2  == 0){
+       xn1 = xn1 >> 1;
+       ++expo;
+    }
+    //modular exponentiation 
+    i64 x0 = powermodule2(xa, xn1, xn);
+    i64 x1;
+    for(unsigned int i = 1; i <= expo; ++i){
+        x1 = product_mod(x0, x0, xn);
+        if(x1 == 1 && x0 != 1 && x0 != xn - 1)
+            return 1;
+        x0 = x1;
+    }
+    if(x1 != 1)
+        return 1;
+    return 0;
+}
+
+//implement a 64 bit integer version Miller-Rabin primality test
+//composite == 0 prime == 1
+bool miller_rabin(i64 xn, unsigned int nsampling)
+{
+    for(unsigned int cnt = 0; cnt < nsampling; ++cnt){
+      i64 xa = rand() %(xn-2)+2;//TODO refine this part since rand is not well written
+      assert(xa < 4000000000LL);
+        if(witness(xa, xn))
+           return 0;
+    }
+    return 1;
+}
+
+i64 powermodule2(i64 base, i64 expo, i64 module){
+    i64 result = 1;
+    i64 cbase = base;
+    while(expo){
+       int remainder = expo & 1; 
+       if(remainder){
+            --expo;
+            result = product_mod(result, cbase, module);
+            assert(result >= 0);
+       }
+       else{
+            expo /= 2;
+            cbase = product_mod(cbase, cbase, module);
+            assert(cbase >= 0);
+       }
+    }
+    return result;
+}
+
+void kara_mult(int nsize, int* a, int* b, int* ret)
+{
+    assert((nsize & 1) == 0 || nsize == 1);
+    unsigned int n2 = nsize >> 1;
+    int * ar = a;
+    int * al = a + n2;
+    int * br = b;
+    int * bl = b + n2;
+    int * asum = ret + 5 * nsize;
+    int * bsum = asum + n2;
+    int * x1 = ret;
+    int * x2 = ret + nsize; // shift size
+    int * x3 =  x2 + nsize; //shift 2 size
+    if(nsize <= 4){
+        for(unsigned int i = 0; i < static_cast<unsigned int>(nsize); ++i){
+            if(a[i] == 0) continue;
+            for(unsigned int j = 0; j < static_cast<unsigned int>(nsize); ++j){
+                ret[i+j] += a[i]*b[j];
+            }
+        }
+        return;
+    } //normal multiplication
+    for( unsigned int i = 0; i < n2; ++i){
+        asum[i] = al[i] + ar[i];
+        bsum[i] = bl[i] + br[i];
+    }
+    kara_mult(n2, ar, br, x1);
+    kara_mult(n2, al, bl, x2);
+    kara_mult(n2, asum, bsum, x3);
+    for(unsigned int i = 0; i < static_cast<unsigned int>(nsize); ++i) x3[i] -= (x1[i]+x2[i]);
+    for(unsigned int i = 0; i < static_cast<unsigned int>(nsize); ++i) ret[i+n2] += x3[i];
+}
+*/
