@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <cassert>
 #include "../lib/tools.h"
+//this is a relative easy problem. wilson theorem is the key;
 int main()
 {
     int limit = 100000000;
