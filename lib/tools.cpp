@@ -3,11 +3,11 @@
 #include <cassert>
 #include <numeric>
 #include <algorithm>
-#include <ctime>
 #include <cstdio>
 #include "typedef.h"
 #include "tools.h"
 #include "int2.h"
+#include <tr1/unordered_set>
 using namespace std;
 void primeWithin( vector<int>& vecr, int limit)
 {
@@ -36,6 +36,7 @@ void primeWithin( vector<int>& vecr, int limit)
         if( vec[i] ) vecr.push_back(2*i+1);
 }
 
+//without prime list
 bool isPrime( i64 num )
 {
     if(num == 1) return false;
@@ -49,6 +50,7 @@ bool isPrime( i64 num )
     return true;
 }
 
+//with prime list
 bool isPrime(u64 num, vector<int>& primes){
     if( num == 1) return false;
     if( num == 2) return true;
@@ -68,37 +70,61 @@ bool isPrime(u64 num, vector<int>& primes){
 }
 
 //pollard rho prime 
-bool isRhoPrime(i64 n, int debug){
-    for(int test = 0 ; test <= 10; ++test){
-        i64 limit = 1000;
-        i64 i  = 1; 
-        srand(time(0));
-        i64 x = rand()%n;
-        i64 y = x;
-        i64 k = 2;
-        int iter = 0;
-        while(iter != limit){
-            ++i;
-            ++iter;
-            x = x * x + 2;
+//check return values, if non-zero, factor, else return 0, not composite
+//the original version of this function is kind of brute force. 
+//I will try the unordered map way
+i64 pollard_rho(i64 n, int n0, int debug){
+    typedef std::tr1::unordered_set<i64> hashset;
+    hashset hset;
+
+    i64 limit = 2000;
+    i64 i  = 1; 
+    i64 x = n0;
+    i64 y = x;
+    i64 k = 2;
+    int iter = 0;
+    hashset::iterator hiter;
+    while(iter != limit){
+        ++i;
+        ++iter;
+        // check paper: compute A*B mod N efficiently in ansi c
+        if( x > 1000000000LL){
+            double dn = n; 
+            double dx = x;
+            double dp = dx * dx - 1;
+            double dq = dp/dn;
+            i64 qpp = dq+0.5;
+            i64 rp = x*x-1-qpp * n;
+            i64 r = (rp & 0x8000000000000000LL)? rp+n:rp;
+            x = r;
+        }else{
+            x = x*x-1;
             x %= n;
-            if(x < 0) x += n;
-            i64 delta =  y -x ;
-            if( y < x) delta = -delta;
-            i64 d = gcd( delta, n );
-            if( d != 1 && d != n ){
-                if(debug)
-                    //printf("DEBUG %d %I64d %I64d \n", iter, n, d);
-                    printf("DEBUG %d %lld %lld \n", iter, n, d);
-                return false;
-            }
-            if( i == k){
-                y = x;
-                k *= 2;
-            }
+        }
+        hiter = hset.find(x);
+        if(hiter==hset.end())
+            hset.insert(x);
+        else{
+            //printf("hashset size %d\n", static_cast<int>(hset.size()));
+            return 0;//loop detected but still no factors found hopeless
+        }
+        if(x < 0) x += n;
+        i64 delta =  y -x ;
+        if( delta < 0) delta = -delta;
+        i64 d = gcd( delta, n );
+        if( d != 1 && d != n ){
+            if(debug)
+                printf("DEBUG %d %lld %lld \n", iter, n, d);
+            //printf("hashset size %d\n", static_cast<int>(hset.size()));
+            return d;
+        }
+        if( i == k){
+            y = x;
+            k <<= 1;
+        }
     }
-    }
-    return true;    
+    //printf("hashset size %d\n", static_cast<int>(hset.size()));
+    return 0;    
 }
 
 //prime factors, less than or equal to num. 
@@ -178,7 +204,7 @@ bool isPermutation(int im, int in)
     return true;
 }
 
-bool isPalindromic(int num, int base) //base generally 10
+bool isPalindromic(i64 num, int base) //base generally 10
 {
     vector<int> vec, rvec;
     while(num){
@@ -228,22 +254,27 @@ void extended_euclid(i64 a, i64 b, i64& x, i64& y, i64& gcd){
     }
 }
 
-
-    //multiplier bound at 1e9 
-    //result bound at 1e15;
-/*  
-i64 product_mod(i64 n1, i64 n2, i64 mod)
+void shank_tonelli(int prime, int residue)
 {
-    assert(mod < 1e15); //why do you ask for even larger number!
-    i64 low = 1000000000LL;
-    if(n1 < low && n2 <= low)
-        return (n1*n2)%mod;
-    GeneralInteger g1(n1), g2(n2), gx(1);
-    GeneralInteger denom(mod), remainder(1);
-    gx = g1 * g2;
-    gx.divide(denom, remainder);
-    return remainder.to_i64();
+
 }
+
+//quadratic reciprocity 
+//quadratic_residue_test(int num, int prime)
+/*  
+//implement a 64 bit integer version Miller-Rabin primality test
+//composite == 0 prime == 1
+bool miller_rabin(i64 xn, unsigned int nsampling)
+{
+    for(unsigned int cnt = 0; cnt < nsampling; ++cnt){
+      i64 xa = rand() %(xn-2)+2;//TODO refine this part since rand is not well written
+      assert(xa < 4000000000LL);
+        if(witness(xa, xn))
+           return 0;
+    }
+    return 1;
+}
+
 bool witness(i64 xa, i64 xn)
 {
     i64 xn1 = xn - 1;
@@ -266,19 +297,6 @@ bool witness(i64 xa, i64 xn)
     return 0;
 }
 
-//implement a 64 bit integer version Miller-Rabin primality test
-//composite == 0 prime == 1
-bool miller_rabin(i64 xn, unsigned int nsampling)
-{
-    for(unsigned int cnt = 0; cnt < nsampling; ++cnt){
-      i64 xa = rand() %(xn-2)+2;//TODO refine this part since rand is not well written
-      assert(xa < 4000000000LL);
-        if(witness(xa, xn))
-           return 0;
-    }
-    return 1;
-}
-
 i64 powermodule2(i64 base, i64 expo, i64 module){
     i64 result = 1;
     i64 cbase = base;
@@ -297,6 +315,23 @@ i64 powermodule2(i64 base, i64 expo, i64 module){
     }
     return result;
 }
+
+i64 product_mod(i64 n1, i64 n2, i64 mod)
+{
+    assert(mod < 1e15); 
+    i64 low = 1000000000LL;
+    assert(n1 <= low && n2 <= low)
+        return (n1*n2)%mod;
+    //GeneralInteger g1(n1), g2(n2), gx(1);
+    //GeneralInteger denom(mod), remainder(1);
+    //gx = g1 * g2;
+    //gx.divide(denom, remainder);
+    //return remainder.to_i64();
+}
+    //multiplier bound at 1e9 
+    //result bound at 1e15;
+
+
 
 void kara_mult(int nsize, int* a, int* b, int* ret)
 {

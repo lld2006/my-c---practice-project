@@ -12,9 +12,22 @@ class rational //negative rational number is not considered yet
             d_num /= common;
         }
     };
+    //the following code need to be careful, overflow;
     rational operator+(const rational& r2) const
     {
-        return rational(d_num*r2.d_den+d_den*r2.d_num, d_den*r2.d_den);
+        i64 common = gcd(r2.d_den, d_den);
+        return rational(d_num*(r2.d_den/common)+d_den/common*r2.d_num, d_den/common*r2.d_den);
+    }
+    rational& operator+=(const rational& r2){
+        i64 common = gcd(r2.d_den, d_den);
+        d_num = d_num*(r2.d_den/common)+d_den/common*r2.d_num;
+        d_den *= (r2.d_den/common);
+        common = gcd(d_num, d_den);
+        if(common != 1){
+            d_den /= common;
+            d_num /= common;
+        }
+        return *this;
     }
     rational operator*(const rational& r2) const
     {
@@ -24,10 +37,6 @@ class rational //negative rational number is not considered yet
     {
         assert(r2.d_num > 0);
         return rational(d_num*r2.d_den, d_den*r2.d_num);
-    }
-    bool operator<(const rational& r2)
-    {
-       return d_num*r2.d_den < d_den*r2.d_num;
     }
     bool operator>(const rational& r2)
     {
@@ -39,6 +48,10 @@ class rational //negative rational number is not considered yet
     i64 d_num;
     i64 d_den;
 };
+bool operator<(const rational& r1, const rational& r2)
+{
+   return r1.pnum()*r2.pden() < r1.pden()*r2.pnum();
+}
 class coord_less
 {
 // (0, 0 ) zero

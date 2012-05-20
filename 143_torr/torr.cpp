@@ -8,7 +8,8 @@
 using namespace std;
 typedef multimap<int, int>::iterator miter;
 typedef pair<miter, miter> miterpair;
-int main(){
+int main()
+{
     set<int> valueset;
     int limit = 120000;
     i64 sum = 0;
