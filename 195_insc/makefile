@@ -1,2 +1,2 @@
-insc: insc.cpp
-	g++ -Wall -g insc.cpp -o insc
+insc: insc_2.cpp
+	g++ -Wall -O3 insc_2.cpp -o insc

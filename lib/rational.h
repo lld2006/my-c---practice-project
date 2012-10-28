@@ -1,11 +1,22 @@
 #include <cassert>
 #include "../lib/tools.h"
-class rational //negative rational number is not considered yet
+//internal rep, den num are all positive or 0; now considering negative rationals
+//when I added negative sign to the class, the operator+ is not well defined, missed to assigne the sign
+//when I introduced the operator- which is not defined before, to change the sign, I used a *= which should be =
+class rational 
 {
   public:
-    rational():d_num(0), d_den(1) { };
-    rational(i64 nx, i64 dx=1):d_num(nx), d_den(dx)
+    rational():d_num(0), d_den(1), d_sign(1) { };
+    rational(i64 nx, i64 dx=1, int pm=1):d_num(nx), d_den(dx), d_sign(pm)
     {
+        if(nx < 0){
+            d_num = -nx;
+            d_sign = -d_sign;
+        }
+        if(dx < 0){
+            d_den = -dx;
+            d_sign = -d_sign;
+        }
         i64 common = gcd(d_num, d_den);
         if(common != 1){
             d_den /= common;
@@ -16,11 +27,32 @@ class rational //negative rational number is not considered yet
     rational operator+(const rational& r2) const
     {
         i64 common = gcd(r2.d_den, d_den);
-        return rational(d_num*(r2.d_den/common)+d_den/common*r2.d_num, d_den/common*r2.d_den);
+        if(d_sign == r2.d_sign)
+            return rational(d_num*(r2.d_den/common)+d_den/common*r2.d_num, d_den/common*r2.d_den, d_sign);
+        else{
+            i64 result = d_num*(r2.d_den/common)-d_den/common*r2.d_num;
+            return rational(result, d_den/common*r2.d_den, d_sign);
+        }
     }
+    rational operator-(const rational& r2) const
+    {
+        rational r2t(r2);
+        r2t.d_sign = -r2t.d_sign;
+        return operator+(r2t);
+    }
+
     rational& operator+=(const rational& r2){
+        assert(0);
         i64 common = gcd(r2.d_den, d_den);
-        d_num = d_num*(r2.d_den/common)+d_den/common*r2.d_num;
+        if(d_sign == r2.d_sign){
+            d_num = d_num*(r2.d_den/common)+d_den/common*r2.d_num;
+        }else{
+            d_num = d_num*(r2.d_den/common)-d_den/common*r2.d_num;
+            if(d_num < 0){
+                d_num = -d_num;
+                d_sign = -d_sign;
+            }
+        }
         d_den *= (r2.d_den/common);
         common = gcd(d_num, d_den);
         if(common != 1){
@@ -31,26 +63,43 @@ class rational //negative rational number is not considered yet
     }
     rational operator*(const rational& r2) const
     {
-        return rational(d_num*r2.d_num, d_den*r2.d_den);
+        return rational(d_num*r2.d_num, d_den*r2.d_den, d_sign==r2.d_sign? 1:-1);
     }
-    rational operator/(const rational& r2)
+    rational operator/(const rational& r2)const
     {
         assert(r2.d_num > 0);
-        return rational(d_num*r2.d_den, d_den*r2.d_num);
+        return rational(d_num*r2.d_den, d_den*r2.d_num, d_sign==r2.d_sign?1:-1);
     }
-    bool operator>(const rational& r2)
+    bool operator>(const rational& r2)const
     {
-        return d_num*r2.d_den > d_den*r2.d_num;
+        assert(0);
+        if(d_sign > r2.d_sign ){
+            return d_num>0 || r2.d_num>0;//possible: d_num==0
+        }else if(d_sign < r2.d_sign){
+            return false; 
+        }else{
+            i64 diff = d_num*r2.d_den - d_den*r2.d_num;
+            return d_sign? diff>0:d_sign<0;
+        }
     }
-    i64 pnum()const {return d_num;} ;
-    i64 pden()const {return d_den;} ;
+    i64 pnum()const {return d_num;}
+    i64 pden()const {return d_den;} 
+    i64 psign() const {return d_sign;}
   private:
     i64 d_num;
     i64 d_den;
+    int d_sign; //-1 for negative, 1 for positive
 };
 bool operator<(const rational& r1, const rational& r2)
 {
-   return r1.pnum()*r2.pden() < r1.pden()*r2.pnum();
+   if(r1.psign() < r2.psign()){
+       return !(r1.pnum()==0 && r2.pnum() == 0);
+   }else if(r1.psign() > r2.psign()){
+       return false;
+   }else{
+        i64 diff = r1.pnum()*r2.pden() - r1.pden()*r2.pnum();
+        return r1.psign() ? diff < 0: diff > 0;
+   }
 }
 class coord_less
 {

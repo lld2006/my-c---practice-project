@@ -19,6 +19,13 @@ i64 product_mod(i64 n1, i64 n2, i64 mod);
 i64 powermodule2(i64 base, i64 expo, i64 module);
 void kara_mult(int nsize, int* a, int* b, int* ret);
 inline int index0(int dim, int i, int j) { return i*dim+j;}
+void factor_table_min( int nmax, vector<int>& ftable);
+void factor_table_max( int nmax, vector<int>& ftable);
+bool tonelli_shank(i64 prime, i64 residue, i64& sol); 
+bool strong_pseudo_test(i64 p);
+i64 mult64mod(u64 a, u64 b, u64 mod);
+i64 powermodule(i64 base, i64 expo, i64 module);
+void farey_sequence(vector<IntPair>& vf, int nlimit, bool ascending);
 
 
 class DisJointSet{
@@ -117,24 +124,6 @@ u64 power(itype base, itype npow)
     return ret;
 }
 
-template <typename itype> 
-itype powermodule(itype base, itype expo, itype module){
-    itype result = 1;
-    itype cbase = base;
-    while(expo){
-       int remainder = expo & 1; 
-       if(remainder){
-            result *= cbase;
-            if(result >= module)
-                result %= module;
-       }
-        cbase *= cbase;
-        expo >>= 1;
-        if(cbase >= module) 
-            cbase %= module;
-    }
-    return result;
-}
 
 
 template <typename itype> 

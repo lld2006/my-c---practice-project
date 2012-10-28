@@ -407,4 +407,5 @@ void GeneralInteger::print()const
       assert(numbers[riter] >= 0 && numbers[riter] < 10);
       printf("%d", numbers[riter]);
   }
+  printf("\n");
 }
