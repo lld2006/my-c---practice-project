@@ -240,6 +240,7 @@ int binary_find(int num, vector<int>& vec){
 }
 
 // a * x + b * y = gcd 
+// x y maybe negative
 void extended_euclid(i64 a, i64 b, i64& x, i64& y, i64& gcd){
     if(b == 0){
         gcd = a;
@@ -254,9 +255,9 @@ void extended_euclid(i64 a, i64 b, i64& x, i64& y, i64& gcd){
     }
 }
 
-//I forgot to add a comment on this function, this is a bad habit.
-//when I really need this function, I myself almost forgot how it works
-//and why it is important for prime detection! 
+// I forgot to add a comment on this function, this is a bad habit.
+// when I really need this function, I myself almost forgot how it works
+// and why it is important for prime detection! 
 // The idea is sometimes a series numbers are in quadratic form, so with 
 // this function, we can sieve out those numbers that are composite.
 // if the boolean returned is false, it means no solutiona available for
@@ -354,6 +355,26 @@ void factor_table_max( int nmax, vector<int>& ftable)
                 ftable[j] = i; //overwrite to find the largest factor
     }
 }
+/* 
+i64 powermodule2(i64 base, i64 expo, i64 module){
+    i64 result = 1;
+    i64 cbase = base;
+    while(expo){
+       int remainder = expo & 1; 
+       if(remainder){
+            --expo;
+            result = product_mod(result, cbase, module);
+            assert(result >= 0);
+       }
+       else{
+            expo /= 2;
+            cbase = product_mod(cbase, cbase, module);
+            assert(cbase >= 0);
+       }
+    }
+    return result;
+}
+*/
 //quadratic reciprocity 
 //quadratic_residue_test(int num, int prime)
 /*  
@@ -392,24 +413,6 @@ bool witness(i64 xa, i64 xn)
     return 0;
 }
 
-i64 powermodule2(i64 base, i64 expo, i64 module){
-    i64 result = 1;
-    i64 cbase = base;
-    while(expo){
-       int remainder = expo & 1; 
-       if(remainder){
-            --expo;
-            result = product_mod(result, cbase, module);
-            assert(result >= 0);
-       }
-       else{
-            expo /= 2;
-            cbase = product_mod(cbase, cbase, module);
-            assert(cbase >= 0);
-       }
-    }
-    return result;
-}
 
 i64 product_mod(i64 n1, i64 n2, i64 mod)
 {
@@ -572,4 +575,30 @@ void farey_sequence(vector<IntPair>& vf, int nlimit, bool ascending)
         //if(a + b <=  nlimit)
             vf.push_back(IntPair(a, b));
     }
+}
+//this is a flawed version of totient calculation. but sometimes
+//we just need some such kind of simple calculations
+i64 totient(int n, vector<int>& primes)
+{
+    //assert(n < 1000);
+    if(n == 1)
+        return 1;
+    int prod = 1;
+    int total = 1;
+    for(unsigned int i = 0; i < primes.size(); ++i){
+        prod = 1;
+        bool first = true;
+        while((n % primes[i] )== 0){
+            n/= primes[i];
+            if(first){
+                prod *= (primes[i]-1);
+                first = false;
+            }else
+                prod *= primes[i];
+        }
+        total *= prod;
+        if(n == 1)
+            break;
+    }
+    return total;
 }

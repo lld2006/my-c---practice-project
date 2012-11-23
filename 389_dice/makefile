@@ -1,2 +1,2 @@
 dice: dice.cpp
-	g++ -Wall -g dice.cpp -std=c++0x -o dice
+	g++ -Wall -O3 dice.cpp -std=c++0x -o dice
