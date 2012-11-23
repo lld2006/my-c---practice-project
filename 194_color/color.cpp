@@ -1,8 +1,6 @@
 #include <cstdio>
 #include <vector>
 #include <cassert>
-#include "../lib/typedef.h"
-#include "../lib/tools.h"
 using namespace std;
 
 vector<vector<int> > vna, vnb;
@@ -31,24 +29,13 @@ void enum_all_cfg(vector<vector<int> >& vn, int cpos, int ncolor, vector<int>& v
         if(allowed_color[i] == 0)
             continue;
         vcolor[cpos] = i+1;
-        if(i ==  allowed_color.size()-1){
+        if(i == allowed_color.size()-1){
             enum_all_cfg(vn, cpos+1, ncolor+1, vcolor, ncfg);
         }else{
             enum_all_cfg(vn, cpos+1, ncolor, vcolor, ncfg);
         }
         vcolor[cpos] = 0;
     }
-}
-
-i64 permute_mod(i64 n, i64 a, i64 mod)
-{
-    assert(a>=1);
-    i64 prod = 1;
-    for(i64 i = 0; i < a; ++i){
-       prod *= (n-i); 
-       prod %= mod;
-    }
-    return prod;
 }
 int main()
 {
@@ -89,22 +76,9 @@ int main()
     }
     enum_all_cfg(vnb, 1, 1, vcolor, nbcfg);
 
-    i64 mod = 100000000;
-    i64 result = permute_mod(1984, 2, mod);
-    i64 ar=0, br = 0;
     for(unsigned int i = 0; i < nacfg.size(); ++i){
-        ar += permute_mod(1982, i+1, mod) * nacfg[i];
-        ar %= mod;
-        br += permute_mod(1982, i+1, mod) * nbcfg[i];
-        br %= mod;
+        printf("color %d cnta %d, cntb %d\n", i+3, nacfg[i], nbcfg[i]);
     }
-    i64 a1 = powermodule(ar, 25LL, mod);
-    i64 b1 = powermodule(br, 75LL, mod);
-    result *= a1;
-    result %= mod;
-    result *= b1;
-    result %= mod;
-    result *= 21015504LL;//last 8 digit of C^100_25;
-    result %= mod;
-    printf("%lld\n", result);
-} 
+}
+
+

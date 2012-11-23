@@ -4,6 +4,25 @@
 #include <cstdlib>
 #include <cassert>
 vector<int> cands;
+//this problem is solved but the code here is not correct.
+//the first point is to realize that all primes can either 
+//have 1 or 3 solutions to this x^3==1 mod p. then we need to
+//find all prime candidates. then we need to use a recursive
+// function to find all solutions that have 243 solutions.
+// 2 key points need to be noted. First, order all primes in asscending
+// order, then we do not need to search all primes spaces. If no 
+// primes selected then the first number to be selected should be less than
+//(1e11)^(1/5);
+// the second part to accelerate the summation is to use a sieve to find out
+//all numbers' sum up to n(than has only one solution x^3 ==1 mod p; We just
+// need to take out all numbers that are multiples of p has 3 solutions.
+//one tricky thing need to be very careful, we need actually two sieves instead
+//of one sieve because of 9=3^2; which is the only special prime that has 3
+//solutions. but not a prime. if number(243 solutions) has a factor of 3^n(n>=2)
+// then the sieve should sieve all numbers that is a multiple of 3. But in
+//the other sieve we only need to sieve out numbers are multiple of 9;
+// the numbers we want to find is p1^a p2^b p3^c p4^d p5^e q1 q2...qn
+//where p1 ...p5 has three solutions while q has one.
 i64 ntop=100000000000LL;
 i64 search243(i64 prod, int cnt, int cpos)
 {

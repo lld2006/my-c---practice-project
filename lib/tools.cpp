@@ -240,6 +240,7 @@ int binary_find(int num, vector<int>& vec){
 }
 
 // a * x + b * y = gcd 
+// x y maybe negative
 void extended_euclid(i64 a, i64 b, i64& x, i64& y, i64& gcd){
     if(b == 0){
         gcd = a;
@@ -254,11 +255,126 @@ void extended_euclid(i64 a, i64 b, i64& x, i64& y, i64& gcd){
     }
 }
 
-void shank_tonelli(int prime, int residue)
+// I forgot to add a comment on this function, this is a bad habit.
+// when I really need this function, I myself almost forgot how it works
+// and why it is important for prime detection! 
+// The idea is sometimes a series numbers are in quadratic form, so with 
+// this function, we can sieve out those numbers that are composite.
+// if the boolean returned is false, it means no solutiona available for
+// the quadratic mod equation n^2 % prime == residue;
+// otherwise the solution is in "sol"
+bool tonelli_shank(i64 prime, i64 residue, i64& sol)
 {
+    sol = 0;
 
+    assert((prime-1)%2 == 0);
+    i64 pow = (prime-1)/2;
+    if(powermodule(residue, pow, prime) != 1) return false;
+    int s = 0;
+    i64 q = prime - 1;
+    while ((q & 1 )== 0){
+        ++s; 
+        q >>= 1;
+    }
+    if(s == 1){
+        pow = (prime+1)/4;
+        sol = powermodule(residue, pow, prime);
+        return true;
+    }else{
+        bool found = false;
+        i64 z = 0;
+        for(i64 i = 2; i < prime -1; ++i){
+            i64 ret = powermodule(i, (prime-1)/2, prime);
+            if(ret == prime-1){
+                z = i;
+                found = true;
+                break;
+            }
+        }
+        assert(found == true);
+        i64 r = powermodule(residue, (q+1)/2, prime);
+        i64 t = powermodule(residue, q, prime);
+        i64 c = powermodule(z,q, prime);
+        i64 m = s;
+        i64 b = 0;
+        while(t != 1){
+            int ix = 0;
+            i64 t1 = t;
+            while(t1 != 1){
+                t1*= t1;
+                t1%= prime;
+                ++ix;
+                assert (ix < m );
+            }
+            int px = m-ix-1;
+            int pb = 0;
+            b = c;
+            while(pb < px){
+                b *= b;
+                b %= prime;
+                ++pb;
+            }
+            r = r*b;
+            r %= prime;
+            c = b * b;
+            c %= prime;
+            t = t * c;
+            t %= prime;
+            m = ix;
+        }
+        sol = r;
+        return true;
+    }
+}
+//
+void factor_table_min( int nmax, vector<int>& ftable)
+{
+    ftable.resize(nmax+1);
+    for( unsigned int i = 1; i < ftable.size(); ++i )
+        ftable[i] = i;
+    
+    for( unsigned int i = 2; i < ftable.size(); ++i ){
+        if(ftable[i] < static_cast<int>(i)) continue;
+        for(unsigned int j = i *i; j < ftable.size(); j+=i){
+            if( ftable[j] > static_cast<int>(i) ) 
+                ftable[j] = i;
+        }
+    }  
 }
 
+//if not necessary, use min, which is faster
+void factor_table_max( int nmax, vector<int>& ftable)
+{
+    ftable.resize(nmax+1);
+    for( unsigned int i = 1; i < ftable.size(); ++i )
+        ftable[i] = i;
+    
+    for( unsigned int i = 2; i < ftable.size(); ++i ){
+        if(ftable[i] < static_cast<int>(i)) continue;
+        for(unsigned int j = 2*i;  j < ftable.size(); j+=i)
+                ftable[j] = i; //overwrite to find the largest factor
+    }
+}
+/* 
+i64 powermodule2(i64 base, i64 expo, i64 module){
+    i64 result = 1;
+    i64 cbase = base;
+    while(expo){
+       int remainder = expo & 1; 
+       if(remainder){
+            --expo;
+            result = product_mod(result, cbase, module);
+            assert(result >= 0);
+       }
+       else{
+            expo /= 2;
+            cbase = product_mod(cbase, cbase, module);
+            assert(cbase >= 0);
+       }
+    }
+    return result;
+}
+*/
 //quadratic reciprocity 
 //quadratic_residue_test(int num, int prime)
 /*  
@@ -297,24 +413,6 @@ bool witness(i64 xa, i64 xn)
     return 0;
 }
 
-i64 powermodule2(i64 base, i64 expo, i64 module){
-    i64 result = 1;
-    i64 cbase = base;
-    while(expo){
-       int remainder = expo & 1; 
-       if(remainder){
-            --expo;
-            result = product_mod(result, cbase, module);
-            assert(result >= 0);
-       }
-       else{
-            expo /= 2;
-            cbase = product_mod(cbase, cbase, module);
-            assert(cbase >= 0);
-       }
-    }
-    return result;
-}
 
 i64 product_mod(i64 n1, i64 n2, i64 mod)
 {
@@ -366,3 +464,141 @@ void kara_mult(int nsize, int* a, int* b, int* ret)
     for(unsigned int i = 0; i < static_cast<unsigned int>(nsize); ++i) ret[i+n2] += x3[i];
 }
 */
+//pi is a very small prime number 
+//number is now less than 2^32;
+bool strong_pseudo_test_int(i64 pi, i64 d, i64 s, i64 p) 
+{
+    if( pi == p) return true;
+//itype powermodule(itype base, itype expo, itype module){
+    bool isComposite = false;
+    bool isPrime = true;
+    i64 result = powermodule(pi, d, p);
+    if(result == 1) 
+        return isPrime;
+    else if (result == p-1) 
+        return isPrime;
+    else{
+        i64 prod = result;
+        for(unsigned int j = 1; j < s; ++j){
+            // lesson !!!! the following two lines are incorrect!
+            // mult64mod should be used, I did not find the bug!
+            //prod *= prod; 
+            //prod %= p;
+            prod = mult64mod(prod, prod, p);
+            if(prod == p-1) 
+                return isPrime;
+        }
+    }
+    return isComposite;
+}
+
+bool strong_pseudo_test(i64 p)
+{
+    if( p == 2) return true;
+    if(p % 2 == 0 || p == 1)
+        return false;
+    vector<int> vp;
+    vp.resize(6, 0);
+    vp[0] = 2;
+    vp[1] = 3;
+    vp[2] = 5;
+    vp[3] = 7;
+    vp[4] = 11;
+    vp[5] = 13;
+    i64 p1 = p - 1;
+    int o2 = 0;
+    while (p1 % 2 == 0){
+        p1/=2;
+        ++o2;
+    }
+    for(unsigned int i = 0; i <vp.size(); ++i){
+       if(!strong_pseudo_test_int(vp[i], p1, o2, p)) //true composite
+           return false; 
+    }
+    return true;
+}
+
+i64 mult64mod(u64 a, u64 b, u64 mod)
+{
+    assert(mod <(unsigned long long) 1LL<<63);
+    double dn = mod;
+    double da = a;
+    double db = b;
+    double dp = da*db;
+    double dq = dp/dn;
+    u64 qpp = dq + 0.5;
+    u64 rp = a*b-qpp*mod;
+    unsigned long r;
+    if(rp & 0x8000000000000000)
+        r =  rp+mod;
+    else
+        r = rp;
+    return r;
+}
+
+i64 powermodule(i64 base, i64 expo, i64 module){
+    i64 result = 1;
+    i64 cbase = base;
+    while(expo){
+       int remainder = expo & 1; 
+       if(remainder){
+            result = mult64mod(result, cbase, module);
+       }
+        //i64 cbase1 = cbase;
+        cbase = mult64mod(cbase, cbase, module);
+        assert(cbase > 0);
+        expo >>= 1;
+    }
+    return result;
+}
+
+void farey_sequence(vector<IntPair>& vf, int nlimit, bool ascending)
+{
+    vf.clear();
+    int a=0, b=1, c=1, d=nlimit;
+    int k=0;
+    if(!ascending) {
+       a=1; b=1; c=nlimit-1; d=nlimit;
+    }
+    if(ascending){
+        vf.push_back(IntPair(0,1));
+    }else{
+        vf.push_back(IntPair(1,1));
+    }
+
+    while((ascending && c <= nlimit) || (!ascending && a > 0)){
+        k = (nlimit + b) / d;
+        int a1 = a, b1 = b;  
+        a = c; b = d;
+        c = k*c-a1;
+        d = k*d-b1;
+        //if(a + b <=  nlimit)
+            vf.push_back(IntPair(a, b));
+    }
+}
+//this is a flawed version of totient calculation. but sometimes
+//we just need some such kind of simple calculations
+i64 totient(int n, vector<int>& primes)
+{
+    //assert(n < 1000);
+    if(n == 1)
+        return 1;
+    int prod = 1;
+    int total = 1;
+    for(unsigned int i = 0; i < primes.size(); ++i){
+        prod = 1;
+        bool first = true;
+        while((n % primes[i] )== 0){
+            n/= primes[i];
+            if(first){
+                prod *= (primes[i]-1);
+                first = false;
+            }else
+                prod *= primes[i];
+        }
+        total *= prod;
+        if(n == 1)
+            break;
+    }
+    return total;
+}
