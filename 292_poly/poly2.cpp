@@ -22,19 +22,17 @@ int cross_product (int vx1, int vy1, int vx2, int vy2)
 //start from the leftmost lowest point, this point is unique for each polygon
 //set this point as 0 0
 //now, we need to memorize the result
-i64 search_polygon_single(int xc, int pneed, double angle, int nsides)//
+i64 search_polygon_single(int xc, int yc, int pneed, double angleIndex)//
 {
-    assert(xc > 0 && xc <= perimeter);
+    assert(xc != 0 || yc != 0);
     assert(pneed  > 0);
-    assert(nsides < 3 && nsides >= 0);
     if(dirIndex == vpr.size()) return 0;
-    if(nsides == 1) return 1;
-    i64 nmem = vmem[xc][dirIndex][nsides-1][pneed] ;
+    i64 nmem = get_mem_value(xc, yc, angleIndex, pneed);
     if(nmem >= 0 ) 
         return nmem;
     
     i64 sum = 0;
-    //since the direction are now sorted, we can reduce the search space
+    //use sorted direction to reduce the search space
     for(unsigned int i = dirIndex+1; i < vpr.size(); ++i){
         int xi = vpr[i].first; //new index
         int yi = vpr[i].second;//this is actually the new direction

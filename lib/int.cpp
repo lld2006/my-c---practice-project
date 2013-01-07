@@ -213,7 +213,9 @@ bool GeneralInteger::operator<(const GeneralInteger& gi)const{
         return false;
     }
 }
+//this is ugly should be rewritten
 void GeneralInteger::power(int n) {
+    assert(0);
     GeneralInteger g1(*this);
     for(int i = 1; i< n; ++i){
         *this = multiply(g1);           

@@ -1,2 +1,2 @@
 fac: fac.cpp
-	g++ -Wall -g fac.cpp -std=c++0x -o fac
+	g++ -Wall -O3 fac.cpp ../lib/tools.cpp -std=c++0x -o fac

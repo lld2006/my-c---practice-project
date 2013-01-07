@@ -128,6 +128,7 @@ i64 pollard_rho(i64 n, int n0, int debug){
 }
 
 //prime factors, less than or equal to num. 
+//check each prime number to square root
 void factor(i64 num, I64PairVec& ifac, const IntVec& prime)
 {
     //special case, not prime factor for 1
@@ -150,6 +151,26 @@ void factor(i64 num, I64PairVec& ifac, const IntVec& prime)
         if(n1 == 1 || prime[i] > ubound)break;
     }
     if(n1 > 1) ifac.push_back(I64Pair(n1, 1));
+}
+
+//the factors are from small to large
+//first is prime number, second is power
+void factor_using_table(i64 n, IntPairVec& vpairs, const vector<int>& ftable)
+{
+    vpairs.clear(); 
+    int pwr = 0;
+    int curr_fac = ftable[n];
+    while(curr_fac>1){
+        ++pwr;
+        n /= ftable[n];
+        while(curr_fac == ftable[n]){
+            ++pwr;
+            n /= ftable[n];
+        }
+        vpairs.push_back(IntPair(curr_fac, pwr));
+        curr_fac = ftable[n];
+        pwr = 0;
+    }
 }
 //input is a combination of  0, 1, ..., k-1(distinct) from 0 -- n-1, 
 //return the next combination
@@ -332,10 +353,13 @@ void factor_table_min( int nmax, vector<int>& ftable)
     ftable.resize(nmax+1);
     for( unsigned int i = 1; i < ftable.size(); ++i )
         ftable[i] = i;
+
+    int root = sqrt(nmax);
+    //without considering square root, bugs created
     
-    for( unsigned int i = 2; i < ftable.size(); ++i ){
+    for( int i = 2; i<= root; ++i ){
         if(ftable[i] < static_cast<int>(i)) continue;
-        for(unsigned int j = i *i; j < ftable.size(); j+=i){
+        for(unsigned int j = i *i; j <= ftable.size(); j+=i){
             if( ftable[j] > static_cast<int>(i) ) 
                 ftable[j] = i;
         }
@@ -601,4 +625,30 @@ i64 totient(int n, vector<int>& primes)
             break;
     }
     return total;
+}
+void prime_generate_sq2(i64 p, int& a, int& b)
+{
+    assert((p-1)%4==0);
+    i64 result = 0;
+    for(i64 n = 2; n <= p-2; ++n){
+        result = powermodule(n, (p-1)/4, p);
+        i64 r2 = result * result;
+        if ((r2)%p==1) 
+            continue;
+        else
+            break;
+    }
+    double root = sqrt(p);
+    i64 rk = p; 
+    i64 rk1=result;
+    i64 tp;
+    while(rk >= root){
+        tp = rk % rk1;
+        rk=rk1;
+        rk1 = tp;
+    }
+    assert(rk*rk+rk1*rk1==p);//this is what this function about
+    a=rk; b=rk1;
+    if(a > b)
+        swap(a, b);
 }

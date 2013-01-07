@@ -8,7 +8,10 @@ using namespace std;
 void primeWithin( vector<int>& vecr, int limit);
 bool isPrime( i64 i );
 bool isPrime(u64 num, vector<int>& primes);
+//this is a costly factorization method, but if we 
+//do not need to factor a lot of numbers it is OK.
 void factor(i64 num, I64PairVec& ifac, const vector<int>& primes);
+void factor_using_table(i64 num, IntPairVec& ifac, const vector<int>& ftable);
 bool next_combination(IntVec& cvec, int n, int k);
 bool isPermutation(int im, int in);
 bool isPalindromic(i64 num, int base);
@@ -33,7 +36,7 @@ i64 mult64mod(u64 a, u64 b, u64 mod);
 i64 powermodule(i64 base, i64 expo, i64 module);
 i64 totient(int n, vector<int>& primes);
 void farey_sequence(vector<IntPair>& vf, int nlimit, bool ascending);
-
+void prime_generate_sq2(i64 p, int& a, int& b);
 
 class DisJointSet{
    public:

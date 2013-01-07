@@ -4,80 +4,107 @@
 #include "../lib/typedef.h"
 #include "../lib/tools.h"
 #include "../lib/rational.h"
+#include <unordered_map>
 using namespace std;
-vector<vector<vector<i64>>> vmem;
+//vector<vector<vector<vector<i64>>>> vmem;
 //think about the problem in this way, there are two different 
 //possibilities if we do not want to duplicate solutions.
 vector<IntPair> vpr;
 vector<int> vlen;//store the length of each side
 int perilimit=120;
-//xc0 yc0 are used for left turn check
+int peri2 = perilimit/2;
+unordered_map<i64, i64> pmap;
 //v1 X v2
 int cross_product (int vx1, int vy1, int vx2, int vy2)
 {
     return  vx1*vy2 - vy1* vx2;
 }
+i64 get_mem_value(int xc, int yc, int aindex, int peri)
+{
+    xc += peri;
+    yc += peri;
+    i64 result = xc;
+    result <<= 8;
+    result += yc;
+    result <<=8;
+    result += aindex;
+    result <<= 8;
+    result += peri;
+    auto iter =pmap.find(result);
+    if(iter != pmap.end())
+        return iter->second;
+    else
+        return -1;
+}
+void set_mem_value(int xc, int yc, int aindex, int peri, i64 value)
+{
+    xc += peri;
+    yc += peri;
+    i64 result = xc;
+    result <<= 8;
+    result += yc;
+    result <<=8;
+    result += aindex;
+    result <<= 8;
+    result += peri;
+    auto ret = pmap.insert(make_pair(result, value));
+    assert(ret.second);
+}
 //start from the leftmost lowest point, this point is unique for each polygon
 //set this point as 0 0
-i64 search_polygon_single(int xc, int yc, int pc, int dirIndex, int nsides)//
+//now, we need to memorize the result
+// this function fulfill the functionality of number of paths from 0 0 to xc yc with pneed
+// and convecx, angleIndex is constrained
+i64 search_polygon_single(int xfin, int yfin, int pneed, int angleIndex)//
 {
-    assert(xc != 0 || yc != 0);
-    assert(pc <= perilimit);
-    if(yc == 0 && xc < 0) return 0; //violated the assumption that first point is the leftmost lowest point
-    
-    if(xc==0 && yc == 0 && pc<= perilimit && nsides >= 3) //return to original point with more than 3 sides
-        return 1;
-    //if the point is too far from 0 0, and perimeter is definitely large, return
-    double dlen = sqrt(xc*xc+yc*yc);
-    if(dlen > perilimit - pc)
+    assert(xfin != 0 || yfin != 0);
+    assert(pneed  >= 0);
+    assert(angleIndex >= 0 && angleIndex <= static_cast<int>(vpr.size()));
+    if(pneed == 0){
+        if(xfin == 0 && yfin == 0)
+            return 1;
+        else
+            return 0;
+    }
+    if(angleIndex == static_cast<int>(vpr.size()))
         return 0;
+    i64 nmem = get_mem_value(xfin, yfin, angleIndex, pneed);
+    if(nmem >= 0 ) 
+        return nmem;
     
     i64 sum = 0;
-    //since the direction are now sorted, we can reduce the search space
-    for(unsigned int i = dirIndex+1; i < vpr.size(); ++i){
-        int xi = vpr[i].first;
-        int yi = vpr[i].second;//this is actually the new direction
+    //use sorted direction to reduce the search space
+    for(unsigned int i = angleIndex; i < vpr.size(); ++i){
+        //the new direction
+        int xi = vpr[i].first; 
+        int yi = vpr[i].second;
         int len = vlen[i];
-        int dirx = vpr[dirIndex].first;
-        int diry = vpr[dirIndex].second;
-        if(xi*yc - xc*yi > 0) break;
-        //assert(cross_product(dirx, diry, xi, yi) <= 0);
-        if(cross_product(dirx, diry, xi, yi) <= 0)
-            break;
-        if(cross_product(xc, yc, xi, yi) < 0 ) 
-            break;
-        if(xc*yi==yc*xi){
-            int n1 = 0;
+        //current direction
+        int nl=0;
+        if(xfin*yi==yfin*xi){// on the same line
             if(xi != 0 ){
-                int xr = xc%xi;
-                assert(xr == 0);
-                n1 = -xc / xi;
-            }else if(yi != 0 ){ 
-                assert(xi == 0 && (yi == 1|| yi==-1));
-                n1 = yc;
+                assert(xfin % xi == 0);
+                nl = xfin / xi;
             }else{
-                assert(0);
+                assert(xi == 0 && (yi == 1|| yi==-1));
+                nl = yfin/yi;
             }
-            assert(n1 > 0);
-            if(pc + n1 * len <= perilimit)
+            if(nl > 0 && (pneed -nl * len >= 0))
                 ++sum;
             continue;
         }
 
-        int pleft = perilimit - pc;
-        for( int j = 1; j <= pleft/len; ++j){
-            int x1 = xc + xi*j;
-            int y1 = yc + yi*j;
-            if(y1 < 0) break;
-            if(pc + len *j > perilimit) continue;
-            sum += search_polygon_single(x1, y1, pc+len*j,i, nsides+1);
+        for( int j = 1; j <= pneed/len; ++j){
+            int x1 = xfin - xi*j;
+            int y1 = yfin - yi*j;
+            sum += search_polygon_single(x1, y1, pneed-len*j,i+1);
         }
     }
+    set_mem_value(xfin, yfin, angleIndex, pneed, sum);
     return sum;
 }
 int main()
 {
-    int peri2 = perilimit/2;
     for(int n = 1; n<=10 ;++n){
         for(int m = n+1; ;m+=2){
             if(gcd(m,n)!=1) continue;
@@ -93,43 +120,43 @@ int main()
                 vpr.push_back(IntPair(-b, a));
                 vpr.push_back(IntPair(-a, -b));
                 vpr.push_back(IntPair(-b, -a));
-            }else{
+            }else
                 break;
-            }
         }
     }
-    vpr.push_back(IntPair(1,0));//special in x or y direction
-    vpr.push_back(IntPair(0,1));//special in x or y direction
-    vpr.push_back(IntPair(-1,0));//special in x or y direction
-    vpr.push_back(IntPair(0,-1));//special in x or y direction
+    vpr.push_back(IntPair(1,0));
+    vpr.push_back(IntPair(0,1));
+    vpr.push_back(IntPair(-1,0));
+    vpr.push_back(IntPair(0,-1));
+
     printf("%zu\n", vpr.size());
     sort(vpr.begin(), vpr.end(), coord_less());
+    //angle and length part
     for(unsigned int j = 0; j < vpr.size(); ++j){
         int len = round(sqrt(vpr[j].first * vpr[j].first + vpr[j].second*vpr[j].second));
         vlen.push_back(len);
+        
     }
     //all the possibile elements are ready
     //now initialize the mem vector
-    //3 dimension, the first is the intital distance, from 0 0,
-    //second is the direction constrain, angle can not less than this index
-    //third is the total perimeter to be collected
-    vmem.resize(peri2);
-    for(unsigned int j=0; j <vmem.size(); ++j){
-        vmem[j].resize(vpr.size()+1);
-    }
-    for(unsigned int i = 0; i < vmem.size(); ++i)
-        for(unsigned int j = 0; j < vmem[i].size(); ++j)
-             vmem[i][j].resize(120, -1);
+    //dim1  destination x; -peri2 peri2
+    //dim2  destination y; -peri2 peri2
+    //dim3  angle index, all segment must be equal or greater 
+    //      than this index;
+    //dim4  perimeter constraint: perimeter max 0-->perilimit
 
     i64 total = 0;
     for(unsigned int i = 0; i< vpr.size(); ++i){
-        for(unsigned int j = 1; j <= peri2/vlen[i]; ++j){
-            printf("%d len=%d j=%d\n",i,vlen[i], j );
-            int x0 = j*vpr[i].first;
-            int y0 = j*vpr[i].second;
+        for( int j = 1; j <= peri2/vlen[i]; ++j){
+            //printf("%d len%d j=%d\n",i,vlen[i], j );
+            int x0 = j * vpr[i].first;
+            int y0 = j * vpr[i].second;
             int p0 = j * vlen[i];
-            total += search_polygon_single(x0, y0, p0, i, 1);//the lower left corner
+            i64 tp = search_polygon_single(-x0,-y0, perilimit-p0, i+1);
+            if(tp >= 1)
+                total += tp - 1;
         }
     }
+    printf("mapsize %zu\n", pmap.size());
     printf("%lld\n", total);
 }

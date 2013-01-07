@@ -1,2 +1,2 @@
-markov: markov.cpp
-	g++ -Wall -g markov.cpp -std=c++0x -o markov
+random: random.cpp
+	g++ -Wall -O3 random.cpp -std=c++0x -o random

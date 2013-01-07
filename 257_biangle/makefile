@@ -1,2 +1,2 @@
 biangle: biangle.cpp
-	g++ -Wall -g biangle.cpp -o biangle
+	g++ -Wall -O3 biangle.cpp ../lib/tools.cpp  -o biangle
