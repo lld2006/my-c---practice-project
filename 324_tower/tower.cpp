@@ -3,6 +3,7 @@
 #include <vector>
 #include <cstdlib>
 #include "../lib/typedef.h"
+#include <algorithm>
 using namespace std;
 //first, I thought this problem is the same as problem 161. 
 //But I was wrong, there are some subtle difference between 
@@ -10,10 +11,10 @@ using namespace std;
 //first I think the state is related with one level only. but 
 //actually it related to two levels.
 //
-//this function tells us whether this position is occupied
-//or it is empty
+//lesson, need to reduce, why I forgot symmetry?!!!
 typedef vector<vector<i64>> Matrix;
 vector<vector<i64>> vn;
+vector<int> visited;
 i64 nmod = 100000007LL;
 
 int isOccupied(int num, int x, int y)
@@ -24,13 +25,103 @@ int isOccupied(int num, int x, int y)
     int btest = 1<<pos;
     return num & btest;
 }
+int find_all_equivalent_states(int n)
+{
+    int n0 = n;
+    assert(n>=0 && n<512);
+    vector<int> vb;
+    vb.resize(9,0);
+    int cnt = 0;
+    while(n){
+        int res = n & 1;
+        vb[cnt] = res;
+        n /= 2;
+    }
+    cnt = 1;
+    //check x
+    int nx;
+    vector<int> vbx(vb);
+    swap(vbx[0],vbx[6]);
+    swap(vbx[1],vbx[7]);
+    swap(vbx[2],vbx[8]);
+    if(vbx != vb) {
+        nx = 0;
+        reverse(vbx.begin(), vbx.end());
+        for(unsigned int i = 0; i <vbx.size(); ++i){
+            nx *= 2; 
+            nx += vbx[i]; 
+        }
+        assert(nx != n0);
+        visited[nx]=1;
+        ++cnt;
+    }
+    //in y direction
+    int ny;
+    vector<int> vby(vb);
+    swap(vby[0],vby[2]);
+    swap(vby[3],vby[5]);
+    swap(vby[6],vby[8]);
+    if(vby != vb) {
+        ny = 0;
+        reverse(vby.begin(), vby.end());
+        for(unsigned int i = 0; i <vby.size(); ++i){
+            nx *= 2; 
+            nx += vby[i]; 
+        }
+        assert(ny != n0);
+        visited[ny]=1;
+        ++cnt;
+    }
+
+    //in main diagonal
+    {
+        vector<int> vby(vb);
+        swap(vby[1],vby[3]);
+        swap(vby[2],vby[6]);
+        swap(vby[5],vby[7]);
+        if(vby != vb) {
+            ny = 0;
+            reverse(vby.begin(), vby.end());
+            for(unsigned int i = 0; i <vby.size(); ++i){
+                nx *= 2; 
+                nx += vby[i]; 
+            }
+            assert(ny != n0);
+            visited[ny]=1;
+            ++cnt;
+        }
+    }
+    //the other diagonal
+    {
+        vector<int> vby(vb);
+        swap(vby[0],vby[8]);
+        swap(vby[1],vby[5]);
+        swap(vby[3],vby[7]);
+        if(vby != vb) {
+            ny = 0;
+            reverse(vby.begin(), vby.end());
+            for(unsigned int i = 0; i <vby.size(); ++i){
+                nx *= 2; 
+                nx += vby[i]; 
+            }
+            assert(ny != n0);
+            visited[ny]=1;
+            ++cnt;
+        }
+    }
+    return cnt;
+}
+
 void state_transition(int nc, int gridn, int n0) 
 {
     assert(gridn <= 9 && gridn >= 0);
     if(gridn == 9) {
         //new state is ready to be processed
         int n1 = nc>>9;
-        ++vn[n0][n1];
+        if(visited[n1])
+            return;
+        int ne = find_all_equivalent_states(n1);
+        vn[n0][n1] += ne;
         return;
     }
     int xi = gridn % 3;
@@ -47,7 +138,7 @@ void state_transition(int nc, int gridn, int n0)
         state_transition(nc1, gridn+2, n0);
     }
     //y direction
-    if(yi < 2 && !isOccupied(nc, xi, yi+1)){
+    if(yi <2 && !isOccupied(nc, xi, yi+1)){
         int nc1 = nc;
         nc1 |= 1<<gridn;
         nc1 |= 1<<(gridn+3);
@@ -109,6 +200,7 @@ int main()
     for(unsigned int i = 0; i < nstate; ++i){
         vn[i].resize(nstate, 0);
     } 
+    visited.resize(nstate, 0);
     for(unsigned int i = 0; i < nstate; ++i)
         state_transition(i, 0, i);
     //now all the states are available 
@@ -177,4 +269,3 @@ int main()
     }
     printf("%lld\n", result[0][0]);
 }   
-

@@ -1,0 +1,51 @@
+#include <cstdio>
+#include <vector>
+#include <cmath>
+#include <cassert>
+#include "../lib/tools.h"
+using namespace std;
+
+int main()
+{
+    vector<int> prime;
+    vector<int> factor;
+    primeWithin(prime, 1000000);
+    int trinum = 0;
+    for(int i = 3; i < 20000; ++i)
+    {
+      factor.clear();
+      trinum = i*(i+1)/2;
+      int limit = sqrt((double)trinum);
+      //calculate prime factors
+      while(true)
+      {
+        int tri = trinum;
+        for(int pi =0 ; pi < static_cast<int>(prime.size()); ++pi)
+        {
+            if(prime[pi] > limit) break;
+            int count = 0;
+            while( tri%prime[pi] == 0)
+            {
+              tri /= prime[pi];
+              ++count;
+            } 
+            if(count > 0) factor.push_back(count);
+        }
+	//assert(tri == 1);
+	if(tri == 1)
+	  break;
+	else
+	  {
+	    factor.push_back(1);
+	    break;
+	  }
+      }
+      int product = 1;
+      for( int j = 0; j<factor.size(); ++j)
+        product *= (factor[j]+1);
+      //printf("trinum = %d product is %d\n", trinum, product);
+     if( product > 500) break;   
+    }
+    printf("the first triangle number is %d\n", trinum);
+}
+

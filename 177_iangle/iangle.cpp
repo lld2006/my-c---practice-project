@@ -1,114 +1,102 @@
+#include <vector>
 #include <cstdio>
 #include <cassert>
-#include <vector>
 #include <cmath>
-#include <tr1/unordered_set>
-#include "../lib/typedef.h"
+
+double pi = 3.1415926535897;
+double ltol = 1e-8;
 using namespace std;
+//now let me start from a different point of view
+//start from the smaller diagonal, and angle 1 is the smallest angle of the 
+//four
 vector<double> vsin;
 vector<double> vcos;
-typedef std::tr1::unordered_set<u64> hashset;
-hashset vset;
-double pi = 3.1415926535897932384;
+
 double mysin( int i)
 {
-    assert(i>0 && i < 180);
-    if( i > 90 ) 
-        i = 180 - i;
-    return vsin[i-1];
+    assert(i> 0 && i < 180);
+    return vsin[i];
 }
+
 double mycos(int i)
 {
-    assert( i > 0 && i<= static_cast<int>(vcos.size()));
-    return vcos[179-i];
+    assert( i > 0 && i < 180);
+    return vcos[i];
 }
-int find_angle(double value) //based on the sin value
+
+bool sideeq(double a, double b)
 {
-    int start= 0;
-    int last = 89;
-    int mid = 0;
-    if(value <vsin[0]){
-        if(fabs(value - vsin[0]) < 1e-10)
-            return 1;
-        else
-            return -1;
-    }
-    assert(value >= vsin[0] && value <= vsin.back());
-    while(last - start > 1){
-        mid = (start + last)/2;
-        if(vsin[mid] < value)
-            start = mid;
-        else if (vsin[mid] > value)
-            last = mid; 
-        else{
-            assert(fabs(value - vsin[mid]) < 1e-10);
-            return mid + 1;
-        }
-    }
-    assert(start +1 == last);
-    if(fabs(vsin[start] - value) < 1e-10)
-       return start+1; 
-    else if(fabs(vsin[last] -value) < 1e-10)
-        return last + 1;
-    else 
-        return -1;
+    if(fabs(a-b)<ltol) 
+        return true;
+    return false;
 }
-void process_value(const vector<int>& angles)
+bool sideless(double a, double b)
 {
-    u64 sum = 0;
-    if(angles[4]==0 || angles[5]==0 || angles[6]==0||angles[7]==0) return;
-    if(angles[4]+angles[5] >= 180) return ;//convexity check
-    if(angles[6]+angles[7] >= 180) return ;
-    for(int shift = 0; shift < 8; shift += 2){
-        sum = 0;
-        for(unsigned int i = 0; i< angles.size(); ++i){
-            int ni = (shift + i)%8;
-            assert(angles[ni] > 0 && angles[ni] < 180);
-            sum <<= 8;
-            sum += angles[ni];
-        }
-        if(vset.find(sum) != vset.end()) return;
-    }
-    vset.insert(sum);    
+    if(a > b + ltol) 
+        return false;
+    else if(sideeq(a,b)) 
+        return false;
+    return true;
 }
 int main()
 {
-    vsin.resize(90, 0);
-    vcos.resize(179, 0);
-    for(unsigned int i = 0; i < 90; ++i){
-        vsin[i] = sin(static_cast<double>(i+1)*pi/180); // angle from 1-->90
+    pi = atan(1.0)*4.0;
+    vsin.resize(181, 0);
+    vcos.resize(181, 0);
+    for(unsigned int i = 0; i <= 180; ++i){
+        vsin[i] = sin(static_cast<double>(i)*pi/180); // angle from 1-->90
+        vcos[i] = cos(static_cast<double>(i)*pi/180); //i=0 178 angle179-->1
     }
-    for(unsigned int i = 0; i < 179; ++i){
-        vcos[i] = cos(static_cast<double>(179-i)*pi/180); //i=0 178 angle179-->1
-    }
-    for(int a1 = 1 ; a1 < 90; ++a1){
-        for(int a2 = 1; a2 <= 90-a1; ++a2){
-            for(int a3=1; a3<180-a1-a2; ++a3){
-                for(int a4 = 1; a4<180-a2-a3; ++a4){
-                    double bd = mysin(a1+a2)/mysin(a1+a2+a3);
-                    double bc = mysin(a2)/mysin(a2+a3+a4);
-                    double cd = sqrt(bc*bc+bd*bd-2*bc*bd*mycos(a4));
-                    double sina7 = bc*mysin(a4)/cd;
-                    int a7 = find_angle(sina7);
-                    if(a7 == -1) continue;
-                    if(bd*bd+cd*cd < bc*bc)
-                        a7= 180-a7;
-                    int a8 = 180-a1-a2-a3;
-                    assert(a8 > 0);
-                    vector<int> angles;
-                    angles.resize(8);
-                    angles[0] = a1;
-                    angles[1] = a2;
-                    angles[2] = a3;
-                    angles[3] = a4;
-                    angles[4] = 180-a2-a3-a4;
-                    angles[7] = 180 - a1 -a2 -a3;
-                    angles[6] = a7;
-                    angles[5] = 180 - angles[4] - a4 - a7;
-                    process_value(angles);
-                }
-            }
-        }
-    }
-    printf("%d\n", static_cast<int>(vset.size()));
+
+    int total = 0;
+    double AC = 1;
+    for(int a1 = 1; a1 < 90; ++a1)
+        for(int a2 = a1; a2 <= 178 -a1; ++a2)
+        //for(int a2 = a1; a2 <= 89; ++a2)
+            for(int a3 = a1; a3 <= 178 -a2; ++a3)
+                for(int a4 = a1; a4 <= 178-a1; ++a4){
+                    int D = 180 - a1 - a4;
+                    int B = 180 - a2 - a3;
+                    double DA = AC/mysin(D)*mysin(a4);
+                    double AB = AC/mysin(B)*mysin(a3);
+                    double BDx = DA*mycos(a1) - AB *mycos(a2);
+                    double BDy = DA*mysin(a1) + AB*mysin(a2);
+                    double BD = sqrt(BDx*BDx+BDy*BDy);
+                    if(sideless(BD, AC)) continue;
+                    bool deq = sideeq(AC, BD);
+                    double cosADB = (DA*DA+BD*BD-AB*AB)/(2*DA*BD);
+                    double dADB = acos(cosADB);
+                    dADB *= 180/pi;
+                    int ADB = round(dADB);
+                    if(fabs(dADB-ADB) > 1e-10) 
+                        continue;
+                    int a5 = ADB;
+                    int a6 = D - a5;
+                    int a7 = 180 - a1 - a2 - a5;
+                    int a8 = B - a7;
+                    int minangle = a5;
+                    if(deq){
+                        if(a6 < minangle) minangle = a6;
+                        if(a7 < minangle) minangle = a7;
+                        if(a8 < minangle) minangle = a8;
+                        if(minangle < a1) continue;
+                    }
+
+                    if(a5<=0||a6<=0||a7<=0||a8<=0)
+                        continue;
+                    if(a2==a1 && a3 > a4)
+                        continue;
+                    else if(a4==a1 && a2 > a3)
+                        continue;
+                    else if(a3 == a1 && a2 > a4)
+                        continue;
+                    if(a1==a3 && a2==a4)
+                        assert(a5==a8 && a6 == a7);
+                    if(a1==a2 && a3==a4) 
+                        assert(a5==a7 && a6==a8);
+                    //printf("%d %d %d %d %d %d %d %d\n", a1, a2, a7
+                    //        ,a8, a3,a4, a6,a5);
+                    ++total;
+                }//loop a1 a2 a3 a4
+    printf("%d\n", total);
 }

@@ -1,0 +1,153 @@
+#include <cstdio>
+#include <cassert>
+#include <vector>
+#include <cmath>
+#include "../lib/typedef.h"
+using namespace std;
+double ltol = 1e-10;
+vector<double> vsin;
+vector<double> vcos;
+double pi = 3.1415926535897932384;
+double mysin( int i)
+{
+    assert(i> 0 && i < 180);
+        i = 180 - i;
+    return vsin[i];
+}
+double mycos(int i)
+{
+    assert( i > 0 && i < 180);
+    return vcos[i];
+}
+
+bool sideeq(double a, double b)
+{
+    if(fabs(a-b)<ltol) 
+        return true;
+    return false;
+}
+//bool sideless(double a, double b)
+//{
+//    if(a > b + ltol) 
+//        return false;
+//    else if(sideeq(a,b)) 
+//        return false;
+//    return true;
+//}
+
+bool check_convexity(int a1, int a2, int a3, int a4, int a5, 
+        int a6, int a7, int a8, double AB, double BC, double CD, 
+        double AD, double AC, double BD)
+{
+    double xa = 0; 
+    double ya = 0;
+    double xb = AB;
+    double yb = 0;
+    int B = a7 + a8;
+    double xc = -BC*mycos(B)+xb;
+    double yc = BC*mysin(B)+yb;
+    double xd = AD*mycos(a1+a2);
+    double yd = AD*mysin(a1+a2);
+    double cdnew = sqrt((xc-xd)*(xc-xd)+(yc-yd)*(yc-yd));
+    assert(sideeq(cdnew, CD));
+    assert(sideeq(sqrt(xc*xc+yc*yc),AC));
+    assert(sideeq(sqrt((xd-xb)*(xd-xb)+(yd-yb)*(yd-yb)), BD));
+    return true;
+
+}
+
+int main()
+{
+    int total = 0;
+    pi = atan(1.0)*4.0;
+    vsin.resize(181, 0);
+    vcos.resize(181, 0);
+    for(unsigned int i = 0; i <= 180; ++i){
+        vsin[i] = sin(static_cast<double>(i)*pi/180); // angle from 1-->90
+        vcos[i] = cos(static_cast<double>(i)*pi/180); //i=0 178 angle179-->1
+    }
+    
+    double AB = 1.0;
+    for(int alpha = 1 ; alpha <= 45; ++alpha){
+        for(int beta = alpha; beta < 180-alpha; ++beta){
+            for(int gamma =alpha; gamma<180-alpha-beta; ++gamma){
+                for(int delta = alpha; delta< 180-gamma-beta; ++delta){
+                    double BD = mysin(alpha+beta)/mysin(gamma);
+                    int yita = 180 - alpha - beta - gamma;
+                    int phi = 180 - beta - gamma - delta;
+                    double AD = mysin(yita)/mysin(gamma);
+                    double AC = AD/mysin(phi)*mysin(gamma+delta);
+                    double CD = mysin(beta)*AD/mysin(phi);
+                    double BC = sqrt(AC*AC+1-2*AC*mycos(alpha));
+                    double vsin = mysin(alpha)/BC;
+                    assert(vsin<=1.0 || vsin < 1.0+1e-12);
+                    if(vsin > 1.0) vsin =1.0;
+                    double dpsi = asin(vsin);
+                           dpsi = dpsi/pi*180;
+                    int psi = round(dpsi);
+                    int zeta = beta + gamma - psi;
+                    if(fabs(psi-dpsi)>1e-10 || psi < alpha) 
+                        continue;
+                    int a1 = alpha; int a2=beta; int a3 = gamma; int a4 = delta;
+                    int a5 = phi; int a6= psi; int a7 = zeta; int a8 = yita;
+                    assert(a5 > 0 && a6 > 0 && a7 > 0 && a8 > 0);
+                    assert(a2 <178 && a3 < 178 && a4 < 178 && a5 < 178 && a6 < 178 && a7 < 178 && a8 < 178);
+                    if(a5 < a1 || a6<a1 || a7<a1 || a8 <a1)continue;
+                    //compare a1 a2
+                    if(a1 == a2){
+                        if(a5>a6)
+                            continue;
+                        else if(a5 == a6){//perpendicular and midpoint
+                            assert(a3==a8);
+                            assert(a4==a7);
+                        }
+                    }else if(a1 == a3){
+                        if(a2>a4) continue;
+                        if(a2 == a4){
+                            assert(a5==a8);
+                            assert(a6==a7);
+                        }
+                    }else if(a1 == a4){
+                        //assert(a2==a7);
+                        //assert(a3==a6);
+                        //assert(a5==a8);
+                        if(a2>a3) continue;
+                        if(a2==a3){
+                            assert(a5==a8);
+                        }
+                    }else if(a1==a5){
+                        assert(a4==a8);
+                        if(a2 > a6) continue;
+                    } else if(a1==a6){
+                        if(a2>a5) continue;
+                        if(a2==a5){
+                            assert(a3==a4);
+                            assert(a7==a8);
+                        }
+                    }else if(a1==a7){
+                       if(a2>a8) continue; 
+                       if(a2==a8){
+                            printf("17e %d %d %d %d\n", a3, a4, a5, a6);
+                       }
+                    }else if(a1==a8){
+                        if(a2>a7)
+                            continue;
+                        if(a2==a7){
+                            assert(a3==a6);
+                            assert(a4==a5);
+                        }
+                    }
+                    //if(!check_convexity(a1, a2, a3, a4, a5, a6, a7, a8, AB, BC, CD, AD, AC, BD))
+                    //    continue;
+                    ++total;
+                    //int nsame=(a2==a1) + (a3==a1)+(a4==a1)+(a5==a1)
+                    //    +(a6==a1)+(a7==a1)+(a8==a1);
+                    //if(nsame>=2){
+                    //    printf("%d %d %d %d %d %d %d %d\n", alpha, beta, gamma, delta, phi, psi, zeta, yita);
+                    //}
+                }//delta
+            }//gamma
+        }//beta
+    }//alpha
+    printf("%d\n", total);
+}

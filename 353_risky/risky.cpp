@@ -3,6 +3,7 @@
 #include <cmath>
 #include <map>
 #include <complex>
+#include <set>
 #include "../lib/typedef.h"
 #include "../lib/tools.h"
 using namespace std;
@@ -10,6 +11,34 @@ typedef tuple<int,int,int> Triplet;
 typedef vector<tuple<int,int,int>> VTriplet;
 vector<int> ftable; 
 map<int, IntPair> msq2;
+class tripleless{
+    public:
+bool operator() ( const Triplet& t1, const Triplet& t2)
+{
+    int t1x = get<0>(t1);
+    int t1y = get<1>(t1);
+    int t1z = get<2>(t1);
+    int t2x = get<0>(t2);
+    int t2y = get<1>(t2);
+    int t2z = get<2>(t2);
+    if(t1z < t2z)
+        return true;
+    else if(t1z>t2z)
+        return false;
+    else{
+        if(t1y<t2y){
+            return true;
+        }else if(t1y > t2y){
+            return false;
+        }else{
+            if(t1x < t2x)
+                return true;
+            else
+                return false;
+        }
+    }
+}
+};
 void merge_factors(const IntPairVec& v1, const IntPairVec& v2, IntPairVec& v)
 {
     v.clear();
@@ -163,12 +192,46 @@ void create_all_triplets(int radius, VTriplet& vtrip)
                 vtrip.push_back(Triplet(vresults[i].first, vresults[i].second, z)); 
         }
     }
+
+    set<Triplet, tripleless > strip;
+    for(unsigned int i = 0; i < vtrip.size();++i){
+        int x = get<0>(vtrip[i]);
+        int y = get<1>(vtrip[i]);
+        int z = get<2>(vtrip[i]);
+        assert(x <=y && y<= z);
+        assert(z!=0);
+        strip.insert(Triplet(x,y,z));
+        strip.insert(Triplet(x,y,-z));
+
+        if(z != y)
+            strip.insert(Triplet(x,z,y));
+        if(y != 0)
+            strip.insert(Triplet(x,z,-y));
+        if(x!=y && x != z){
+            strip.insert(Triplet(y,z,x));
+            if(x!=0)
+                strip.insert(Triplet(y,z,-x));
+        }
+    }
+    //now all triplets in z direction are created
+    //put all these triplets into vector
+    VTriplet vt1;
+    for(auto iter = strip.begin(); iter!=strip.end(); ++iter){
+        vt1.push_back(*iter);
+    }
+    vt1.swap(vtrip);
 }
 void debug(const VTriplet& vt)
 {
     for(unsigned int i = 0; i< vt.size(); ++i){
         printf("%d %d %d\n", get<0>(vt[i]), get<1>(vt[i]), get<2>(vt[i]));
     }
+}
+void debugs(const set<Triplet, tripleless>& st)
+{
+    for(auto iter = st.begin(); iter != st.end(); ++iter)
+        printf("%d %d %d\n", get<0>(*iter), get<1>(*iter), get<2>(*iter));
+
 }
 int main()
 {
@@ -178,6 +241,7 @@ int main()
         i64 radius = (1<<i)-1;
         VTriplet vtrip;
         create_all_triplets(radius, vtrip);
+        //if(i==4) debug(vtrip);
         printf("%lld %zu\n",radius, vtrip.size());
     }
 }

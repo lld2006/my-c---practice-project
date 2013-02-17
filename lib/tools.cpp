@@ -227,15 +227,18 @@ bool isPermutation(int im, int in)
 
 bool isPalindromic(i64 num, int base) //base generally 10
 {
-    vector<int> vec, rvec;
+    vector<int> vec ;
     while(num){
         int res = num % base;
         num = num /base;
         vec.push_back(res);
     }
-    rvec.resize(vec.size(), 0);
-    reverse_copy(vec.begin(), vec.end(),rvec.begin());
-    return (vec == rvec);
+    //rvec.resize(vec.size(), 0);
+    //reverse_copy(vec.begin(), vec.end(),rvec.begin());
+    for(int start = 0, last=static_cast<int>(vec.size()-1); start < last; ++start, --last)
+        if(vec[start] != vec[last])
+            return false;
+    return true;
 }
 
 //find the position of the elem

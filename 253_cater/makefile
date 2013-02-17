@@ -1,2 +1,2 @@
-markov: markov.cpp
-	g++ -Wall -g markov.cpp -std=c++0x -o markov
+cater: cater.cpp
+	g++ -Wall -O3 cater.cpp -std=c++0x -o cater
