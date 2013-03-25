@@ -214,12 +214,24 @@ bool GeneralInteger::operator<(const GeneralInteger& gi)const{
     }
 }
 //this is ugly should be rewritten
-void GeneralInteger::power(int n) {
-    assert(0);
-    GeneralInteger g1(*this);
-    for(int i = 1; i< n; ++i){
-        *this = multiply(g1);           
+GeneralInteger GeneralInteger::power(int n) {
+    //assert(0);
+    //GeneralInteger g1(*this);
+    //for(int i = 1; i< n; ++i){
+    //    *this = multiply(g1);           
+    //}
+    GeneralInteger ret(1), base(*this);
+    while(n){
+        int remainder = n & 1;
+        if(remainder){
+            --n;
+            ret = ret.multiply(base);
+        }else{
+            n/=2;
+            base = base.multiply(base);
+        }
     }
+    return ret;
 }
 
 //leave remainder in the interface

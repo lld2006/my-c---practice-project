@@ -52,9 +52,10 @@ bool isPrime( i64 num )
 
 //with prime list
 bool isPrime(u64 num, vector<int>& primes){
-    if( num == 1) return false;
+    if( num == 0) return false;
     if( num == 2) return true;
     int root = round(sqrt((double) num)+1);
+    //this assert should be guarranted somehow
     assert(primes.back() >= root);
     u64 value = num;
     int pk = 0;
@@ -227,18 +228,15 @@ bool isPermutation(int im, int in)
 
 bool isPalindromic(i64 num, int base) //base generally 10
 {
-    vector<int> vec ;
+    int ncopy = num;
+    int nr = 0;
     while(num){
+        nr *= base;
         int res = num % base;
-        num = num /base;
-        vec.push_back(res);
+        nr += res;
+        num /= base;
     }
-    //rvec.resize(vec.size(), 0);
-    //reverse_copy(vec.begin(), vec.end(),rvec.begin());
-    for(int start = 0, last=static_cast<int>(vec.size()-1); start < last; ++start, --last)
-        if(vec[start] != vec[last])
-            return false;
-    return true;
+    return (ncopy == nr);
 }
 
 //find the position of the elem
@@ -573,7 +571,7 @@ i64 powermodule(i64 base, i64 expo, i64 module){
        }
         //i64 cbase1 = cbase;
         cbase = mult64mod(cbase, cbase, module);
-        assert(cbase > 0);
+        assert(cbase >= 0);
         expo >>= 1;
     }
     return result;

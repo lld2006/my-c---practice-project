@@ -39,9 +39,8 @@ int main()
                && ia.getNthDigit(6)==6 && ia.getNthDigit(8) ==5 && ia.getNthDigit(10)==4
                && ia.getNthDigit(12)==3 && ia.getNthDigit(14)==2 && ia.getNthDigit(16)==1)
        {
-           printf("result\n");
            ia.print();
-           printf("result\n");
+           printf("\n");
        }
     }
 }

@@ -38,7 +38,7 @@ int main(){
             x2 = x2.multiply(i);
             x2 = x1.minus(x2);
             x2 = x2.divide(2);
-            x2.truncateTrailing(240);
+            x2.clear0();
             if(x0.getNumber() == x2.getNumber())
                 break;
             x0 = x2;

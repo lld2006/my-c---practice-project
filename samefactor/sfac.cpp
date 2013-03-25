@@ -1,5 +1,5 @@
 #include "../lib/typedef.h"
-#include "../lib/primelist.h"
+#include "../lib/tools.h"
 #include <vector>
 #include <cstdio>
 
@@ -8,7 +8,7 @@ int main()
     int limit=3200;
     vector<int> primes, nfac;
     primeWithin(primes, limit);
-    IntPairVec ifac;
+    I64PairVec ifac;
     int prevdiv = 1;
     int count = 0;
     for(int i = 2; i<= 100; ++i){

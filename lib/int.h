@@ -49,12 +49,12 @@ public:
   void truncate(const unsigned int size);
   GeneralInteger minus(const GeneralInteger& g1)const;
   GeneralInteger multiply(const GeneralInteger& g1)const;
-  void power(int n);
+  GeneralInteger power(int n);
   GeneralInteger divide(const GeneralInteger& denom, GeneralInteger& remainder) const;
   GeneralInteger divide(int den);
+  void clear0();
 private:
   vector<int> number;  //A_0, A_1, A_2,...,A_n-2, A_n-1;
   // clear trivial heading 0s
-  void clear0();
 };
 #endif

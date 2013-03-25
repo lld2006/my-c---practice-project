@@ -1,0 +1,332 @@
+#include <set>
+#include <bitset>
+#include <vector>
+#include <cstdio>
+#include <cassert>
+#include "../lib/typedef.h"
+using namespace std;
+
+//now kind of new idea, in crease two more nbits for nmax and ncurr
+const int pieces = 10;
+const int nbits = 6; //up to 63
+const int bsize = nbits*(pieces/2+2); //pieces/2+2 for bits 
+const int nsize = bsize/nbits;
+
+void set_bits(bitset<bsize>& vbit, int idx, int value);
+
+vector<bitset<bsize>> resetvec; //resetvec is to handle reset quickly
+bitset<bsize> allone;
+vector<double> vfact;
+double result = 0.0;
+bool debug= false;
+
+struct caterpillar
+{
+    caterpillar(bitset<bsize>& b0, int m0, double w0, int nc):bitstr(b0), nmax(m0), ncurr(nc),weight(w0)
+    {
+        assert(ncurr > 0);
+        assert(nmax>= ncurr);
+    }
+    bitset<bsize> bitstr; //bit string
+    short nmax; //maximum segment seen so far
+    short ncurr;
+    double weight; //weight, actually count, but too large for int
+    bool bitset_to_vector(vector<short>& vn) const ;
+};
+
+//initialization of bitset at the very beginning
+bitset<bsize> create_bits(int num, int nmax, int ncurr)
+{
+    i64 nt = 0;
+    if(num==1){
+        nt=63;//special boundary symbol
+        nt <<= 6;
+        nt += pieces - num; //lesson 1, used number at first, inconsistency with other numbers!!!
+    }else{
+        nt = num - 1; 
+        nt <<= 6;
+        nt += pieces - num;
+    }
+    bitset<bsize> vbits(nt);
+    //set_bits(vbits,nsize, nmax);
+    //set_bits(vbits,nsize+1, ncurr);
+    return vbits;
+}
+//idx start from 0
+//filled at idx and idx + 1;
+void split_bits(bitset<bsize>& vbit, int idx, int value1, int value2)
+{
+    bitset<bsize> left(vbit);
+    bitset<bsize> right(vbit);
+    left <<= nbits *(nsize-idx);
+    left >>= nbits*(nsize-idx);
+    right >>= nbits*(idx+1);
+    right <<= nbits*(idx+2); //reserve one space for two vals
+    i64 value = (value2 << 6) + value1;
+    bitset<bsize> bt(value);
+    bt <<= nbits * (idx);
+    vbit = left | right|bt;
+}
+//start from idx 0
+void set_bits(bitset<bsize>& vbit, int idx, int value)
+{
+    assert(value>= 0 && value <=63);
+    bitset<bsize> newbits(value);
+    newbits <<= idx * nbits;
+    vbit &= resetvec[idx];
+    vbit |= newbits;
+}
+//make sure the shrinked bits is '1'
+//but it is not so easy to assert
+void shrink_bits(bitset<bsize>& vbit, int idx)
+{
+    bitset<bsize> left(vbit);
+    bitset<bsize> right(vbit);
+    left <<= nbits *(nsize-idx);
+    left >>= nbits*(nsize-idx);
+    right >>= nbits*(idx+1);
+    right <<= nbits*(idx); //reserve one space for two vals
+    vbit = right | left;
+}
+void debug_bits(const bitset<bsize>& bits)
+{
+    for(int i = 1; i<= nsize; ++i){
+        bitset<bsize> tb(bits);
+        tb <<= (nsize-i)*6;
+        tb >>= (nsize-1)*6;
+        i64 nt = tb.to_ulong();
+        if(nt >0)
+            printf("%lld ", nt);
+        else
+            break;
+    }
+    printf("\n");
+}
+//from right to left, if all one, no need to do this
+//in the middle, two means nothing to do. 
+//so on the side check if it is 2 or in the middle
+//there is some block that has 3 emtpy spaces. we need to continue;
+//to make it more efficient, careful checks are needed
+bool caterpillar::bitset_to_vector(vector<short>& vn) const
+{
+    vn.clear();
+    bool maxAchieved= true;
+    for( int i = 1; i <= pieces; ++i){
+        bitset<bsize> tb(bitstr);
+        //lesson 5, what a big mistake here, mask should be fliped
+        //not resetvec
+        bitset<bsize> mask(resetvec[i-1]);
+        mask.flip();
+        tb &= mask;
+        tb >>= (i-1)*6;
+        int nt = tb.to_ulong();
+        assert(nt>=0 && nt<=63);
+
+        if(nt >2 && nt<63) // in the middle 2 means no potential
+            maxAchieved = false;
+
+        if(nt > 0)
+            vn.push_back(nt);
+        else
+            break;
+    }
+    if(maxAchieved){
+        int vnsize = vn.size();
+        assert(vnsize> 0);
+        if(vn[0]==63){
+            if(vn.size()>1 && vn[1]==2)
+                maxAchieved = false;
+        }else{
+            if(vn[0]==2)
+               maxAchieved = false; 
+        }
+
+        if(vn.back()==63){ 
+            if(vn.size()> 1 && vn[vnsize-2]==2) 
+                maxAchieved = false;
+        }else{
+            if(vn.back()==2)
+                maxAchieved = false;
+        }
+    }
+    return maxAchieved; //lesson 3, if maxAchieved do not continue, otherwise continue, but I forgot !
+}
+bool operator< (const bitset<bsize>& b1, const bitset<bsize>& b2)
+{
+    for(int i = bsize-1; i >= 0; --i){
+        if(b1[i] < b2[i]) 
+            return true;
+        else if ( b1[i] > b2[i]) 
+            return false;
+    }
+    return false;
+}
+
+bool operator< (const caterpillar& c1, const caterpillar& c2)
+{
+    if(c1.bitstr< c2.bitstr)
+        return true;
+    else if(c2.bitstr < c1.bitstr)
+        return false;
+    else{
+        if(c1.nmax < c2.nmax){
+            return true; 
+        }else if(c1.nmax > c2.nmax){
+            return false;
+        }else{
+            return c1.ncurr < c2.ncurr;
+        }
+    }
+    assert(0);
+    return false;
+}
+bool operator== (const caterpillar& c1, const caterpillar& c2)
+{
+    if(c1.bitstr == c2.bitstr && c1.nmax==c2.nmax && c1.ncurr == c2.ncurr)
+        return true;
+    return false;
+}
+
+void insert_or_update(set<caterpillar>& cset, caterpillar cater)
+{
+    set<caterpillar>::iterator iter = cset.lower_bound(cater);
+    //lesson 4, the insertion criteria need an ==op, less op is not right
+    //lesson 5 the criteria forgot iter == end
+    if(iter== cset.end() || !(*iter == cater))
+        cset.insert(iter, cater);
+    else{
+        *const_cast<double*>(&iter->weight) += cater.weight;
+    }
+}
+void process_cfg(const caterpillar& cater, vector<short>& vn, set<caterpillar>& newcset)
+{
+    assert(!vn.empty());
+
+    for(unsigned int i = 0; i < vn.size(); ++i){
+        assert(vn[i] > 0);
+        if(vn[i]==63) continue;
+        bitset<bsize> newbits(cater.bitstr);
+
+        if(vn[i]==1){
+            //at the border size 1 means make up a symbol
+            if(i==0||i==vn.size()-1){
+                set_bits(newbits, i, 63);         
+                assert(vn.size()>1);
+                insert_or_update(newcset,caterpillar(newbits, cater.nmax, cater.weight,  cater.ncurr));
+            }else{
+                //in the middle means this empty space disappeared
+                shrink_bits(newbits, i);
+                insert_or_update(newcset,caterpillar(newbits, cater.nmax, cater.weight,  cater.ncurr-1));
+            }
+        }else if (i==0){
+        //now it is an empty sapce with size >= 2
+            //0 boundary
+            bitset<bsize> newbits(cater.bitstr);
+            split_bits(newbits, 0, 63, vn[i] - 1 );
+            assert(vn[0]!=1);
+            int currmax = cater.nmax == cater.ncurr? cater.nmax+1:cater.nmax;
+            insert_or_update(newcset, caterpillar(newbits,currmax, cater.weight,  cater.ncurr+1 ));
+
+            // the other side
+            newbits = cater.bitstr;
+            if(i != vn.size()-1){
+                set_bits(newbits, i, vn[i]-1);
+                insert_or_update(newcset, caterpillar(newbits, cater.nmax,cater.weight,  cater.ncurr ));
+            }else{//only one segment
+                split_bits(newbits, i, vn[i]-1, 63);
+                insert_or_update(newcset, caterpillar(newbits,cater.nmax+1,cater.weight, cater.ncurr+1 ));
+            }
+            
+            for(int j = 1; j< vn[i]-1;++j){
+                newbits = cater.bitstr;
+                split_bits(newbits, i, j, vn[i]-j-1);        
+                int currmax = cater.nmax == cater.ncurr? cater.nmax+1:cater.nmax;
+                insert_or_update(newcset, caterpillar(newbits,currmax, cater.weight,  cater.ncurr+1 ));
+            }
+        }else if(i==vn.size()-1){
+            //boundary end 
+            newbits = cater.bitstr;
+            split_bits(newbits, i, vn[i]-1, 63);
+            int currmax = cater.nmax == cater.ncurr? cater.nmax+1:cater.nmax;
+            insert_or_update(newcset, caterpillar(newbits,currmax, cater.weight,  cater.ncurr+1 ));
+
+            //the other end
+            newbits = cater.bitstr;
+            assert(i > 0);
+            set_bits(newbits, i, vn[i]-1);
+            insert_or_update(newcset, caterpillar(newbits, cater.nmax,cater.weight,  cater.ncurr ));
+
+            for(int j = 1; j < vn[i]-1; ++j){
+                newbits = cater.bitstr;
+                split_bits(newbits, i, j, vn[i]-j-1);
+                int currmax = cater.nmax == cater.ncurr? cater.nmax+1:cater.nmax;
+                insert_or_update(newcset, caterpillar(newbits, currmax,cater.weight,  cater.ncurr+1 ));
+            }
+        }else{
+            newbits = cater.bitstr;
+            set_bits(newbits, i, vn[i]-1); // this should be multiplied by two
+            insert_or_update(newcset, caterpillar(newbits, cater.nmax, cater.weight*2,  cater.ncurr ));
+            //in the middle
+            for(int j = 1; j < vn[i]-1; ++j){
+                newbits = cater.bitstr;
+                split_bits(newbits, i, j, vn[i]-j-1);
+                int currmax = cater.nmax == cater.ncurr? cater.nmax+1:cater.nmax;
+                insert_or_update(newcset, caterpillar(newbits,currmax, cater.weight,  cater.ncurr+1 ));
+            }
+        }
+    }
+}
+void process_level(set<caterpillar>& cset, int level)
+{
+    set<caterpillar> newcset;
+    vector<short> vn;
+    int left = pieces + 1 - level;
+    for(auto iter=cset.begin(); iter != cset.end(); ++iter){
+        if(iter->bitset_to_vector(vn)){
+            // sum up and clear from the set
+            // lesson 6, weight is missed in the first version
+            result += vfact[left] * iter->weight*iter->nmax;
+            continue;
+        }
+        process_cfg(*iter, vn, newcset);
+    }
+    //lesson 2 forgot to swap newcset and cset. 
+    //The code for this problem takes too much time. I should focus on this problem on some day.
+    cset.swap(newcset);
+}
+void debugset(set<caterpillar>& cset)
+{
+    for(auto iter = cset.begin(); iter!=cset.end(); ++iter){
+        debug_bits(iter->bitstr);
+        printf("iter->nmax = %d iter->ncurr=%d weight=%f\n", iter->nmax, iter->ncurr, iter->weight);
+    }
+}
+int main()
+{
+    vfact.resize(41);
+    vfact[1] = 1;
+    for(unsigned int i = 2; i< vfact.size(); ++i)
+        vfact[i] = vfact[i-1]*i;
+    
+    allone.all();
+    //initialize resetvec
+    resetvec.resize(bsize/nbits);
+    for(unsigned int i = 0; i < resetvec.size(); ++i){
+        resetvec[i].set();//all to 1
+        for(unsigned int j = i * nbits; j < (i+1)*nbits; ++j){
+            resetvec[i].reset(j);
+        }
+    }
+    //insert all initial 1 piece cfg 
+    set<caterpillar> cset;
+    for(unsigned int i= 1; i<= pieces/2; ++i){
+        bitset<bsize> tbit =create_bits(i, 1, 1);
+        cset.insert(caterpillar(tbit,1,1,1.0));
+    }
+    for(int level = 2; level <= pieces; ++level){
+        printf("in level %d set size is %zu\n", level, cset.size());
+        process_level(cset, level);
+    }
+    
+    printf("average value is %20.10f %20.10f\n", result, 2.0*result/vfact[pieces]);
+}

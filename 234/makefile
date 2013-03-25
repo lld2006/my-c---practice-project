@@ -1,2 +1,2 @@
-234: 234.cpp ../lib/primelist.h ../lib/primelist.cpp
-	g++ -Wall -g 234.cpp ../lib/primelist.cpp ../lib/primelist.h -o 234
+semi: semi.cpp ../lib/tools.cpp
+	g++ -Wall -g semi.cpp ../lib/tools.cpp -o semi
