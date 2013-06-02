@@ -1,2 +1,2 @@
-dgrt: dgrt.cpp
-	g++ -Wall -g dgrt.cpp -o dgrt
+159: 159.cpp
+	g++ -Wall -O3 159.cpp  -o 159

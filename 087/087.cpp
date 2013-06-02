@@ -4,34 +4,34 @@
 #include <vector>
 #include <set>
 #include <cassert>
+#include <unordered_set>
 #include "../lib/tools.h"
+#include "../lib/typedef.h"
 using namespace std;
 
 int main(){
-    unsigned int limit = 50000000;
+    int limit = 50000000;
     vector<int> primes;
-    set<int> strip;
+    unordered_set<int> strip;
     primeWithin(primes, 7071);
-    int s4, s3 ;
-    int lim4 = pow((double)limit, 0.25);
-    for(unsigned int i4 = 0; i4 !=primes.size(); ++i4){
-        if(primes[i4] > lim4) break;
-        s4 = primes[i4]*primes[i4]*primes[i4]*primes[i4];
-        int lim3 = pow((double) (limit - s4), (double) 1 /3.0);
-        for(unsigned int i3 = 0; i3 != primes.size(); ++i3){
-            if(primes[i3] > lim3) break;
-            s3 = primes[i3]*primes[i3]*primes[i3];
-            int lim2 = sqrt(limit - s4 - s3);
-            for(unsigned int i2 = 0; i2 != primes.size(); ++i2){
-                if(primes[i2] > lim2) break;
-                unsigned int sum = primes[i2] * primes[i2] + s3 + s4;
-                assert(sum <= limit);
-                //printf("%u %u %u\n", primes[i2], primes[i3], primes[i4]);
-                strip.insert(sum);
+    int sum, sum1, sum2;
+    for( int i4 = 0; true; ++i4){
+        int sum = power(primes[i4], 4); 
+        if(sum >= limit) break;
+        for( int i3 = 0; true; ++i3){
+            sum1 = sum + power(primes[i3], 3);
+            if(sum1 >= limit) break;
+            for( int i2 = 0; i2 < primes.size(); ++i2){
+                sum2 = sum1 + primes[i2] * primes[i2];
+                if(sum2 < limit){
+                    strip.insert(sum2);
+                    //printf("%d %d %d %d\n", i2,i3, i4, sum2);
+                } else
+                    break;
             }
         }
     }
-    printf("num = %zu\n", strip.size());
+    printf("num = %zu \n", strip.size());
 }
 
     //square  <= 7071

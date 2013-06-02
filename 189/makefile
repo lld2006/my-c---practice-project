@@ -1,2 +1,2 @@
-tricolor: tricolor.cpp
-	g++ -Wall -g tricolor.cpp -o tricolor
+189: 189.cpp
+	g++ -Wall -O3 189.cpp -o 189

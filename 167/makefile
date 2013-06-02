@@ -1,2 +1,2 @@
-ulam: ulam.cpp
-	g++ -O3 ulam.cpp -o ulam
+167: 167.cpp
+	g++ -O3 167.cpp -o 167

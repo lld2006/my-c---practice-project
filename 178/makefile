@@ -1,2 +1,2 @@
-step: step.cpp
-	g++ -Wall -g step.cpp -o step
+178: 178.cpp
+	g++ -Wall -O3 178.cpp -o 178

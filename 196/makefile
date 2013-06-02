@@ -1,3 +1,2 @@
-###triple: triple.cpp ../lib/tools.cpp ../lib/int2.cpp
-triple: triple.cpp 
-	g++  -g -Wall triple.cpp ../lib/int2.cpp ../lib/tools.cpp -o triple 
+196: 196.cpp 
+	g++  -O3 -Wall 196.cpp ../lib/tools.cpp -o 196 

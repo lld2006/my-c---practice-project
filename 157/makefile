@@ -1,2 +1,2 @@
-ten: ten.cpp ../lib/tools.cpp
-	g++ -Wall -g ten.cpp ../lib/tools.cpp -o ten
+157: 157.cpp ../lib/tools.cpp
+	g++ -Wall -g 157.cpp ../lib/tools.cpp -o 157

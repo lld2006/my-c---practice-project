@@ -1,2 +1,2 @@
-ami: ami.cpp ../lib/tools.h ../lib/tools.cpp 
-	g++ -Wall -g ami.cpp ../lib/tools.cpp ../lib/tools.h -o ami
+095: 095.cpp 
+	g++ -Wall -std=c++0x -g 095.cpp -o 095

@@ -1,2 +1,2 @@
-p10: p10.cpp ../lib/tools.cpp 
-	g++ -Wall -g p10.cpp ../lib/tools.cpp -o p10
+111: 111.cpp ../lib/tools.cpp 
+	g++ -Wall -g 111.cpp ../lib/tools.cpp -o 111

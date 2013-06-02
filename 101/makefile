@@ -1,2 +1,2 @@
-elim: elim.cpp   
-	g++ -Wall -g elim.cpp  -o elim
+101: 101.cpp   
+	g++ -Wall -g 101.cpp  -o 101

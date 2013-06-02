@@ -1,2 +1,2 @@
-tri0: tri0.cpp ../lib/rational.h
-	g++ -Wall -g tri0.cpp -o tri0
+184: 184.cpp ../lib/rational.h
+	g++ -Wall -O3 184.cpp -o 184

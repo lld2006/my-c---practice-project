@@ -1,2 +1,2 @@
-xyz: xyz.cpp
-	g++ -Wall -g xyz.cpp -o xyz
+180: 180.cpp
+	g++ -Wall -O3 180.cpp -o 180

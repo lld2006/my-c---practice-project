@@ -1,2 +1,2 @@
-intersec: intersec.cpp
-	g++ -Wall -g intersec.cpp -o intersec
+165: 165.cpp
+	g++ -Wall -O3 165.cpp -std=c++0x -o 165

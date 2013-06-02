@@ -1,2 +1,2 @@
-mult: mult.cpp ../lib/tools.h ../lib/tools.cpp
-	g++ -Wall -g mult.cpp ../lib/tools.cpp -o mult
+122: 122.cpp 
+	g++ -Wall -O3 122.cpp ../lib/tools.cpp -o 122

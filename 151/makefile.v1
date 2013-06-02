@@ -1,0 +1,2 @@
+151: 151.cpp
+	g++ -Wall -g -std=c++0x 151.cpp -L /usr/lib/liblapack.a -llapack -lblas -lgfortran -o 151

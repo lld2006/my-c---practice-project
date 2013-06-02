@@ -8,7 +8,7 @@ int main()
     vector<int> vn;
     vn.resize(limit/fac+1, 0);
     for(i64 ia = 1; ia < 8001; ++ia){
-        if(ia % 100 ==0)
+        if(ia % 10 ==0)
             printf("%lld\n",ia);
         i64 ibmax = limit/2/ia;
         for(i64 ib = ia+1; ib<=ibmax; ib+=2){

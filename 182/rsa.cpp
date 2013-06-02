@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <cassert>
 #include "../lib/tools.h"
-//this problem is boring and doesnot create too much joy !
+//this problem is boring and doesnot create too much pleasure !
 int main()
 {
     int n = 3675787; //1009*3643
@@ -10,8 +10,8 @@ int main()
     i64 sum = 0;
     int p = 1009;
     int q = 3643;
-    for( int i = 5; i < phi; ++i){
-        if(i% 3==0 || i % 7==0 ||i % 607 == 0) continue;
+    for( int i = 5; i < phi; i+=2){
+        if(i%3==0 || i%7==0 ||i%607 == 0) continue;
         if(gcd(i-1, p-1)!=2) continue;
         if(gcd(i-1, q-1)!=2) continue;
         sum += i;

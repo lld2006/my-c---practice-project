@@ -24,9 +24,9 @@ GeneralInteger::GeneralInteger(const string & str)
         number[i]= str[size-1-i]-'0';
 }
 
-GeneralInteger::GeneralInteger(const int num ){
+GeneralInteger::GeneralInteger(const i64 num ){
     number.clear();
-    int n = num;
+    i64 n = num;
     if( n == 0)
         number.push_back(0);
     else
@@ -215,11 +215,6 @@ bool GeneralInteger::operator<(const GeneralInteger& gi)const{
 }
 //this is ugly should be rewritten
 GeneralInteger GeneralInteger::power(int n) {
-    //assert(0);
-    //GeneralInteger g1(*this);
-    //for(int i = 1; i< n; ++i){
-    //    *this = multiply(g1);           
-    //}
     GeneralInteger ret(1), base(*this);
     while(n){
         int remainder = n & 1;

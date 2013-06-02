@@ -13,7 +13,7 @@ void primeWithin( vector<int>& vecr, int limit)
 {
     vecr.clear();
     int odd = (limit+1)/2;
-    vector<int> vec; //for i >=1 number represent 2i+1 assume all prime
+    vector<short> vec; //for i >=1 number represent 2i+1 assume all prime
     vec.resize(odd, 1);
     vec[0] = 0;
     int ip= 1;  // prime number from 2 3 5 ....
@@ -36,6 +36,44 @@ void primeWithin( vector<int>& vecr, int limit)
         if( vec[i] ) vecr.push_back(2*i+1);
 }
 
+/* 
+void primeWithin( vector<int>& vecr, int limit)
+{
+    vecr.clear();
+    int odd = (limit+1)/2;
+    vector<bool> vec; //for i >=1 number represent 2i+1 assume all prime
+    vec.resize(odd, true);
+    vec[0] = false;
+    int ip= 1;  // prime number from 2 3 5 ....
+    int iprime = 3;
+    int max = sqrt((double) limit)+1;
+    while( iprime <= max )
+    {
+      // sieve
+        for(int i =(iprime * iprime-1)/2; i < odd; i+=iprime)
+            vec[i] = false;
+      //find next prime
+        while(!vec[++ip]);
+
+        iprime = 2*ip+1;
+    }
+    vecr.push_back(2);
+    int nx = accumulate(vec.begin(), vec.end(), 0);
+    vecr.reserve(nx+1);
+    for( int i = 1; i< odd; ++i)
+        if( vec[i] ) vecr.push_back(2*i+1);
+}
+
+*/
+/* 
+void primeSegSieve(vector<int>& vecr, i64 limit )
+{
+    if(limit < )
+    vecr.clear();
+    vecr.push_back(2);
+}
+*/
+
 //without prime list
 bool isPrime( i64 num )
 {
@@ -52,7 +90,7 @@ bool isPrime( i64 num )
 
 //with prime list
 bool isPrime(u64 num, vector<int>& primes){
-    if( num == 0) return false;
+    if( num < 2 ) return false;
     if( num == 2) return true;
     int root = round(sqrt((double) num)+1);
     //this assert should be guarranted somehow
@@ -206,8 +244,9 @@ bool next_combination(vector<int>& cvec, int n, int k)
         return true;
 }
 
-bool isPermutation(int im, int in)
+bool isPermutation(i64 im, i64 in)
 {
+    if((im - in) % 9 ) return false;
     vector<int> digits;
     digits.resize(10,0); // 0----9
     while(im){
@@ -217,28 +256,28 @@ bool isPermutation(int im, int in)
     }
     while(in){
         int res = in % 10;
+        if(digits[res] == 0) 
+            return false;
         --digits[res];
         in /= 10;
     }
-    for(int i = 0; i < 10; ++i)
-        if(digits[i]) return false;
 
     return true;
 }
 
 bool isPalindromic(i64 num, int base) //base generally 10
 {
-    int ncopy = num;
     int nr = 0;
-    while(num){
+    if(num % base == 0) return false;
+    while(nr < num){
         nr *= base;
         int res = num % base;
         nr += res;
+        if(nr >= num) break;
         num /= base;
     }
-    return (ncopy == nr);
+    return (num == nr);
 }
-
 //find the position of the elem
 int binary_find(int num, vector<int>& vec){
     if(vec.empty()) return -1;
@@ -652,4 +691,16 @@ void prime_generate_sq2(i64 p, int& a, int& b)
     a=rk; b=rk1;
     if(a > b)
         swap(a, b);
+}
+
+i64 totient_with_factor(IntPairVec& vfac)
+{
+    i64 prod = 1;
+    for(unsigned int i = 0; i < vfac.size(); ++i){
+        i64 px = vfac[i].first;
+        i64 npow = vfac[i].second;
+        prod *= (px-1);
+        prod *= power(px, npow-1);
+    }
+    return prod;
 }

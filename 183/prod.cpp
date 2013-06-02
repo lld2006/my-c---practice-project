@@ -11,22 +11,13 @@ int main(){
             ++rmax;
         int gi = gcd(i, rmax);
         int rp = rmax/gi;
-        if(rp == 1){
-            sum -= i;
-            continue;
-        }
         while(rp  % 2 == 0){
                 rp/= 2;
             }
         while(rp % 5 == 0){
             rp /= 5;
         }
-        if(rp ==1)
-            printf("%d %d %d\n", i, rmax, rp);
-        if( rp == 1 )
-            sum -= i;
-        else 
-            sum += i;
+        sum += (rp==1)? -i:i;
     }
     printf("%lld\n", sum);
 }

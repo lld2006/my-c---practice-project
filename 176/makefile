@@ -1,2 +1,2 @@
 cath: cath.cpp
-	g++ -Wall -g cath.cpp -o cath
+	g++ -Wall -O3 cath.cpp -o cath

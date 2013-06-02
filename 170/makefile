@@ -1,2 +1,2 @@
-pan: pan.cpp
-	g++ -Wall -g pan.cpp -o pan
+170: 170.cpp
+	g++ -Wall -O3 170.cpp -o 170

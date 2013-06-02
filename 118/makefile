@@ -1,2 +1,2 @@
-prime: prime.cpp ../lib/tools.cpp
-	g++ -Wall -g prime.cpp ../lib/tools.cpp  -o prime
+118: 118.cpp ../lib/tools.cpp
+	g++ -Wall -O3 118.cpp ../lib/tools.cpp  -o 118

@@ -7,7 +7,7 @@ class rational
 {
   public:
     rational():d_num(0), d_den(1), d_sign(1) { };
-    rational(i64 nx, i64 dx=1, int pm=1):d_num(nx), d_den(dx), d_sign(pm)
+    rational(i64 nx, i64 dx=1, int pm=1, int fgcd=true):d_num(nx), d_den(dx), d_sign(pm)
     {
         if(nx < 0){
             d_num = -nx;
@@ -17,10 +17,12 @@ class rational
             d_den = -dx;
             d_sign = -d_sign;
         }
-        i64 common = gcd(d_num, d_den);
-        if(common != 1){
-            d_den /= common;
-            d_num /= common;
+        if(fgcd){
+            i64 common = gcd(d_num, d_den);
+            if(common != 1){
+                d_den /= common;
+                d_num /= common;
+            }
         }
     };
     //the following code need to be careful, overflow;
@@ -42,7 +44,7 @@ class rational
     }
 
     rational& operator+=(const rational& r2){
-        assert(0);
+        //assert(0);
         i64 common = gcd(r2.d_den, d_den);
         if(d_sign == r2.d_sign){
             d_num = d_num*(r2.d_den/common)+d_den/common*r2.d_num;
@@ -72,14 +74,13 @@ class rational
     }
     bool operator>(const rational& r2)const
     {
-        assert(0);
         if(d_sign > r2.d_sign ){
-            return d_num>0 || r2.d_num>0;//possible: d_num==0
+            return true;//possible: d_num==0
         }else if(d_sign < r2.d_sign){
             return false; 
         }else{
             i64 diff = d_num*r2.d_den - d_den*r2.d_num;
-            return d_sign? diff>0:d_sign<0;
+            return diff>0;
         }
     }
     i64 pnum()const {return d_num;}
@@ -100,6 +101,14 @@ bool operator<(const rational& r1, const rational& r2)
         i64 diff = r1.pnum()*r2.pden() - r1.pden()*r2.pnum();
         return r1.psign() ? diff < 0: diff > 0;
    }
+}
+bool operator==(const rational& r1, const rational& r2)
+{
+    if(r1.psign() != r2.psign()){
+        return false;
+    }else{
+        return r1.pnum()==r2.pnum() && r1.pden()==r2.pden();
+    }
 }
 class coord_less
 {

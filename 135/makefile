@@ -1,2 +1,2 @@
-alg: alg.cpp ../lib/tools.cpp
-	g++ -Wall -g alg.cpp ../lib/tools.cpp -o alg
+135: 135.cpp
+	g++ -Wall -g 135.cpp -std=c++0x -o 135

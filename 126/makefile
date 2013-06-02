@@ -1,2 +1,2 @@
-geo: geo.cpp
-	g++ -Wall -g geo.cpp -o geo
+126: 126.cpp
+	g++ -Wall -g 126.cpp -o 126

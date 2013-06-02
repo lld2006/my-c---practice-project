@@ -1,2 +1,2 @@
-rot: rot.cpp ../lib/tools.cpp
-	g++ -Wall -g rot.cpp ../lib/tools.cpp -o rot
+168: 168.cpp ../lib/tools.cpp
+	g++ -Wall -g 168.cpp ../lib/tools.cpp -std=c++0x -o 168

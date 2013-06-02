@@ -2,7 +2,7 @@
 #include <vector>
 #include <numeric>
 #include <cassert>
-#include "../lib/primelist.h"
+#include "../lib/tools.h"
 
 using namespace std;
 

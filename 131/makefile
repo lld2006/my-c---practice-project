@@ -1,2 +1,2 @@
-cube: cube.cpp ../lib/tools.cpp
-	g++ -Wall -g cube.cpp ../lib/tools.cpp -o cube
+131: 131.cpp ../lib/tools.cpp
+	g++ -Wall -g 131.cpp ../lib/tools.cpp -o 131

@@ -13,7 +13,7 @@ bool isPrime(u64 num, vector<int>& primes);
 void factor(i64 num, I64PairVec& ifac, const vector<int>& primes);
 void factor_using_table(i64 num, IntPairVec& ifac, const vector<int>& ftable);
 bool next_combination(IntVec& cvec, int n, int k);
-bool isPermutation(int im, int in);
+bool isPermutation(i64 im, i64 in);
 bool isPalindromic(i64 num, int base);
 int binary_find(int num, vector<int>& vec);
 void extended_euclid(i64 a, i64 b, i64& x, i64& y, i64& gcd);
@@ -35,6 +35,7 @@ bool strong_pseudo_test(i64 p);
 i64 mult64mod(u64 a, u64 b, u64 mod);
 i64 powermodule(i64 base, i64 expo, i64 module);
 i64 totient(int n, vector<int>& primes);
+i64 totient_with_factor(IntPairVec& vp);
 void farey_sequence(vector<IntPair>& vf, int nlimit, bool ascending);
 void prime_generate_sq2(i64 p, int& a, int& b);
 

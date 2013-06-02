@@ -1,2 +1,2 @@
-part: part.cpp
-	g++ -Wall -g part.cpp -o part
+181: 181.cpp
+	g++ -Wall -O3 181.cpp -std=c++0x -o 181

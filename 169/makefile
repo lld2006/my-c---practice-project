@@ -1,2 +1,2 @@
-25: 25.cpp ../lib/tools.cpp 
-	g++ -Wall -g 25.cpp ../lib/tools.cpp -o 25
+169: 169.cpp ../lib/tools.cpp 
+	g++ -Wall -g 169.cpp ../lib/tools.cpp -o 169

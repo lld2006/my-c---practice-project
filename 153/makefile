@@ -1,2 +1,2 @@
-gauss: gauss.cpp ../lib/tools.cpp
-	g++ -Wall -g gauss.cpp ../lib/tools.cpp -o gauss
+153: 153.cpp ../lib/tools.cpp
+	g++ -Wall -O3 153.cpp ../lib/tools.cpp -o 153

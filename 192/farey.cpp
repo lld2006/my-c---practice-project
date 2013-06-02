@@ -58,14 +58,12 @@ int main()
         if(i % 1000 == 0)
             printf("%d\n",i);
         double droot = sqrt(i);
-        int iroot = droot;
-        if( iroot+1 -droot <= 1e-10){
-            iroot += 1;
-            printf("%d\n", i);
-        }
+        int iroot = round(droot);
         if(iroot * iroot == i) continue;
 
         i64 den = farey(i, limit);
+        if(i < 10) 
+            printf("%d %lld\n",i, den);
         sum += den;
     }
     printf("%lld\n", sum);

@@ -4,6 +4,7 @@
 
 using namespace std;
 
+int square_sum(int num);
 int square(int num, vector<int>& sqvec)
 {
     if(sqvec[num] != -1) {
@@ -12,33 +13,34 @@ int square(int num, vector<int>& sqvec)
     {
         return num;
     }
-    int n1 = num;
-    int sum = 0;
-    while(n1)
-    {
-        int res = n1%10;
-        sum += res * res;
-        n1 /= 10;
-    }
+    int sum = square_sum(num);
     sqvec[num] = square(sum, sqvec);
     return sqvec[num];
+}
+
+int square_sum(int num)
+{
+    int sum = 0;
+    while(num){
+        int res = num % 10;
+        sum += res * res;
+        num /= 10;
+    }
+    return sum;
 }
 
 int main()
 {
     vector<int> sqvec;
-    sqvec.resize(10000000, -1);
-    sqvec[1] = 1;
-    sqvec[89] = 89;
-    for(int i = 1 ; i < 10000000; ++i)
+    sqvec.resize(568, -1);
+    sqvec[1]= 1;
+    sqvec[89]=89;
+    for(int i = 1 ; i <= 81*7; ++i)
         square(i, sqvec);
     int count = 0;
-    // 0 is intentionally wasted
-    for(int i = 1; i < 10000000; ++i)
-    {
-        if(sqvec[i] == -1) printf("error %d\n", i);
-        assert(sqvec[i] != -1);
-        if(sqvec[i] == 89) ++count;
+    for(int i = 1; i < 10000000; ++i) {
+        int nx = square_sum(i);
+        count += (sqvec[nx] == 89);
     }
     printf("%d\n", count);
 }

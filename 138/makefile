@@ -1,2 +1,2 @@
-tri: tri.cpp
-	g++ -Wall -g tri.cpp -o tri
+138: 138.cpp
+	g++ -Wall -g 138.cpp -o 138

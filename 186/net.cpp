@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <cassert>
 #include "../lib/typedef.h"
+#include "../lib/tools.h"
 using namespace std;
 //this problem is a practice problem for the disjoint set concept introduced int CLRS
 //without the concept of disjoint set, it is very complicated and lengthy. 

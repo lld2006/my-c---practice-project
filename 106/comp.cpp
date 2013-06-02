@@ -25,7 +25,7 @@ int compare(int size, vector<int> top, vector<int> bottom){
             set_union(top.begin(), top.end(), 
                     realbottom.begin(), realbottom.end(),
                     back_inserter(sunion));
-            if(sunion.size()!= top.size()+realbottom.size())
+            if(sunion.size()!= 2*vsize)
                 continue;
             bool alwaysequal = true;
             bool initialized = false;
@@ -47,16 +47,9 @@ int compare(int size, vector<int> top, vector<int> bottom){
             }
             if(alwaysequal)
                 continue;
-            if(needCompare){
-                //printf("t ");
-                //for(unsigned int i = 0; i < top.size(); ++i)
-                //    printf("%d ", top[i]);
-                //printf("b ");
-                //for(unsigned int i = 0; i < top.size(); ++i)
-                //    printf("%d ", realbottom[i]);
-                //printf("\n");
+            if(needCompare)
                 ++sum;
-            }
+            
         }while(next_combination(top, size, vsize));
     }while(next_combination(bottom, size, vsize));
     return sum;

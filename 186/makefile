@@ -1,2 +1,2 @@
 net: net.cpp
-	g++ -Wall -g net.cpp -o net
+	g++ -Wall -O3 net.cpp -o net

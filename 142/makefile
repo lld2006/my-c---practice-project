@@ -1,2 +1,2 @@
-6sq: 6sq.cpp
-	g++ -Wall -g 6sq.cpp -o 6sq
+142: 142.cpp
+	g++ -Wall 142.cpp -o 142 -std=c++0x

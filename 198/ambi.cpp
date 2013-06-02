@@ -4,19 +4,6 @@
 #include <cstdio>
 #include <set>
 using namespace std;
-struct stree
-{
-    stree(i64 n1, i64 d1, i64 pn1, i64 pd1):
-        num(n1),
-        den(d1),
-        pnum(pn1),
-        pden(pd1)
-    {}
-    i64 num;
-    i64 den;
-    i64 pnum;
-    i64 pden;
-};
 int main()
 {
     i64 sum = 0;
@@ -31,7 +18,6 @@ int main()
     vector<I64Pair> vf; 
     i64 x, y, gcd1; 
     i64 tp, xp, yp, xn, yn, tcnt, tmax;
-    printf("before anything %lld\n", sum);
     for(i64 iden = 2; iden <= root; ++iden){
         i64 inmax = iden/lim2;
         for(i64 inum=1; inum<=inmax; ++inum){
@@ -85,9 +71,6 @@ int main()
                 pset.insert(I64Pair(p,q));
             }
             sum += tcnt;
-            if(tcnt > 0)
-                ;
-                //printf("positive %lld %lld %lld %lld\n",a, b, tcnt, sum);
             //--------------------//
             xn = xp - b;
             yn = -yp + a;
@@ -125,44 +108,8 @@ int main()
                 assert(q <= limit);
                 pset.insert(I64Pair(p, q));
             }
-            if(tcnt > 0)
-                ;
-                //printf("negative %lld %lld %lld %lld\n",a, b, tcnt, sum);
         }
     }
     printf("%lld\n", sum+cnt);
-    printf("%d\n", pset.size()+cnt);
-    //for(auto iter = pset.begin(); iter != pset.end(); ++iter)
-       // printf("%lld %lld\n", iter->first, iter->second);
-    
-    //vector<IntPair> vf;
-    // 
-    //for(int i =3; i <= limit/2; ++i){
-    //    farey_sequence(vf, i, true); 
-    //    int line_counter = 0;
-    //    for(int j = 1; j < vf.size()-1; ++j){
-    //        rational r1(vf[j].first, vf[j].second);
-    //        rational r2(vf[j+1].first, vf[j+1].second);
-    //        rational r = r1+r2;
-    //        r = r * rational(1,2);
-    //        if(r.pden() > limit) continue;
-    //        if(r.pnum()==1 && r.pden() %2 ==0)
-    //            continue;
-    //        if(2*r.pnum()>= r.pden()) 
-    //            break;
-    //        if(pset.insert(IntPair(r.pnum(), r.pden())).second){
-    //            if(r1.pden() < r2.pden())
-    //                printf("%lld %lld %lld %lld %lld %lld\n", r1.pnum(), r1.pden(), r2.pnum(), r2.pden(), r.pnum(), r.pden());
-    //            else
-    //                printf("%lld %lld %lld %lld %lld %lld\n", r2.pnum(), r2.pden(), r1.pnum(), r1.pden(), r.pnum(), r.pden());
-    //            ++line_counter;
-    //        }
-    //    }
-    //    if(line_counter > 0){
-    //        //printf("%d %d %zu\n",i, line_counter, pset.size());
-    //    }
-    //} 
-    //for(auto iter = pset.begin(); iter != pset.end();++iter){
-    //    printf("%d %d\n", iter->first, iter->second);
-    //}
+    printf("%zu %lld %lld\n", pset.size(), cnt, pset.size()+cnt);
 }

@@ -1,2 +1,2 @@
-ntri: ntri.cpp ../lib/tools.h ../lib/tools.cpp ../lib/int.h ../lib/int.cpp
-	g++ -Wall -g ntri.cpp ../lib/tools.h ../lib/tools.cpp ../lib/int.h ../lib/int.cpp -o ntri
+094: 094.cpp ../lib/tools.h ../lib/tools.cpp 
+	g++ -Wall -g 094.cpp ../lib/tools.h ../lib/tools.cpp -o 094

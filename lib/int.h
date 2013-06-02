@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <vector>
 #include <cassert>
+#include "../lib/typedef.h"
 
 using namespace std;
 
@@ -11,7 +12,7 @@ class GeneralInteger
 {
 public:
   //constructors
-  GeneralInteger(const int num);
+  GeneralInteger(const i64 num);
   GeneralInteger(const string& string);
   GeneralInteger(const vector<int>& nvec);
   //copy constructor
@@ -38,13 +39,14 @@ public:
       assert(!number.empty());
       return number.size();
   }
-  void print()const
+  void print(int endl = 0)const
   {
     for( int riter = static_cast<int>(number.size()-1); riter >= 0;  --riter){
         assert(number[riter] >= 0 && number[riter] < 10);
         printf("%d", number[riter]);
     }
-  };
+    if(endl){printf("\n");}
+  }
   int modulus(const int num) const;
   void truncate(const unsigned int size);
   GeneralInteger minus(const GeneralInteger& g1)const;

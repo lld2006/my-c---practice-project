@@ -1,2 +1,2 @@
-89: 89.cpp
-	g++ -Wall -g 89.cpp -o 89
+092: 092.cpp
+	g++ -Wall -g 092.cpp -o 092

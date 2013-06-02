@@ -28,8 +28,9 @@ int main(){
             gnum += gtp;
         }while(next_combination(combi, round, i));
     }
-    gnum.print();
+    gnum.print(1);
     GeneralInteger gr(1);
-    gr= gden.divide();
+    gden.print();
+    //gr= gden.divide();
     printf("\n");
 }

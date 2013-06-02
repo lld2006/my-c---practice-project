@@ -1,2 +1,2 @@
-grid: grid.cpp
-	g++ -Wall -g grid.cpp -o grid
+147: 147.cpp
+	g++ -Wall -g 147.cpp -o 147

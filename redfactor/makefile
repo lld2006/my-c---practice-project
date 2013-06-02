@@ -1,2 +1,2 @@
-factor: factor.cpp ../lib/primelist.h ../lib/primelist.cpp
-	g++ -Wall -g factor.cpp ../lib/primelist.h ../lib/primelist.cpp -o factor
+factor: factor.cpp 
+	g++ -Wall -g factor.cpp ../lib/tools.cpp -o factor

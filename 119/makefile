@@ -1,2 +1,2 @@
-a30: a30.cpp ../lib/tools.h ../lib/tools.cpp ../lib/int.h ../lib/int.cpp 
-	g++ -Wall -g a30.cpp ../lib/tools.cpp ../lib/tools.h ../lib/int.cpp ../lib/int.h -o a30
+119: 119.cpp ../lib/tools.h ../lib/tools.cpp 
+	g++ -Wall -g 119.cpp ../lib/tools.cpp -std=c++0x -o 119
