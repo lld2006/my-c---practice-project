@@ -1,2 +1,2 @@
-nim3: nim3.cpp
-	g++ -Wall -O3 nim3.cpp -std=c++0x -o nim3
+260: 260.cpp
+	g++ -Wall -O3 260.cpp -std=c++0x -o 260

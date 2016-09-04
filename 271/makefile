@@ -1,2 +1,2 @@
-mod1: mod1.cpp  ../lib/tools.cpp ../lib/int2.cpp ../lib/int2.h ../lib/tools.h
-	g++ -Wall -g mod1.cpp ../lib/tools.cpp ../lib/int2.cpp ../lib/int2.h -o mod1
+271: 271.cpp  ../lib/tools.cpp ../lib/tools.h makefile
+	g++ -Wall -std=c++0x -O3 271.cpp ../lib/tools.cpp -o 271

@@ -2,28 +2,13 @@
 #include "../lib/typedef.h"
 #include <cstdio>
 #include <cassert>
-//TODO use sieve factor to do this problem again
-//each number only remember the first prime factor
-//110000000
 int limit = 110000000;
-int limitk = 1;
-int sqrtlimit = 1;
-i64 nk;
-//prod1 for b and prod2 for c
   
-i64 cardano(I64PairVec& ifac, int index, i64 prod1, i64 prod2, int sum)
+i64 cardano(IntPairVec& ifac, int index, i64 prod1, i64 prod2, int sum, int limitk)
 {
-    if(index == static_cast<int>(ifac.size())){
-        if(prod1 + prod2 + sum <= limit){
-            //assert(prod1 * prod1 * prod2 == (8*nk+5)*(nk+1)*(nk+1));//for bug check
-            //if(nk > limit/6.8)
-            //if((nk-5) %9!=0 && (nk-15)%50!=0)
-            //    printf("%lld %lld %d %lld\n", prod1, prod2, sum, nk);
-            return 1; 
-        }
-        else
-            return 0;
-    }
+    if(index == static_cast<int>(ifac.size()))
+        return (prod1 + prod2 + sum <= limit);
+    
     i64 cnt = 0; 
     i64 pd1 = prod1, pd2=prod2;
     
@@ -32,8 +17,6 @@ i64 cardano(I64PairVec& ifac, int index, i64 prod1, i64 prod2, int sum)
     int pmax = ifac[index].second;
     i64 pfac = ifac[index].first;
     i64 pfac2 = pfac*pfac;
-    //double quot = (double)limit/prod2;
-    //int p2 = log((double)quot)/log((double)pfac2);
     i64 quote = limitk/prod2;
     int istart = 0;
     i64 power2=1;
@@ -51,39 +34,19 @@ i64 cardano(I64PairVec& ifac, int index, i64 prod1, i64 prod2, int sum)
         assert(pd2 > 0);
         power2 *= pfac2;
         if(pd1+pd2+sum <= limit)
-            cnt += cardano(ifac, index+1, pd1, pd2, sum);
+            cnt += cardano(ifac, index+1, pd1, pd2, sum, limitk);
         if(power2 > quote) break;
     }
     return cnt;
 }
 
-//i64 cardano(I64PairVec& ifac, int index, i64 prod1, i64 prod2, int sum)
-//{
-//    i64 pdn1=prod1, pdn2=prod2;
-//    for(unsigned int nindex= 0; nindex < ifac.size(); ++nindex){
-//        int pmax = ifac[nindex].second;
-//        i64 pfac = ifac[nindex].first;
-//        i64 pfac2 = pfac *pfac;
-//        i64 quote = limit/prod2;
-//        int i;
-//        for(i = 0; i <=pmax; ++i){
-//            pd1 = prod1 * power(pfac, static_cast<i64>(pmax-i));
-//            i64 power2 = power(pfac2, static_cast<i64>(i));
-//            if(power2 > quote) break;
-//            pd2 = prod2 * power2;
-//            assert(pd1 > 0);
-//            assert(pd2 > 0);
-//            if(pd +pd2 +sum > limit)
-//                continue;
-//        }
-//        if(nindex == 
-//    }
-//}
 //lesson forgot to handle the case index=size
 //lesson if the factor in ifac1 is too large, overflow.
 //lesson start from large prime numbers
-void add_factors(const I64PairVec& ifac1, const I64PairVec& ifac2, I64PairVec& ifac,
-                i64& prod1, i64& prod2)
+//
+//prod1 for b and prod2 for c
+void add_factors(const IntPairVec& ifac1, const IntPairVec& ifac2, IntPairVec& ifac,
+                i64& prod1, i64& prod2, int sqrtlimit)
 {
     int size1 = ifac1.size();
     int size2 = ifac2.size();
@@ -94,9 +57,11 @@ void add_factors(const I64PairVec& ifac1, const I64PairVec& ifac2, I64PairVec& i
     prod1 = 1;
     while(index1 >= 0 && index2 >= 0){
         if(ifac1[index1].first > ifac2[index2].first){
-            if(ifac1[index1].first > sqrtlimit)
+            if(ifac1[index1].first > sqrtlimit){ //type p^1
+                //since b must be less than limit, if this factor 
+                //is from c^2, it must belongs to c
                 prod1 *= ifac1[index1].first;
-            else
+            }else
                 ifac.push_back(ifac1[index1]);
             --index1;
         }else if(ifac1[index1].first < ifac2[index2].first){
@@ -138,24 +103,29 @@ void add_factors(const I64PairVec& ifac1, const I64PairVec& ifac2, I64PairVec& i
     }
 }
 
+//i64 psq = ((8*k+21)*k+18)*k+5; //(k+1)^2*(8k+5)
+// b + c >= 3*(b/2 * b/2* c)^(1/3), a = 3k+2;
+//so for a b c sum greater than 6.78k
 int main(){
-    int primelimit = 11000;
-    vector<int> primes;
-    primeWithin(primes, primelimit);
-    I64PairVec ifac1, ifac2, ifac;
-    i64 ncard = 0;
-    sqrtlimit = sqrt((double) limit);
-    for(nk = 1; nk<= (limit/6+1); ++nk){
-        limitk = limit - nk;
-        //i64 psq = ((8*k+21)*k+18)*k+5; //(k+1)^2*(8k+5)
-        if((nk % 1000000)==0)
+    struct timer mytime;
+    vector<int> ftable;
+    factor_table_min_odd(limit*8/6+25, ftable);
+    IntPairVec ifac1, ifac2, ifac;
+    i64 ncard = 1;//nk = 0
+    printf("%.6f\n", mytime.getTime());
+    double max_nk = 6/pow(4.0, 1.0/3.0) + 3;
+    i64 nk;
+    int sqrtlimit = sqrt((double) limit);
+    for(nk = 1; nk< (limit/max_nk+1); ++nk){
+        int limitk = limit - nk;
+        if((nk & 1048575)==0)
             printf("%lld nk\n", nk);
         int sum = 3*nk+2; //a's value
-        factor(8*nk+5, ifac2, primes); 
-        factor(  nk+1, ifac1, primes);
+        factor_using_table_odd(8*nk+5, ifac2, ftable);
+        factor_using_table_odd(nk+1, ifac1, ftable);
         i64 prod1=1, prod2=1;
-        add_factors(ifac1, ifac2, ifac, prod1, prod2);//combine all factors into one vector
-        ncard += cardano(ifac, 0, prod1, prod2, sum); //factors, index, product, sum
+        add_factors(ifac1, ifac2, ifac, prod1, prod2, sqrtlimit);//combine all factors into one vector
+        ncard += cardano(ifac, 0, prod1, prod2, sum, limitk); //factors, index, product, sum
     }
-    printf("%lld\n", ncard+1);
+    printf("%lld\n", ncard);
 }

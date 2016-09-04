@@ -7,9 +7,10 @@
 using namespace std;
 //find the unique solutions of a prime 4k+1 = a^2 + b^2;
 //lesson 1, 4k+3 should never be considered, since x1+x2+x3 = (4k+3)*n
+//can not be 5!
 //lesson 2, r should be n*5; this will at least reduce the calculation
 //by a factor of 5
-//lesson 3, set is evil. If it could be avoided, avoid it.
+//lesson 3, set is evil. If it can be avoided, avoid it.
 //now the bottle neck is generate all squares for a composite number.
 //Just because there are duplicates, I used set. lazy!
 double total = 0;
@@ -139,7 +140,6 @@ void check_ortho(int n, vector<IntPair>& results)
                 if(t1 <= perilimit){
                     ++cnt;
                     total += t1;
-                    //printf("%d %d %d %d %d %d %d %d %20.10f %20.10f\n", x1, y1, x2,y2,x3,y3, x1*x1+y1*y1, cnt, t1, total);
                 }
             }
         }

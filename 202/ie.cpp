@@ -27,8 +27,6 @@ i64 inc_ex(int pos, i64 product){
     return sum;
 }
 int main(){
-    //primes.push_back(53);
-    //primes.push_back(89);
     primes.push_back(5);
     primes.push_back(11);
     primes.push_back(17);

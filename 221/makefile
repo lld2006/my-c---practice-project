@@ -1,2 +1,2 @@
-anum: anum.cpp ../lib/tools.cpp 
-	g++ -Wall -g anum.cpp ../lib/tools.cpp  -o anum
+221: 221.cpp 
+	g++ -Wall -O3 221.cpp -std=c++0x  -o 221

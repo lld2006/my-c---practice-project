@@ -1,2 +1,2 @@
-obtuse: obtuse.cpp
-	g++ -Wall -g obtuse.cpp -o obtuse
+210: 210.cpp
+	g++ -Wall -O3 210.cpp -o 210

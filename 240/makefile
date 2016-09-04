@@ -1,2 +1,2 @@
-dice: dice.cpp
-	g++ -Wall -g dice.cpp -o dice
+dice: dice.cpp makefile
+	g++ -Wall -O3 dice.cpp -o dice

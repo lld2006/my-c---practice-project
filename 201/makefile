@@ -1,2 +1,2 @@
 setu: setu.cpp
-	g++ -Wall -g setu.cpp -o setu
+	g++ -Wall -O3 setu.cpp -o setu

@@ -1,35 +1,20 @@
 #include <cstdio>
 #include <cassert>
-#include "../lib/tools.h"
 #include <algorithm>
-#include <deque>
+#include "../lib/tools.h"
 
 int convert_input(int n)
 {
     assert(n>=0 && n<64);
-    vector<int> vr;
-    vr.resize(6, 0);
-    int cnt = 0;
-    while(n > 0){
-        int res = n&1;
-        n/=2;
-        if(res)
-            vr[cnt]=1;
-        ++cnt;
-    }
-    int nx = vr[0];
-    nx = vr[1] & vr[2];
-    nx += vr[0];
-    nx %= 2;
-    vr.erase(vr.begin());
-    vr.push_back(nx);
-    int sum = 0;
-    for(int i = 5; i >= 0; --i){
-        sum*=2;
-        sum += vr[i];
-    }
-    assert(sum >= 0 && sum < 64);
-    return sum;
+    int na = n & 1;
+    int nb = (n & 2)>>1;
+    int nc = (n & 4)>>2;
+    n >>= 1;
+    nb = nb & nc;
+    na += nb;
+    na %= 2;
+    n+= (na<<5);
+    return n;
 }
 
 void create_data(int nmax, vector<i64>& data)
@@ -47,12 +32,14 @@ void create_data(int nmax, vector<i64>& data)
     v11[2] = 0;
     data[1]=1;
     data[2]=3; 
+    //add in front of the i...j sequence and always 
+    //satisfy the condition, first is i last is j
     for(unsigned int i= 3; i < data.size();++i){
         v00[i]=v00[i-1]+v10[i-1];
         v01[i]=v01[i-1]+v11[i-1];
         v10[i]=v00[i-1];
         v11[i]=v01[i-1];
-        data[i]=v00[i]+v01[i]+v10[i];
+        data[i]=v00[i]+v01[i]+v10[i];//satisfy the criteria
     }
     return;
 }

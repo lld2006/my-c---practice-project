@@ -24,32 +24,34 @@ struct sumset{
         max_index = maxi;
     }
 };
+//first notice that the sum can at most reach 100*100*201/6=338350 - 50*51*101/6
 void update_sumset_vec(int level, vector<sumset>& sqvec){
     vector<sumset> dpvec;
-    dpvec.resize(340000, sumset());
+    int maxval = 295425/2;//at most equal to this value, greater than will be omitted
+    dpvec.resize(maxval+1, sumset());
     int cnt = 0;
     for(int i = 0; i < static_cast<int>(sqvec.size()); ++i){
         int start = sqvec[i].index+1;
         int final = nsize/2+level;
         for(int j = start; j <= final; ++j){
-            bool is_single = (j <= sqvec[i].max_index) && sqvec[i].single;
+            bool is_single = (j <= sqvec[i].max_index) && sqvec[i].single; //this is not quite right
             assert(j < static_cast<int>(square.size()));
             int value = sqvec[i].sum + square[j];
+            if(value > maxval) continue;
             assert(value > 0 && value < static_cast<int>(dpvec.size()));
             if(dpvec[value].index == -1){//the first entry in dpvec
                 assert(sqvec[i].max_index <= 101 && sqvec[i].max_index > 0);
                 dpvec[value].init(j, value, is_single, 101); // for single no constrain
                 ++cnt;
-            } else {// already been touched
+            }else{ //use the minimal index as index val
                 if(j < dpvec[value].index){
                     int max_idx = dpvec[value].index;
                     dpvec[value].init(j, value, is_single, max_idx);
                 }
                 else{
                     int idx = dpvec[value].max_index;
-                    if(j < idx){
+                    if(j < idx)
                         dpvec[value].max_index = j;
-                    }
                 }
             }
         }
@@ -58,12 +60,9 @@ void update_sumset_vec(int level, vector<sumset>& sqvec){
     sqvec.resize(cnt, sumset());
     int nnew = 0;
     for(unsigned int i = 0; i < dpvec.size(); ++i){
-        if(dpvec[i].single != - 100){
-            assert(dpvec[i].single==0||dpvec[i].single == 1);
+        if(dpvec[i].single>=0)
             sqvec[nnew++] = dpvec[i];
-        }
     }
-    assert(nnew == static_cast<int>(sqvec.size()));
 }
 int main(){
     square.resize(nsize+1, 0);
@@ -76,11 +75,11 @@ int main(){
     for(int level = 2; level <= nsize/2; ++level)
         update_sumset_vec(level, sqvec);
     i64 sum = 0;
-    printf("%d\n", sqvec.size());
+    
     for(unsigned int i = 0; i < sqvec.size(); ++i){
         if(sqvec[i].single == 1 && sqvec[i].max_index == 101){
-            sum += sqvec[i].sum;
+            ++sum;
         }
     }
-    printf("%lld\n", sum);
+    printf("%lld\n", sum*338350);
 }

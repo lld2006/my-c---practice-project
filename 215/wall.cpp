@@ -8,7 +8,7 @@ using namespace std;
 int total_level = 10;
 int lsize = 32;
 vector<unsigned int> combinations;
-
+//used bits to check if there is a crack
 void search23(vector<unsigned int>& vcb, int shift, unsigned int mask){
     if(shift > lsize) 
         return;

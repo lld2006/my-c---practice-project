@@ -9,24 +9,16 @@ double df(double x){
 }
 int main(){
     int iter = 0;
-    double xl = 1.000695;
-    double x0 = 1.000695;
-    double xh = 1.05;
-    double xm;
-    while (iter < 5){
-        //double vl = f(xl);
-        //double vh = f(xh);
-        //assert(vl * vh <0);
-        //xm = (xl +xh)/2;
-        //double vm = f(xm);
-        //if(vm * vh > 0)
-        //    xh = xm;
-        //else 
-        //    xl = xm;
-        double res = f(x0);
+    double x0 = 1.01;
+    double res = f(x0);
+    while (fabs(res) > 0.1){
         double delta =-(res)/df(x0);
+        if( delta > 1e-4) 
+            delta = 1e-4;
+        else if ( delta < -1e-4)
+            delta = - 1e-4;
         x0= x0+delta;
-        printf("%25.15f %25.15f\n", x0, res);
-        ++iter;
+        printf("%d %25.15f %25.15f\n",++iter, x0, res);
+        res = f(x0);
     }
 }

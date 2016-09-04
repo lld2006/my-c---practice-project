@@ -9,7 +9,7 @@ using namespace std;
 //need to write code using zero-suppressed decision diagram (ZDD)
 unsigned int nn , ng;
 void numbermind(unsigned int nc, const vector<int>& vguess, const vector<int>& vstat,
-                const vector<int>& veff, const vector<vector<int> >& vnumber, 
+                const vector<int>& veff, const vector<vector<int> >& vnumber,
                 const vector<int>& vcolflag){
     //vcolflag: how many candidates in this col
     //use the one with maximum correct guesses as candidate
@@ -27,7 +27,7 @@ void numbermind(unsigned int nc, const vector<int>& vguess, const vector<int>& v
         if(vnumber[i].size()==1 && vcolflag[i] == 1){//one candidate left
             vector<int> vg2(vguess), ve2(veff), vstat2(vstat), vcol2(vcolflag);
             for(unsigned int j = 0; j < ng; ++j){
-                int index = j * nn +  i;
+                int index = j * nn + i;
                 if(vg2[index] != -1){
                     if(vg2[index] == vnumber[i][0])
                         --vstat2[j];
@@ -41,7 +41,7 @@ void numbermind(unsigned int nc, const vector<int>& vguess, const vector<int>& v
         }
     }
     unsigned int selected_guess = 0;
-    double  ncand = 0;
+    double ncand = 0;
     for(unsigned int i = 0; i < vstat.size(); ++i){
         if(veff[i] != -1 && (double)vstat[i]/(double)veff[i] > ncand){
             ncand = (double)vstat[i]/(double)veff[i];

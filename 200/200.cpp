@@ -24,7 +24,7 @@ bool prime_proof(i64 value)
        vdigits.push_back(res);
        v1 /= 10;
    }
-   if(vdigits[0]%2==0){
+   if(!(vdigits[0] & 1)){
         for(int i = 1; i <10; i+=2){
             v1 = value+i-vdigits[0];
             if(isPrime(v1, primes))
@@ -91,10 +91,12 @@ int main()
         }else{
             sort(squbes.begin(), squbes.end());
             for(unsigned int i = cnt+1; i<=200; ++i){
-                if(i == 200) printf("%lld\n", squbes[i-cnt-1]);
+                if(i == 200){ 
+                    //print the 200th number
+                    printf("%lld\n", squbes[i-cnt-1]);
+                    return 0;
+                }
             }
-            //print the 200th number
-            break;
         }
     }
 }

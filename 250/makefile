@@ -1,2 +1,2 @@
-set: set.cpp
-	g++ -Wall -g set.cpp -o set
+set: set.cpp makefile
+	g++ -Wall -O3 set.cpp ../lib/tools.cpp -o set

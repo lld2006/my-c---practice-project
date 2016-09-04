@@ -342,4 +342,14 @@ GeneralInteger GeneralInteger::divide(const int den){
    ret.clear0();
    return ret;
 }
+i64 GeneralInteger::to_i64() const
+{
+    //assert(numbers.size() * 4 <= 19); //do not overflow
+    i64 ret = 0;
+    for(int i = number.size()-1; i >= 0; --i){
+        ret *= 10LL;
+        ret += number[i];
+    }
+    return ret;
+}
 #endif

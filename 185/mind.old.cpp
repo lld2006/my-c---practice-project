@@ -9,7 +9,7 @@
 using namespace std;
 
 //need to write code using zero-suppressed decision diagram (ZDD)
-//let us use a trick since the answer is unqiue, when number of 
+//let us use a trick since the answer is unqiue, when number of
 //correct guess exceed the limit, stop. if two guess have the same pattern, stop.
 
 unsigned int nn , ng; //in c++, static in class is better
@@ -18,7 +18,7 @@ string vcorrect;
 vector<int> selected;
 typedef std::tr1::unordered_map<std::string, int> hashmap;
 
-string string_sum(const string& va, const string& vb){//special version not applicable for general 
+string string_sum(const string& va, const string& vb){//special version not applicable for general
     // purpose vb is string of 0 1
     assert(va.size() == vb.size());
     string result;
@@ -44,7 +44,7 @@ int same_digits(const int a, const int b){
 bool string_less(const string& sa, const string & sb){
     assert(sa.size() == sb.size());
     for(unsigned int i = 0; i < sa.size(); ++i)
-        if(sa[i] > sb[i]) 
+        if(sa[i] > sb[i])
             return false;
     return true;
 }
@@ -56,11 +56,11 @@ public: void setstop(){ stop = true; flag.clear();}
         void setvalue(int val){value = val;}
         void setparent(int index){parent = index;};
         const string& get_vector() {return flag;}
-        int  get_value(){return value;}
-        int  get_parent(){return parent;}
+        int get_value(){return value;}
+        int get_parent(){return parent;}
         bool get_stop(){return stop;}
         treenode(int pindex, int val, const string& vf): parent(pindex)
-                                                      ,value(val) 
+                                                      ,value(val)
                                                       ,stop(false)
                                                       ,flag(vf)
         { }
@@ -74,7 +74,7 @@ private:
     int parent; //index of parent
     int value;
     bool stop;
-    string flag; //# of correct for all guess, 
+    string flag; //# of correct for all guess,
 };
 
 int select_next_col(vector<treenode>& parent, const vector<vector<std::string> >& v_level_col)
@@ -114,7 +114,7 @@ int select_next_col(vector<treenode>& parent, const vector<vector<std::string> >
         }
     }
     assert(col_sel >= 0);
-    return col_sel;    
+    return col_sel;
 }
 
 int main(){
@@ -142,11 +142,11 @@ int main(){
    }
    fclose(fp);
    //statistics about all guesses
-   //for(unsigned int i = 0 ; i < ng  -1; ++i)
-   //    for(unsigned int j = i+1; j < ng; ++j){
-   //         int isame = same_digits(i, j);
-   //         printf("%d %d %d\n", i, j, isame);
-   //    }
+   //for(unsigned int i = 0 ; i < ng -1; ++i)
+   // for(unsigned int j = i+1; j < ng; ++j){
+   // int isame = same_digits(i, j);
+   // printf("%d %d %d\n", i, j, isame);
+   // }
    //exit(0);
     //data reading end
     vector<vector<treenode> > tree;
@@ -167,7 +167,7 @@ int main(){
         }
     }
     //start levelized tree
-    for(unsigned int level = 1; level <= nn;  ++level){
+    for(unsigned int level = 1; level <= nn; ++level){
         statmap.clear();
         vector<treenode>& parent(tree[level-1]);
         vector<treenode>& child(tree[level]);

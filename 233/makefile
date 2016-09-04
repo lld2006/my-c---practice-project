@@ -1,2 +1,2 @@
-cir: cir.cpp
-	g++ -Wall -g cir.cpp ../lib/tools.cpp -o cir
+233: 233.cpp
+	g++ -Wall -O3 233.cpp ../lib/tools.cpp -o 233

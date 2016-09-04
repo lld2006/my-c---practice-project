@@ -38,6 +38,7 @@ void search_level(int level, int da_left, int db_left, const int da, const int d
         if(ratioset.find(result)==ratioset.end()){
             ratioset.insert(result);
             ++cnt;
+            if(dr > 2.0)
             printf("final cnt=%d da=%d db=%d %d %d %30.20f\n",cnt,da, db,a1, b1,dr  );
         }
         found = true;

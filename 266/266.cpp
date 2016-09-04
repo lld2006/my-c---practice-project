@@ -43,6 +43,7 @@ int main()
     vector<int> primes;
     vector<double> vplogs;
     primeWithin(primes, 190);
+    printf("number of primes is %zu\n", primes.size());
     int half = primes.size()/2;
     vplogs.resize(primes.size(), 0);
     for(unsigned int i = 0; i < primes.size(); ++i)
@@ -57,7 +58,7 @@ int main()
     for(int i = 1; i<half; ++i){
         int nshift = 1<<i;
         for(int j = 0; j < nshift; ++j){
-            assert(i+half <vl.size());
+            assert(i+half <static_cast<int>(vl.size()));
             vl[nshift+j]=dipair(vl[j].first+vplogs[i],nshift+j);
             vh[nshift+j]=dipair(vh[j].first+vplogs[i+half], nshift+j);
         }
@@ -65,18 +66,19 @@ int main()
     sort(vl.begin(), vl.end(), pairsort()); 
     sort(vh.begin(), vh.end(), pairsort()); 
     int nlow = -1, nhigh = -1;
-    double vmin = 100.0;
-    for(unsigned int i = 0; i < vh.size(); ++i){
-        if(vh[i].first > d2) break;
-        double left = d2 - vh[i].first;
-        assert( left > 0);
-        int nlt = bsearch(vl, left);
-        if(nlt < 0) continue;
-        
-        if(left - vl[nlt].first < vmin){
-            nlow = vl[nlt].second;
-            nhigh = vh[i].second;
-            vmin = left -vl[nlt].first;
+    double vmin = 0.0;
+    int mindex = vh.size()-1;
+    for(unsigned int mlow = 0; mlow < vl.size(); ++mlow){
+        if(vl[mlow].first+ vh[mindex].first > d2)
+            while(vl[mlow].first + vh[mindex].first > d2 && mindex >= 0) --mindex;
+        assert(mindex >= 0);
+        double value = vl[mlow].first + vh[mindex].first;
+        assert(value < d2);
+        assert(vl[mlow].first + vh[mindex+1].first > d2);
+        if(value > vmin){
+            nlow = vl[mlow].second;
+            nhigh = vh[mindex].second;
+            vmin = value;
         }
     }
     i64 prod = 1;

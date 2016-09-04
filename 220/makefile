@@ -1,2 +1,2 @@
-prime: prime.cpp
-	g++ -Wall -g prime.cpp -o prime
+dragon: dragon.cpp
+	g++ -Wall -g dragon.cpp -o dragon

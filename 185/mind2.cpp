@@ -8,7 +8,7 @@
 using namespace std;
 
 //need to write code using zero-suppressed decision diagram (ZDD)
-//let us use a trick since the answer is unqiue, when number of 
+//let us use a trick since the answer is unqiue, when number of
 //correct guess exceed the limit, stop. if two guess have the same pattern, stop.
 
 unsigned int nn , ng; //in c++, static in class is better
@@ -26,7 +26,7 @@ vector<int> vector_sum(const vector<int>& va, const vector<int>& vb){
 bool vless_or_equal(const vector<int>& va, const vector<int>& vb){
     assert(va.size() == vb.size());
     for(unsigned int i = 0; i < va.size(); ++i){
-        if(va[i] > vb[i]) 
+        if(va[i] > vb[i])
             return false;
     }
     return true;
@@ -58,7 +58,7 @@ public: void setstop(){ stop = true; flag.clear();}
         int get_parent(){return parent;}
         bool get_stop(){return stop;}
         treenode(int pindex, int val, vector<int> vf): parent(pindex)
-                                                      ,value(val) 
+                                                      ,value(val)
                                                       ,stop(false)
                                                       ,flag(vf)
         { }
@@ -72,7 +72,7 @@ private:
     int parent; //index of parent
     int value;
     bool stop;
-    vector<int> flag; //# of correct for all guess, 
+    vector<int> flag; //# of correct for all guess,
 };
 
 int main(){
@@ -105,7 +105,7 @@ int main(){
     vector<vector<treenode> > tree;
     tree.resize(nn+1);
     tree[0].resize(1);
-    for(unsigned int level = 1; level <= nn;  ++level){
+    for(unsigned int level = 1; level <= nn; ++level){
         statmap.clear();
         vector<treenode>& parent(tree[level-1]);
 

@@ -1,2 +1,2 @@
 wall: wall.cpp
-	g++ -Wall -g wall.cpp -o wall
+	g++ -Wall -O3 wall.cpp -o wall

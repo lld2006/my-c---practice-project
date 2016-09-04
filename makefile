@@ -1,2 +1,3 @@
-383: 383.cpp
-	g++ -Wall -g 383.cpp -std=c++0x -o 383
+# add makefile to the list, if makefile changed, still need to compile
+518: 518.cpp makefile ../lib/tools.cpp ../lib/tools.h
+	g++ -Wall -g 518.cpp ../lib/tools.cpp -std=c++0x -o 518

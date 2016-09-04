@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cstdlib>
 #include "../lib/tools.h"
 int cycle0(int num)
 {
@@ -41,6 +42,8 @@ i64 cycle(i64 num)
 }
 int main()
 {
+    printf("%lld\n", cycle(99999989));
+    exit(1);
     int target = 100000;
     vector<int> primes;
     primeWithin(primes, target);

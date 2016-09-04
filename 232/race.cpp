@@ -1,5 +1,4 @@
 #include "../lib/tools.h"
-//#include <cmath>
 #include <cassert>
 #include <cstdio>
 int dim = 100;

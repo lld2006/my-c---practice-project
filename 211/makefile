@@ -1,2 +1,2 @@
-s2: s2.cpp ../lib/tools.cpp 
-	g++ -Wall -g s2.cpp ../lib/tools.cpp -o s2
+211: 211.cpp ../lib/tools.cpp 
+	g++ -Wall -O3 211.cpp ../lib/tools.cpp -o 211

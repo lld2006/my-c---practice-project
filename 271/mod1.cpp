@@ -2,6 +2,10 @@
 #include <cstdio>
 #include "../lib/tools.h"
 #include "../lib/int2.h"
+//the idea is simple, x^3 mod (pq) = 1 means x^3 mod p == 1 and x^3 mod q == 1
+//so we first find all candidates satisfy the first modulo equation, and then 
+//check (x+k*p)^3 mod q == 1? but this is not a standard way of doing it, since 
+//I still need to use number out of range of 2^64
 int main()
 {
     vector<int> primes;
@@ -40,11 +44,11 @@ int main()
             }
             swap(candidates, newcand);
             prod = newprod;
-            printf("%d %lld %d\n", primes[i], prod, candidates.size());
+            printf("%d %lld %zu\n", primes[i], prod, candidates.size());
         }
     }
     long long int sum(0);
-    for(unsigned int i = 0; i < candidates.size(); ++i)
+    for(unsigned int i = 1; i < candidates.size(); ++i)
         sum += candidates[i];
     printf("%lld\n", sum);
 }

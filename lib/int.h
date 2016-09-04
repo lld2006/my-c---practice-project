@@ -54,6 +54,7 @@ public:
   GeneralInteger power(int n);
   GeneralInteger divide(const GeneralInteger& denom, GeneralInteger& remainder) const;
   GeneralInteger divide(int den);
+  i64 to_i64() const;
   void clear0();
 private:
   vector<int> number;  //A_0, A_1, A_2,...,A_n-2, A_n-1;

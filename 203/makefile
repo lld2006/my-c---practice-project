@@ -1,2 +1,2 @@
-pastri: pastri.cpp ../lib/tools.h ../lib/tools.cpp ../lib/int.h ../lib/int.cpp
-	g++ -Wall -g pastri.cpp ../lib/tools.h ../lib/tools.cpp ../lib/int.h ../lib/int.cpp -o pastri
+203: 203.cpp ../lib/tools.h ../lib/tools.cpp 
+	g++ -Wall -g 203.cpp ../lib/tools.cpp -o 203 -std=c++0x

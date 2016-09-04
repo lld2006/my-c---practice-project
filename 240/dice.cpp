@@ -7,11 +7,11 @@ int max_v = 12;//12
 int ntotal = 20;//20
 int ntop = 10;//10
 int nsum = 70;//70
-//int max_v = 6;//12
-//int ntotal = 5;//20
-//int ntop = 3;//10
-//int nsum = 15;//70
-i64 dice_top_sum(int v_curr,int n_curr, int sum_curr, vector<int> vstat){
+//looks like I made a correct decision, since consider large number first
+//can significantly restrict the search space.
+//another possible optimization is to introduce another variable minimum_in_top_10,
+//once the curr value is less than it, we can immdiately stop the search. 
+i64 dice_top_sum(int v_curr,int n_curr, int sum_curr, vector<int>& vstat){
     i64 nr = 0;
     if(n_curr == ntotal){
         nr = nfac[ntotal];
@@ -25,29 +25,27 @@ i64 dice_top_sum(int v_curr,int n_curr, int sum_curr, vector<int> vstat){
     }
     if(n_curr == ntop && sum_curr != nsum) return 0;
     if(n_curr < ntop){
-        for(unsigned int i = v_curr; i >= 1; --i){
+        for( int i = v_curr; i >= 1; --i){
            int new_sum = sum_curr + i;
-           int new_v = i;
            int new_n = n_curr + 1;
-           if( (ntop - new_n) * 1 + new_sum > nsum || (ntop-new_n)*new_v+new_sum < nsum)
+           if( (ntop - new_n) * 1 + new_sum > nsum || (ntop-new_n)*i+new_sum < nsum)
                continue;
-           vector<int> newstat(vstat);
-           ++newstat[new_v];
-           nr += dice_top_sum(new_v, new_n, new_sum, newstat);
+           ++vstat[i];
+           nr += dice_top_sum(i, n_curr+1, new_sum, vstat);
+           --vstat[i];
         }
-    }else{//no sum constrain only value constrain
+    }else{//no sum constrain only value constrain, ntop is the top n numbers
         for(unsigned int i = v_curr; i >=1; --i){
             int new_v = i;
             int new_n = n_curr+1;
-            vector<int> newstat(vstat);
-            ++newstat[new_v];
-            nr += dice_top_sum(new_v, new_n,sum_curr, newstat);
+            ++vstat[new_v];
+            nr += dice_top_sum(new_v, new_n,sum_curr, vstat);
+            --vstat[new_v];
         }
     }
     return nr;
 }
 int main(){
-//recursive? 
     vector<int> stat;
     nfac.resize(ntotal+1, 0);
     nfac[0]=1;

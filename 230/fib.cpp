@@ -9,7 +9,7 @@ using namespace std;
 
 vector<i64> fvec;
 i64 func(i64 n){
-    return (127LL+19*n)*power(7, n);
+    return (127LL+19*n)*power(7LL, n);
 }
 
 int searchPosition(i64 number){

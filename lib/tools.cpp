@@ -8,42 +8,18 @@
 #include "tools.h"
 #include "int2.h"
 #include <tr1/unordered_set>
+#include <sys/time.h>
+#include <bitset>
 using namespace std;
-void primeWithin( vector<int>& vecr, int limit)
-{
-    vecr.clear();
-    int odd = (limit+1)/2;
-    vector<short> vec; //for i >=1 number represent 2i+1 assume all prime
-    vec.resize(odd, 1);
-    vec[0] = 0;
-    int ip= 1;  // prime number from 2 3 5 ....
-    int iprime = 3;
-    int max = sqrt((double) limit)+1;
-    while( iprime <= max )
-    {
-      // sieve
-        for(int i =(iprime * iprime-1)/2; i < odd; i+=iprime)
-            vec[i] = 0;
-      //find next prime
-        while(vec[++ip] == 0);
-
-        iprime = 2*ip+1;
-    }
-    vecr.push_back(2);
-    int nx = accumulate(vec.begin(), vec.end(), 0);
-    vecr.reserve(nx+1);
-    for( int i = 1; i< odd; ++i)
-        if( vec[i] ) vecr.push_back(2*i+1);
-}
-
-/* 
-void primeWithin( vector<int>& vecr, int limit)
+//here I tried some other possibility like char or short
+//but bool is best up till now
+void primeWithin( vector<int>& vecr, const int limit)
 {
     vecr.clear();
     int odd = (limit+1)/2;
     vector<bool> vec; //for i >=1 number represent 2i+1 assume all prime
     vec.resize(odd, true);
-    vec[0] = false;
+    vec[0] = 0;
     int ip= 1;  // prime number from 2 3 5 ....
     int iprime = 3;
     int max = sqrt((double) limit)+1;
@@ -53,7 +29,7 @@ void primeWithin( vector<int>& vecr, int limit)
         for(int i =(iprime * iprime-1)/2; i < odd; i+=iprime)
             vec[i] = false;
       //find next prime
-        while(!vec[++ip]);
+        while(vec[++ip] == false);
 
         iprime = 2*ip+1;
     }
@@ -64,15 +40,6 @@ void primeWithin( vector<int>& vecr, int limit)
         if( vec[i] ) vecr.push_back(2*i+1);
 }
 
-*/
-/* 
-void primeSegSieve(vector<int>& vecr, i64 limit )
-{
-    if(limit < )
-    vecr.clear();
-    vecr.push_back(2);
-}
-*/
 
 //without prime list
 bool isPrime( i64 num )
@@ -302,6 +269,7 @@ int binary_find(int num, vector<int>& vec){
 
 // a * x + b * y = gcd 
 // x y maybe negative
+// x y gcd are output and a b are input
 void extended_euclid(i64 a, i64 b, i64& x, i64& y, i64& gcd){
     if(b == 0){
         gcd = a;
@@ -316,10 +284,7 @@ void extended_euclid(i64 a, i64 b, i64& x, i64& y, i64& gcd){
     }
 }
 
-// I forgot to add a comment on this function, this is a bad habit.
-// when I really need this function, I myself almost forgot how it works
-// and why it is important for prime detection! 
-// The idea is sometimes a series numbers are in quadratic form, so with 
+// Sometimes a series numbers are in quadratic form, so with 
 // this function, we can sieve out those numbers that are composite.
 // if the boolean returned is false, it means no solutiona available for
 // the quadratic mod equation n^2 % prime == residue;
@@ -328,7 +293,7 @@ bool tonelli_shank(i64 prime, i64 residue, i64& sol)
 {
     sol = 0;
 
-    assert((prime-1)%2 == 0);
+    assert(prime & 1);
     i64 pow = (prime-1)/2;
     if(powermodule(residue, pow, prime) != 1) return false;
     int s = 0;
@@ -344,18 +309,28 @@ bool tonelli_shank(i64 prime, i64 residue, i64& sol)
     }else{
         bool found = false;
         i64 z = 0;
-        for(i64 i = 2; i < prime -1; ++i){
-            i64 ret = powermodule(i, (prime-1)/2, prime);
-            if(ret == prime-1){
-                z = i;
+        //old trial and error method for non residual
+        //for(i64 i = 2; i < prime -1; ++i){
+        //    i64 ret = powermodule(i, (prime-1)/2, prime);
+        //    if(ret == prime-1){
+        //        z = i;
+        //        found = true;
+        //        break;
+        //    }
+        //}
+        //following jacobi symbol is from PE problem 216
+        // stubbscroll in page 5 of the discussion
+        for(z = 3; z < prime -1; z+= 2){
+            if(jacobi(z, prime)== -1){
                 found = true;
                 break;
             }
         }
         assert(found == true);
+        //old shank tonelli method
         i64 r = powermodule(residue, (q+1)/2, prime);
         i64 t = powermodule(residue, q, prime);
-        i64 c = powermodule(z,q, prime);
+        i64 c = powermodule(z,q, prime);//equivalent to b ofsq
         i64 m = s;
         i64 b = 0;
         while(t != 1){
@@ -368,13 +343,11 @@ bool tonelli_shank(i64 prime, i64 residue, i64& sol)
                 assert (ix < m );
             }
             int px = m-ix-1;
-            int pb = 0;
             b = c;
-            while(pb < px){
-                b *= b;
-                b %= prime;
-                ++pb;
+            for( int j = 0; j < px; ++j){
+                b*=b; b%= prime;
             }
+            
             r = r*b;
             r %= prime;
             c = b * b;
@@ -384,6 +357,18 @@ bool tonelli_shank(i64 prime, i64 residue, i64& sol)
             m = ix;
         }
         sol = r;
+        //from stubb
+        //i64 b = powermodule(z,q, prime);
+        //i64 r = powermodule(residue, (q+1)/2, prime);
+        //i64 r2a = r*powermodule(residue,(q+1)/2-1,prime)%prime;
+        //int J=0;
+        //for(int i=0;i<s-1;i++) {
+        //   i64 c=powermodule(b,2*J,prime);
+        //   c=r2a*c%prime;
+        //   c=powermodule(c,1ULL<<(s-i-2),prime);
+        //   if(c==prime-1) J+=1ULL<<i;
+        //}
+        //sol =  r*powermodule(b,J,prime)%prime;
         return true;
     }
 }
@@ -395,17 +380,70 @@ void factor_table_min( int nmax, vector<int>& ftable)
         ftable[i] = i;
 
     int root = sqrt(nmax);
-    //without considering square root, bugs created
     
     for( int i = 2; i<= root; ++i ){
         if(ftable[i] < static_cast<int>(i)) continue;
-        for(unsigned int j = i *i; j <= ftable.size(); j+=i){
+        for(unsigned int j = i*i; j < ftable.size(); j+=i){ 
+            //an equal sign up here with size, should be bug. now fixed
             if( ftable[j] > static_cast<int>(i) ) 
                 ftable[j] = i;
         }
     }  
 }
+//no even number in the table
+void factor_using_table_odd(i64 n, IntPairVec& vpairs, const vector<int>& ftable)
+{
+    vpairs.clear(); 
+    i64 n2 = 0;
+    while( (n & 1) == 0){
+        n >>= 1;
+        ++n2;
+    }
+    if(n2)
+        vpairs.push_back(IntPair(2, n2));
 
+    assert( (n & 1) > 0);
+    int np = (n-1) >> 1;
+    int pwr = 0;
+    int curr_fac = ftable[np];
+    while(curr_fac>1){
+        ++pwr;
+        n /= curr_fac;
+        np = (n-1) >> 1;
+        while(curr_fac == ftable[np]){
+            ++pwr;
+            n /= ftable[np];
+            np = (n-1) >> 1;
+        }
+        vpairs.push_back(IntPair(curr_fac, pwr));
+        curr_fac = ftable[np];
+        pwr = 0;
+    }
+}
+
+//just for even numbers, need to double the space is not a good
+//idea. let me try 
+void factor_table_min_odd( int nmax, vector<int>& ftable)
+{
+    int nsize = (nmax+1)/2;//the numbers are 1 3 5 7 ...
+    ftable.resize(nsize);
+    for( unsigned int i = 0; i < ftable.size(); ++i )
+        ftable[i] = (i<<1)+1;
+
+    int root = sqrt(nmax);
+    
+    for( int i = 1; i<= root; ++i ){
+        int value = (i<<1)+1;
+        //already assigned a min factor to i, so it 
+        //is not a prime
+        if(ftable[i] < value) continue; 
+        int start = (value*value-1) >> 1;
+        for(unsigned int j = start; j < ftable.size(); j+=value){
+            if( ftable[j] > value ) 
+                ftable[j] = value;
+        }
+    } 
+}
 //if not necessary, use min, which is faster
 void factor_table_max( int nmax, vector<int>& ftable)
 {
@@ -561,14 +599,7 @@ bool strong_pseudo_test(i64 p)
     if( p == 2) return true;
     if(p % 2 == 0 || p == 1)
         return false;
-    vector<int> vp;
-    vp.resize(6, 0);
-    vp[0] = 2;
-    vp[1] = 3;
-    vp[2] = 5;
-    vp[3] = 7;
-    vp[4] = 11;
-    vp[5] = 13;
+    vector<int> vp = {2,3,5,7,11,13};
     i64 p1 = p - 1;
     int o2 = 0;
     while (p1 % 2 == 0){
@@ -601,6 +632,7 @@ i64 mult64mod(u64 a, u64 b, u64 mod)
 }
 
 i64 powermodule(i64 base, i64 expo, i64 module){
+    assert(expo>=0);
     i64 result = 1;
     i64 cbase = base;
     while(expo){
@@ -693,7 +725,7 @@ void prime_generate_sq2(i64 p, int& a, int& b)
         swap(a, b);
 }
 
-i64 totient_with_factor(IntPairVec& vfac)
+i64 totient_with_factor(const IntPairVec& vfac)
 {
     i64 prod = 1;
     for(unsigned int i = 0; i < vfac.size(); ++i){
@@ -704,3 +736,92 @@ i64 totient_with_factor(IntPairVec& vfac)
     }
     return prod;
 }
+
+//sieve version to get totient, I am so stupid that 
+//that I forget using sieve
+void totient_using_table(vector<int>& vt, int nmax)
+{
+    //initialization
+    vt.clear();
+    vt.resize(nmax+1);
+    for(unsigned int i = 1; i <vt.size(); ++i){
+        vt[i] = i;
+    }
+    //sieve
+    for(int i = 2; i < (int)vt.size(); ++i){
+        if(vt[i] != i) continue;
+        vt[i] = i - 1;
+        for(unsigned int j = i + i; j < vt.size(); j+= i){
+            vt[j] /= i;
+            vt[j] *= (i-1);
+        }
+    }
+}
+
+int jacobi(int a,int m) 
+{
+   int t=1,z;
+   a%=m;
+   while(a) {
+      int cnt = 0;
+      while(!(a&1)) {
+         a>>=1;
+         ++cnt;
+      }
+      if((cnt & 1) && (((m&7)==3 || (m&7)==5))) 
+          t=-t;
+      z=a,a=m,m=z;
+      if((a&3)==3 && (m&3)==3) 
+          t=-t;
+      a%=m;
+   }
+   if(m==1) return t;
+   return 0;
+}
+double gettime() 
+{
+  struct timeval t;
+  gettimeofday(&t,NULL);
+  return t.tv_sec+t.tv_usec/1000000.;
+}
+
+void xgcd(const i64 p, const i64 q, i64& gcd, i64& pcoeff, i64& qcoeff)
+{ i64 a[3]; a[0] = 1; a[1] = 0; a[2] = p; 
+   i64 b[3]; b[0] = 0; b[1] = -1; b[2] = q; 
+   while (a[2] != 0){ 
+       i64 k = b[2]/a[2]; 
+       b[0] -= k * a[0]; 
+       b[1] -= k*a[1]; 
+       b[2] -= k*a[2]; 
+       if (b[2] == 0){ 
+           b[0] = a[0]; a[0] = 0; b[1] = a[1]; a[1] = 0; b[2] = a[2]; a[2] = 0; 
+       } else { 
+           i64 k = a[2]/b[2]; a[0] -= k*b[0]; a[1] -= k*b[1]; a[2] -= k*b[2]; 
+       } 
+   } 
+   gcd = b[2]; pcoeff = b[0]; qcoeff = b[1]; 
+} 
+
+//TODO check numbers in vp has no common factors
+i64 chinese_remainder_theorem(const vector<i64>& vp, const vector<i64>& vr)
+{
+    i64 N = 1; 
+    for(unsigned int i = 0; i < vp.size(); ++i)
+        N*= vp[i];
+    i64 sum = 0;
+    for(unsigned int i = 0; i< vp.size(); ++i){
+        i64 a =  N /vp[i];
+        i64 b = vp[i];
+        i64 x=1, y=1, gcd=1;
+        extended_euclid(a, b, x, y, gcd);
+        if((a *x ) % b != 1){
+            assert(x < 0);
+            x+=b;
+            assert((a * x )% b == 1);
+        }
+        sum +=  vr[i] * a *x;
+    }
+    sum %= N;
+    return sum;
+}
+

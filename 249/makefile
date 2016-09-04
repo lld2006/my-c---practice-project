@@ -1,2 +1,2 @@
-set0: set0.cpp ../lib/tools.cpp
-	g++ -Wall -g set0.cpp ../lib/tools.cpp -o set0
+249: 249.cpp ../lib/tools.cpp makefile
+	g++ -Wall -O3 249.cpp ../lib/tools.cpp -o 249

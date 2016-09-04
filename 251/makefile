@@ -1,2 +1,2 @@
-cardano: cardano.cpp ../lib/tools.cpp
-	g++ -Wall -g cardano.cpp ../lib/tools.cpp -o cardano
+251: 251.cpp ../lib/tools.cpp makefile ../lib/tools.h
+	g++ -Wall -O3 251.cpp ../lib/tools.cpp -o 251
