@@ -1,0 +1,55 @@
+#include "../lib/tools.h"
+//vn how are the number used
+//nt is the total sum
+//ncur is the current number to be continued
+//ncount is the number counted should be less than equal to 10
+//4511732542
+//40561817703823564929
+i64 find_all_sol(const vector<int>& vn, i64 nt, int ncur, int ncount)
+{
+    if(ncur == 10){ //all processed
+        if(ncount != 10) return 0LL;
+        if((90-2*nt)%11 != 0) return 0LL;
+        assert(vn.size()==10);
+        //need some post processing especially for 0
+        i64 fac = 3628800LL*3628800LL;
+        if(vn[0] == 0){
+            for(int i = 0; i < 10; ++i){
+                if(vn[i] == 0|| vn[i]==2)
+                    fac /= 2;
+            }
+        }else if(vn[0] == 1){
+            fac *= 9LL; //0 can not be the first number
+            fac /= 10LL;
+            for(int i = 1; i < 10; ++i){
+                if(vn[i] == 0|| vn[i]==2)
+                    fac /= 2;
+            }
+        }else{//two zero in odd positions
+            fac *= 8LL; //0 can not be the first number
+            fac /= 10LL;
+            for(int i = 0; i < 10; ++i){
+                if(vn[i] == 0|| vn[i]==2)
+                    fac /= 2;
+            }
+        }
+        fac /= (1LL<<10);
+        return fac;
+    }
+    vector<int> vn1(vn);
+    i64 sum = 0LL;
+    int nmax = 2 <= (10-ncount)? 2:(10-ncount);
+    for(int i = 0; i <=nmax; ++i){
+        vn1[ncur] = i;
+        sum += find_all_sol(vn1, nt+i*ncur, ncur+1, ncount+i);
+    }
+    return sum;
+
+}
+int main()
+{
+    vector<int> vn;
+    vn.resize(10, 0);
+    i64 sum = find_all_sol(vn, 0, 0, 0);
+    printf("%lld\n", sum);
+}

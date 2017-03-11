@@ -7,9 +7,10 @@
 
 #ifndef TOOLS_H
 #define TOOLS_H
+//TODO FFT for two polynomial multiplication
 
 using namespace std;
-void primeWithin( vector<int>& vecr, int limit);
+void sievePrimes(int limit, vector<int>& vecr);
 bool isPrime( i64 i );
 bool isPrime(u64 num, vector<int>& primes);
 //this is a costly factorization method, but if we 
@@ -22,11 +23,12 @@ bool isPermutation(i64 im, i64 in);
 bool isPalindromic(i64 num, int base);
 int binary_find(int num, vector<int>& vec);
 void extended_euclid(i64 a, i64 b, i64& x, i64& y, i64& gcd);
+void extended_euclid2(i64 a, i64 b, i64& x, i64& y, i64& gcd);
 void xgcd(const i64 p, const i64 q, i64& gcd, i64& pcoeff, i64& qcoeff);
 i64 pollard_rho(i64 n, int n0, int debug);
 bool miller_rabin(i64 xn, unsigned int nsampling);
+//not good for very large numbers, prefer < 1e9
 i64 product_mod(i64 n1, i64 n2, i64 mod);
-void kara_mult(int nsize, int* a, int* b, int* ret);
 inline int index0(int dim, int i, int j) { return i*dim+j;}
 inline int index3o(i64 i, i64 j, i64 k) 
 { 
@@ -36,6 +38,7 @@ inline int index3o(i64 i, i64 j, i64 k)
 void factor_table_min( int nmax, vector<int>& ftable);
 void factor_table_min_odd( int nmax, vector<int>& ftable);
 void factor_table_max( int nmax, vector<int>& ftable);
+//quadratic mod equation solve
 bool tonelli_shank(i64 prime, i64 residue, i64& sol); 
 int  jacobi(int a,int m);
 bool strong_pseudo_test(i64 p);
@@ -46,6 +49,10 @@ i64  totient_with_factor(const IntPairVec& vp);
 void totient_using_table(vector<int>& vt, int nmax);
 void farey_sequence(vector<IntPair>& vf, int nlimit, bool ascending);
 i64 chinese_remainder_theorem(const vector<i64>& vp, const vector<i64>& vr);
+int find_multiplicative_order(i64 nbase, i64 prime, int power, const vector<int>& vfac);
+
+vector<i64> matrix_multiplication(const vector<i64>& A, const vector<i64>& B, i64 nmod, int dim);
+vector<i64> matrix_power(vector<i64> A, i64 np, i64 nmod, int dim);
 
 void prime_generate_sq2(i64 p, int& a, int& b);
 double gettime() ;
@@ -179,9 +186,27 @@ itype combination(itype n, itype m){
     return prod;
 }
 
-//this is an optimized code for gcd. 
-//I compared with other method, this one is two times 
-//faster than other method.
+//TODO still need to generalize its use, for example
+//nmod must be a prime and all mult op should not equal
+//to nmod!
+template <typename itype>
+itype combination(itype n, itype m, itype nmod){
+    if(m == 0) return 1;
+    if( m > n/2) m = n-m;
+    itype pn = 1;
+    itype pd = 1;
+    for(itype i = 1; i<=m; ++i){
+        pn = product_mod(pn, (n-i+1), nmod);
+        pd = product_mod(pd, i, nmod);
+    }
+    i64 x, y, g;
+    extended_euclid(pd, nmod, x, y, g);
+    return product_mod(pn, x, nmod);
+}
+
+// this is an optimized version of gcd. 
+// I compared with other method, this one is two times 
+// faster than other method.
 // template functions
 // gcd function from PE, Robert_Gerbicz!
 template <typename itype> 

@@ -1,2 +1,2 @@
 049: 049.cpp 
-	g++ -Wall -g 049.cpp ../lib/tools.cpp -o 049
+	g++ -std=c++0x -Wall -O3 049.cpp ../lib/tools.cpp -o 049

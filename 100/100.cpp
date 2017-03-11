@@ -61,7 +61,10 @@ void pell_negative(int num, vector<int>& vroot)
 int main()
 {
     vector<int> vroot;
-    check_period(2, 1, vroot);
-    pell_negative(2, vroot);
+    int n = 2;
+    n=5;
+    int root = sqrt(n);
+    check_period(n, root, vroot);
+    pell_negative(n, vroot);
 }
 

@@ -12,7 +12,7 @@
 #include <bitset>
 using namespace std;
 //here I tried some other possibility like char or short
-//but bool is best up till now
+//but bool type has the best performance 
 void primeWithin( vector<int>& vecr, const int limit)
 {
     vecr.clear();
@@ -38,6 +38,11 @@ void primeWithin( vector<int>& vecr, const int limit)
     vecr.reserve(nx+1);
     for( int i = 1; i< odd; ++i)
         if( vec[i] ) vecr.push_back(2*i+1);
+}
+
+void sievePrimes(int limit , vector<int>& primes)
+{
+    primeWithin(primes, limit);
 }
 
 
@@ -267,6 +272,7 @@ int binary_find(int num, vector<int>& vec){
         return -1;
 }
 
+//did not find too much difference in my two versions
 // a * x + b * y = gcd 
 // x y maybe negative
 // x y gcd are output and a b are input
@@ -283,11 +289,44 @@ void extended_euclid(i64 a, i64 b, i64& x, i64& y, i64& gcd){
        y = tp - (a/b) * y;
     }
 }
+void extended_euclid2(i64 a, i64 b, i64& x, i64& y, i64& gcd)
+{
+    if(b == 0){
+        gcd = a;
+        x = 1;
+        y = 0;
+    }else if (b == 1){
+        gcd = 1;
+        x = 0; 
+        y = 1;
+    }else if(a % b == 0){
+        gcd = b;
+        x = 0;
+        y = 1;
+    }else{
+        i64 q=0;
+        i64 v[9]={a, 1, 0, b, 0, 1, 1, 0, 0}; 
+        i64* va = &v[0];
+        i64* vb = &v[3];
+        i64* vc = &v[6];
+        while(vc[0]){
+            q = va[0]/vb[0];
+            for(unsigned int i = 0 ; i < 3; ++i){
+                vc[i] = va[i]-q*vb[i];
+            }
+            if(vb[0]%vc[0] == 0) break;
+            swap(va, vb);
+            swap(vb, vc);
+        }
+        x = vc[1]; y = vc[2]; gcd = vc[0];
+    }
+    //assert(a*x+b*y==gcd);//may fail if x and y are huge
+}
 
 // Sometimes a series numbers are in quadratic form, so with 
 // this function, we can sieve out those numbers that are composite.
 // if the boolean returned is false, it means no solutiona available for
-// the quadratic mod equation n^2 % prime == residue;
+// the quadratic mod equation n^2 = residue(mod prime);
 // otherwise the solution is in "sol"
 bool tonelli_shank(i64 prime, i64 residue, i64& sol)
 {
@@ -530,41 +569,6 @@ i64 product_mod(i64 n1, i64 n2, i64 mod)
 }
     //multiplier bound at 1e9 
     //result bound at 1e15;
-
-
-
-void kara_mult(int nsize, int* a, int* b, int* ret)
-{
-    assert((nsize & 1) == 0 || nsize == 1);
-    unsigned int n2 = nsize >> 1;
-    int * ar = a;
-    int * al = a + n2;
-    int * br = b;
-    int * bl = b + n2;
-    int * asum = ret + 5 * nsize;
-    int * bsum = asum + n2;
-    int * x1 = ret;
-    int * x2 = ret + nsize; // shift size
-    int * x3 =  x2 + nsize; //shift 2 size
-    if(nsize <= 4){
-        for(unsigned int i = 0; i < static_cast<unsigned int>(nsize); ++i){
-            if(a[i] == 0) continue;
-            for(unsigned int j = 0; j < static_cast<unsigned int>(nsize); ++j){
-                ret[i+j] += a[i]*b[j];
-            }
-        }
-        return;
-    } //normal multiplication
-    for( unsigned int i = 0; i < n2; ++i){
-        asum[i] = al[i] + ar[i];
-        bsum[i] = bl[i] + br[i];
-    }
-    kara_mult(n2, ar, br, x1);
-    kara_mult(n2, al, bl, x2);
-    kara_mult(n2, asum, bsum, x3);
-    for(unsigned int i = 0; i < static_cast<unsigned int>(nsize); ++i) x3[i] -= (x1[i]+x2[i]);
-    for(unsigned int i = 0; i < static_cast<unsigned int>(nsize); ++i) ret[i+n2] += x3[i];
-}
 */
 //pi is a very small prime number 
 //number is now less than 2^32;
@@ -636,11 +640,10 @@ i64 powermodule(i64 base, i64 expo, i64 module){
     i64 result = 1;
     i64 cbase = base;
     while(expo){
-       int remainder = expo & 1; 
-       if(remainder){
-            result = mult64mod(result, cbase, module);
-       }
-        //i64 cbase1 = cbase;
+        int remainder = expo & 1; 
+        if(remainder){
+             result = mult64mod(result, cbase, module);
+         }
         cbase = mult64mod(cbase, cbase, module);
         assert(cbase >= 0);
         expo >>= 1;
@@ -737,8 +740,7 @@ i64 totient_with_factor(const IntPairVec& vfac)
     return prod;
 }
 
-//sieve version to get totient, I am so stupid that 
-//that I forget using sieve
+//sieve version to get totient, 
 void totient_using_table(vector<int>& vt, int nmax)
 {
     //initialization
@@ -823,5 +825,79 @@ i64 chinese_remainder_theorem(const vector<i64>& vp, const vector<i64>& vr)
     }
     sum %= N;
     return sum;
+}
+
+//this function is now used for number that can be expressed as prime^power only
+int find_multiplicative_order(i64 nbase, i64 prime, int np, const vector<int>& vfac)
+{
+    IntPairVec vpairs;
+    assert(prime &  1);
+    //find totient number 
+    i64 nmod = power(prime, (i64)np);
+    int totient = nmod / prime * (prime-1);
+
+    //this is the factorization of the totient number
+    factor_using_table(prime-1, vpairs,  vfac);
+    if(np > 1)
+        vpairs.push_back(IntPair(prime, np-1));
+        
+    i64 result = 1;
+    for(unsigned int i = 0; i < vpairs.size(); ++i){
+        int qi = vpairs[i].first; //base
+        int powi= vpairs[i].second;// power
+        int yi = totient / power(qi, powi);
+        int xi = powermodule((i64)nbase, (i64)yi, nmod);
+        if(xi == 1) continue; //has nothing to do with this prime factor
+        i64 t = xi; 
+        int cnt = 0;
+        do{
+            t = powermodule((i64)t , qi, nmod); //t^(q^n) == (t^q)^(q^(n-1)) !!!!!!
+            ++cnt;
+            assert(cnt <= powi);
+        }while(t != 1);
+        assert(t ==1);
+        result *= power(qi, cnt);
+    }
+    return result;
+}
+
+i64 product_mod(i64 n1, i64 n2, i64 mod)
+{//maybe not correct if overflow
+    n1%=mod; 
+    n2%=mod; 
+    n1*=n2; 
+    n1 %= mod;
+    return n1>=0?n1:n1+mod;
+}
+vector<i64> matrix_multiplication(const vector<i64>& A, const vector<i64>& B, i64 nmod, int dim)
+{
+    vector<i64> C;
+    C.resize(dim*dim, 0);
+    for( int i = 0; i<dim; ++i){
+        for( int j = 0; j<dim; ++j){
+            for( int k = 0; k<dim; ++k){
+                C[i*dim+j] += multmod(A[i*dim+k], B[k*dim+j], nmod);
+                C[i*dim+j] %= nmod;
+            }
+        }
+    }
+    return C;
+}
+
+vector<i64> matrix_power(vector<i64> A, i64 np, i64 nmod, int dim)
+{
+    vector<i64> base(A);
+    vector<i64> result;
+    result.resize(dim*dim, 0);
+    for( int i = 0; i < dim; ++i)
+    result[i*dim+i]= 1;
+    while(np){
+        if(np & 1){
+            result = matrix_multiplication(result, base, nmod, dim);
+        }
+        base = matrix_multiplication(base, base, nmod, dim);
+        np >>= 1;
+    }
+    return result;
 }
 

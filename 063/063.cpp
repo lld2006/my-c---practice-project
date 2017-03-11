@@ -8,7 +8,7 @@ int main()
     for(unsigned int i = 1; i<30; ++i){
         int vmin = pow(10., i/(i+1.))+1;
         cnt += 10 - vmin;
-        //printf("pow=%d min=%d cnt=%d\n",i+1, vmin, 10-vmin);
+        printf("pow=%d min=%d cnt=%d\n",i+1, vmin, 10-vmin);
         prod *= 10;
     }
     printf("%d\n", cnt);

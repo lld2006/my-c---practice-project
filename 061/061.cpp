@@ -19,7 +19,7 @@ int numbers(int n, int order)
         case 8:
             return n*(3*n-2);
         default:
-            assert(0);
+            assert(0);//should never come here
             return 0;
     }
 }
@@ -57,7 +57,8 @@ int main()
             vnum[q].push_back(IntPair(value, order));
         }
     }
-    //let us start from 8 since least number in 8
+    //let us start from 8 since octagonal numbers increase faster
+    //than others
     vector<int> flags;
     flags.resize(9, 0);
     for(unsigned int i = 15; i; ++i){

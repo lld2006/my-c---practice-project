@@ -13,7 +13,7 @@ i64 check_period(i64 num, i64 root)
     i64 q = root; // the integer part for each step
     i64 period = 0;
     i64 den = 1; //initialization of denominator 
-    while(q != stop){
+    while(q != stop){//last term in the periodical sequence is 2 *root
         assert((num - nt * nt) % den == 0);
         den = (num - nt * nt)/den;
         q = (root + nt)/ den;

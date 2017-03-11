@@ -5,6 +5,8 @@
 #include "../lib/tools.h"
 #include <unordered_map>
 
+//OK, count the number of digits appeared in cube and used it as a hash 
+//value
 i64 getNumber(i64 num){
     vector<int> vn;
     vn.resize(10, 0);

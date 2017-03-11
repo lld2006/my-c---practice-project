@@ -1,2 +1,2 @@
-markov: markov.cpp
-	g++ -Wall -g markov.cpp -std=c++0x -o markov
+386: 386.cpp ../lib/tools.h ../lib/tools.cpp makefile
+	g++ -Wall -O3 386.cpp ../lib/tools.cpp ../lib/tools.h -std=c++0x -o 386

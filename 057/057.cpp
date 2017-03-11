@@ -1,4 +1,6 @@
 #include "../lib/int.h"
+//why I am doing this? I can use double and log
+//to figure out the answer.
 int main()
 {
     GeneralInteger a0(1);
@@ -11,10 +13,6 @@ int main()
     while(iter < 1000){
        p = a0 + a1.multiply(2); 
        q = b0 + b1.multiply(2);
-       //p.print();
-       //printf("\n");
-       //q.print();
-       //printf("\n");
        if(p.numberDigit() != q.numberDigit())
            ++cnt;
        swap(a0, a1);

@@ -1,2 +1,2 @@
 060: 060.cpp ../lib/tools.h ../lib/tools.cpp
-	g++ -Wall -g 060.cpp ../lib/tools.cpp  -o 060
+	g++ -Wall -O3 -std=c++0x 060.cpp ../lib/tools.cpp  -o 060

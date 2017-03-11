@@ -1,3 +1,3 @@
-417: 417.cpp makefile
-	g++ 417.cpp -O3 ../lib/tools.cpp -std=c++0x -o 417
+417: 417.cpp makefile ../lib/tools.h
+	g++ 417.cpp -O3 ../lib/tools.cpp ../lib/tools.h -std=c++0x -o 417
 
