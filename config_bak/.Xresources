@@ -1,0 +1,43 @@
+XTerm*faceName:  Anonymous Pro for Powerline:style=Regular
+!XTerm*faceName:  Roboto Mono for Powerline 12:style=Regular
+!XTerm*faceName: Consolas, Dina, 
+!XTerm*faceName:  Dina
+xterm*faceSize: 14
+xterm*vt100*geometry: 80x30
+xterm*saveLines: 16384
+xterm*loginShell: true
+xterm*charClass: 33:48,35:48,37:48,43:48,45-47:48,64:48,95:48,126:48
+xterm*termName: xterm-256color
+xterm*eightBitInput: false
+xterm*activeIcon: true 
+
+! Hybrid Terminal Colours. Uses the palette from Tomorrow-Night:
+! https://github.com/chriskempson/tomorrow-theme/blob/master/vim/colors/Tomorrow-Night.vim
+! vim: ft=xdefaults
+
+*background: #1D1F21
+*foreground: #C5C8C6
+! black
+*color0: #282A2E
+*color8: #373B41
+! red
+*color1: #A54242
+*color9: #CC6666
+! green
+*color2: #8C9440
+*color10: #B5BD68
+! yellow
+*color3: #DE935F
+*color11: #F0C674
+! blue
+*color4: #5F819D
+*color12: #81A2BE
+! magenta
+*color5: #85678F
+*color13: #B294BB
+! cyan
+*color6: #5E8D87
+*color14: #8ABEB7
+! white
+*color7: #707880
+*color15: #C5C8C6
