@@ -6,8 +6,9 @@ int main()
     i64 r = 10;
     i64 x, y, g;
     for(i64 k=1; k<p; ++k){
-        extended_euclid(k,p, x, y, g);
-        i64 c = combination(p-2+r-k, r-1, p);
+        extended_euclid(p-k,p, x, y, g);
+        //i64 c = combination(p-2+r-k, r-1, p);
+        i64 c = combination(k+r-2, k-1, p);
         printf("k=%lld inv=%lld, c=%lld\n", k, x, c);
         sum += product_mod(c, x, p);
     }

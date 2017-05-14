@@ -15,6 +15,7 @@ using namespace std;
 //but bool type has the best performance 
 void primeWithin( vector<int>& vecr, const int limit)
 {
+    if(limit == 1) return;
     vecr.clear();
     int odd = (limit+1)/2;
     vector<bool> vec; //for i >=1 number represent 2i+1 assume all prime

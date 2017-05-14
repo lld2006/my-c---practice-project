@@ -7,6 +7,5 @@ typedef pair<i64, i64> I64Pair;
 typedef vector<int> IntVec ;
 typedef vector<IntPair> IntPairVec;
 typedef vector<I64Pair> I64PairVec;
-typedef vector<int>::iterator IntIter;
 
 

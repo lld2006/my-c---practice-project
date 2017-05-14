@@ -1,0 +1,599 @@
+==6915== Memcheck, a memory error detector
+==6915== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==6915== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==6915== Command: ./406 500 2 3
+==6915== Parent PID: 5916
+==6915== 
+--6915-- 
+--6915-- Valgrind options:
+--6915--    --leak-check=full
+--6915--    --log-file=val.log
+--6915--    -v
+--6915-- Contents of /proc/version:
+--6915--   Linux version 4.4.0-62-generic (buildd@lcy01-30) (gcc version 5.4.0 20160609 (Ubuntu 5.4.0-6ubuntu1~16.04.4) ) #83-Ubuntu SMP Wed Jan 18 14:10:15 UTC 2017
+--6915-- 
+--6915-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-rdtscp-sse3-avx
+--6915-- Page sizes: currently 4096, max supported 4096
+--6915-- Valgrind library directory: /usr/lib/valgrind
+--6915-- Reading syms from /home/euler/coding/my-c---practice-project/406/406
+--6915-- Reading syms from /lib/x86_64-linux-gnu/ld-2.23.so
+--6915--   Considering /lib/x86_64-linux-gnu/ld-2.23.so ..
+--6915--   .. CRC mismatch (computed e101f79f wanted 8d6608d4)
+--6915--   Considering /usr/lib/debug/lib/x86_64-linux-gnu/ld-2.23.so ..
+--6915--   .. CRC is valid
+--6915-- Reading syms from /usr/lib/valgrind/memcheck-amd64-linux
+--6915--   Considering /usr/lib/valgrind/memcheck-amd64-linux ..
+--6915--   .. CRC mismatch (computed 5529a2c7 wanted 5bd23904)
+--6915--    object doesn't have a symbol table
+--6915--    object doesn't have a dynamic symbol table
+--6915-- Scheduler: using generic scheduler lock implementation.
+--6915-- Reading suppressions file: /usr/lib/valgrind/default.supp
+==6915== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-6915-by-euler-on-???
+==6915== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-6915-by-euler-on-???
+==6915== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-6915-by-euler-on-???
+==6915== 
+==6915== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==6915== don't want to do, unless you know exactly what you're doing,
+==6915== or are doing some strange experiment):
+==6915==   /usr/lib/valgrind/../../bin/vgdb --pid=6915 ...command...
+==6915== 
+==6915== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==6915==   /path/to/gdb ./406
+==6915== and then give GDB the following command
+==6915==   target remote | /usr/lib/valgrind/../../bin/vgdb --pid=6915
+==6915== --pid is optional if only one valgrind process is running
+==6915== 
+--6915-- REDIR: 0x401cdc0 (ld-linux-x86-64.so.2:strlen) redirected to 0x3809e181 (???)
+--6915-- Reading syms from /usr/lib/valgrind/vgpreload_core-amd64-linux.so
+--6915--   Considering /usr/lib/valgrind/vgpreload_core-amd64-linux.so ..
+--6915--   .. CRC mismatch (computed a30c8eaa wanted 7ae2fed4)
+--6915--    object doesn't have a symbol table
+--6915-- Reading syms from /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so
+--6915--   Considering /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so ..
+--6915--   .. CRC mismatch (computed 402c2ab5 wanted 745f25ae)
+--6915--    object doesn't have a symbol table
+==6915== WARNING: new redirection conflicts with existing -- ignoring it
+--6915--     old: 0x0401cdc0 (strlen              ) R-> (0000.0) 0x3809e181 ???
+--6915--     new: 0x0401cdc0 (strlen              ) R-> (2007.0) 0x04c31020 strlen
+--6915-- REDIR: 0x401b710 (ld-linux-x86-64.so.2:index) redirected to 0x4c30bc0 (index)
+--6915-- REDIR: 0x401b930 (ld-linux-x86-64.so.2:strcmp) redirected to 0x4c320d0 (strcmp)
+--6915-- REDIR: 0x401db20 (ld-linux-x86-64.so.2:mempcpy) redirected to 0x4c35270 (mempcpy)
+--6915-- Reading syms from /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21
+--6915--   Considering /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21 ..
+--6915--   .. CRC mismatch (computed 834c912e wanted c67ab13d)
+--6915--    object doesn't have a symbol table
+--6915-- Reading syms from /lib/x86_64-linux-gnu/libm-2.23.so
+--6915--   Considering /lib/x86_64-linux-gnu/libm-2.23.so ..
+--6915--   .. CRC mismatch (computed eda5a952 wanted 8f48b034)
+--6915--   Considering /usr/lib/debug/lib/x86_64-linux-gnu/libm-2.23.so ..
+--6915--   .. CRC is valid
+--6915-- Reading syms from /lib/x86_64-linux-gnu/libgcc_s.so.1
+--6915--   Considering /lib/x86_64-linux-gnu/libgcc_s.so.1 ..
+--6915--   .. CRC mismatch (computed b9a68419 wanted 29d51b00)
+--6915--    object doesn't have a symbol table
+--6915-- Reading syms from /lib/x86_64-linux-gnu/libc-2.23.so
+--6915--   Considering /lib/x86_64-linux-gnu/libc-2.23.so ..
+--6915--   .. CRC mismatch (computed 0423f85c wanted cbe1e5cd)
+--6915--   Considering /usr/lib/debug/lib/x86_64-linux-gnu/libc-2.23.so ..
+--6915--   .. CRC is valid
+--6915-- REDIR: 0x5769e50 (libc.so.6:strcasecmp) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--6915-- REDIR: 0x57656d0 (libc.so.6:strcspn) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--6915-- REDIR: 0x576c140 (libc.so.6:strncasecmp) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--6915-- REDIR: 0x5767b40 (libc.so.6:strpbrk) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--6915-- REDIR: 0x5767ed0 (libc.so.6:strspn) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--6915-- REDIR: 0x576959b (libc.so.6:memcpy@GLIBC_2.2.5) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--6915-- REDIR: 0x5767850 (libc.so.6:rindex) redirected to 0x4c308a0 (rindex)
+--6915-- REDIR: 0x575e580 (libc.so.6:malloc) redirected to 0x4c2db20 (malloc)
+--6915-- REDIR: 0x4ec7e60 (libstdc++.so.6:operator new(unsigned long)) redirected to 0x4c2e080 (operator new(unsigned long))
+--6915-- REDIR: 0x5838870 (libc.so.6:__memmove_ssse3_back) redirected to 0x4c32230 (memcpy@GLIBC_2.2.5)
+--6915-- REDIR: 0x4ec5f10 (libstdc++.so.6:operator delete(void*)) redirected to 0x4c2f1e0 (operator delete(void*))
+==6915== Invalid read of size 8
+==6915==    at 0x4013D1: binoLess::operator()(binoData const&, binoData const&) (406.cpp:29)
+==6915==    by 0x404D65: bool __gnu_cxx::__ops::_Val_comp_iter<binoLess>::operator()<binoData, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > > >(binoData&, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >) (predefined_ops.h:169)
+==6915==    by 0x40478A: void std::__unguarded_linear_insert<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess>) (stl_algo.h:1823)
+==6915==    by 0x403E67: void std::__unguarded_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1862)
+==6915==    by 0x40360C: void std::__final_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1881)
+==6915==    by 0x4026F8: void std::__sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1966)
+==6915==    by 0x401AE4: void std::sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess>(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess) (stl_algo.h:4729)
+==6915==    by 0x401032: find_binomial_coefficient(long long, long long, long long) (406.cpp:106)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Address 0x5ab5d18 is 8 bytes before a block of size 20,640 alloc'd
+==6915==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x4040B8: __gnu_cxx::new_allocator<binoData>::allocate(unsigned long, void const*) (new_allocator.h:104)
+==6915==    by 0x403945: std::allocator_traits<std::allocator<binoData> >::allocate(std::allocator<binoData>&, unsigned long) (alloc_traits.h:491)
+==6915==    by 0x402F6D: std::_Vector_base<binoData, std::allocator<binoData> >::_M_allocate(unsigned long) (stl_vector.h:170)
+==6915==    by 0x401FF3: binoData* std::vector<binoData, std::allocator<binoData> >::_M_allocate_and_copy<std::move_iterator<binoData*> >(unsigned long, std::move_iterator<binoData*>, std::move_iterator<binoData*>) (stl_vector.h:1224)
+==6915==    by 0x4016D6: std::vector<binoData, std::allocator<binoData> >::reserve(unsigned long) (vector.tcc:75)
+==6915==    by 0x400D74: find_binomial_coefficient(long long, long long, long long) (406.cpp:90)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915== 
+==6915== Invalid read of size 4
+==6915==    at 0x4013ED: binoLess::operator()(binoData const&, binoData const&) (406.cpp:30)
+==6915==    by 0x404D65: bool __gnu_cxx::__ops::_Val_comp_iter<binoLess>::operator()<binoData, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > > >(binoData&, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >) (predefined_ops.h:169)
+==6915==    by 0x40478A: void std::__unguarded_linear_insert<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess>) (stl_algo.h:1823)
+==6915==    by 0x403E67: void std::__unguarded_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1862)
+==6915==    by 0x40360C: void std::__final_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1881)
+==6915==    by 0x4026F8: void std::__sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1966)
+==6915==    by 0x401AE4: void std::sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess>(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess) (stl_algo.h:4729)
+==6915==    by 0x401032: find_binomial_coefficient(long long, long long, long long) (406.cpp:106)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Address 0x5ab5d08 is 24 bytes before a block of size 20,640 alloc'd
+==6915==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x4040B8: __gnu_cxx::new_allocator<binoData>::allocate(unsigned long, void const*) (new_allocator.h:104)
+==6915==    by 0x403945: std::allocator_traits<std::allocator<binoData> >::allocate(std::allocator<binoData>&, unsigned long) (alloc_traits.h:491)
+==6915==    by 0x402F6D: std::_Vector_base<binoData, std::allocator<binoData> >::_M_allocate(unsigned long) (stl_vector.h:170)
+==6915==    by 0x401FF3: binoData* std::vector<binoData, std::allocator<binoData> >::_M_allocate_and_copy<std::move_iterator<binoData*> >(unsigned long, std::move_iterator<binoData*>, std::move_iterator<binoData*>) (stl_vector.h:1224)
+==6915==    by 0x4016D6: std::vector<binoData, std::allocator<binoData> >::reserve(unsigned long) (vector.tcc:75)
+==6915==    by 0x400D74: find_binomial_coefficient(long long, long long, long long) (406.cpp:90)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915== 
+==6915== Invalid read of size 8
+==6915==    at 0x4047B2: void std::__unguarded_linear_insert<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess>) (stl_algo.h:1825)
+==6915==    by 0x403E67: void std::__unguarded_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1862)
+==6915==    by 0x40360C: void std::__final_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1881)
+==6915==    by 0x4026F8: void std::__sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1966)
+==6915==    by 0x401AE4: void std::sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess>(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess) (stl_algo.h:4729)
+==6915==    by 0x401032: find_binomial_coefficient(long long, long long, long long) (406.cpp:106)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Address 0x5ab5d08 is 24 bytes before a block of size 20,640 alloc'd
+==6915==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x4040B8: __gnu_cxx::new_allocator<binoData>::allocate(unsigned long, void const*) (new_allocator.h:104)
+==6915==    by 0x403945: std::allocator_traits<std::allocator<binoData> >::allocate(std::allocator<binoData>&, unsigned long) (alloc_traits.h:491)
+==6915==    by 0x402F6D: std::_Vector_base<binoData, std::allocator<binoData> >::_M_allocate(unsigned long) (stl_vector.h:170)
+==6915==    by 0x401FF3: binoData* std::vector<binoData, std::allocator<binoData> >::_M_allocate_and_copy<std::move_iterator<binoData*> >(unsigned long, std::move_iterator<binoData*>, std::move_iterator<binoData*>) (stl_vector.h:1224)
+==6915==    by 0x4016D6: std::vector<binoData, std::allocator<binoData> >::reserve(unsigned long) (vector.tcc:75)
+==6915==    by 0x400D74: find_binomial_coefficient(long long, long long, long long) (406.cpp:90)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915== 
+==6915== Invalid read of size 8
+==6915==    at 0x4047B8: void std::__unguarded_linear_insert<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess>) (stl_algo.h:1825)
+==6915==    by 0x403E67: void std::__unguarded_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1862)
+==6915==    by 0x40360C: void std::__final_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1881)
+==6915==    by 0x4026F8: void std::__sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1966)
+==6915==    by 0x401AE4: void std::sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess>(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess) (stl_algo.h:4729)
+==6915==    by 0x401032: find_binomial_coefficient(long long, long long, long long) (406.cpp:106)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Address 0x5ab5d10 is 16 bytes before a block of size 20,640 alloc'd
+==6915==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x4040B8: __gnu_cxx::new_allocator<binoData>::allocate(unsigned long, void const*) (new_allocator.h:104)
+==6915==    by 0x403945: std::allocator_traits<std::allocator<binoData> >::allocate(std::allocator<binoData>&, unsigned long) (alloc_traits.h:491)
+==6915==    by 0x402F6D: std::_Vector_base<binoData, std::allocator<binoData> >::_M_allocate(unsigned long) (stl_vector.h:170)
+==6915==    by 0x401FF3: binoData* std::vector<binoData, std::allocator<binoData> >::_M_allocate_and_copy<std::move_iterator<binoData*> >(unsigned long, std::move_iterator<binoData*>, std::move_iterator<binoData*>) (stl_vector.h:1224)
+==6915==    by 0x4016D6: std::vector<binoData, std::allocator<binoData> >::reserve(unsigned long) (vector.tcc:75)
+==6915==    by 0x400D74: find_binomial_coefficient(long long, long long, long long) (406.cpp:90)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915== 
+==6915== Invalid read of size 8
+==6915==    at 0x4047C0: void std::__unguarded_linear_insert<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess>) (stl_algo.h:1825)
+==6915==    by 0x403E67: void std::__unguarded_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1862)
+==6915==    by 0x40360C: void std::__final_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1881)
+==6915==    by 0x4026F8: void std::__sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1966)
+==6915==    by 0x401AE4: void std::sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess>(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess) (stl_algo.h:4729)
+==6915==    by 0x401032: find_binomial_coefficient(long long, long long, long long) (406.cpp:106)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Address 0x5ab5d18 is 8 bytes before a block of size 20,640 alloc'd
+==6915==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x4040B8: __gnu_cxx::new_allocator<binoData>::allocate(unsigned long, void const*) (new_allocator.h:104)
+==6915==    by 0x403945: std::allocator_traits<std::allocator<binoData> >::allocate(std::allocator<binoData>&, unsigned long) (alloc_traits.h:491)
+==6915==    by 0x402F6D: std::_Vector_base<binoData, std::allocator<binoData> >::_M_allocate(unsigned long) (stl_vector.h:170)
+==6915==    by 0x401FF3: binoData* std::vector<binoData, std::allocator<binoData> >::_M_allocate_and_copy<std::move_iterator<binoData*> >(unsigned long, std::move_iterator<binoData*>, std::move_iterator<binoData*>) (stl_vector.h:1224)
+==6915==    by 0x4016D6: std::vector<binoData, std::allocator<binoData> >::reserve(unsigned long) (vector.tcc:75)
+==6915==    by 0x400D74: find_binomial_coefficient(long long, long long, long long) (406.cpp:90)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915== 
+==6915== Invalid write of size 8
+==6915==    at 0x4047B5: void std::__unguarded_linear_insert<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess>) (stl_algo.h:1825)
+==6915==    by 0x403E67: void std::__unguarded_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1862)
+==6915==    by 0x40360C: void std::__final_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1881)
+==6915==    by 0x4026F8: void std::__sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1966)
+==6915==    by 0x401AE4: void std::sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess>(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess) (stl_algo.h:4729)
+==6915==    by 0x401032: find_binomial_coefficient(long long, long long, long long) (406.cpp:106)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Address 0x5ab5d08 is 24 bytes before a block of size 20,640 alloc'd
+==6915==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x4040B8: __gnu_cxx::new_allocator<binoData>::allocate(unsigned long, void const*) (new_allocator.h:104)
+==6915==    by 0x403945: std::allocator_traits<std::allocator<binoData> >::allocate(std::allocator<binoData>&, unsigned long) (alloc_traits.h:491)
+==6915==    by 0x402F6D: std::_Vector_base<binoData, std::allocator<binoData> >::_M_allocate(unsigned long) (stl_vector.h:170)
+==6915==    by 0x401FF3: binoData* std::vector<binoData, std::allocator<binoData> >::_M_allocate_and_copy<std::move_iterator<binoData*> >(unsigned long, std::move_iterator<binoData*>, std::move_iterator<binoData*>) (stl_vector.h:1224)
+==6915==    by 0x4016D6: std::vector<binoData, std::allocator<binoData> >::reserve(unsigned long) (vector.tcc:75)
+==6915==    by 0x400D74: find_binomial_coefficient(long long, long long, long long) (406.cpp:90)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915== 
+==6915== Invalid write of size 8
+==6915==    at 0x4047BC: void std::__unguarded_linear_insert<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess>) (stl_algo.h:1825)
+==6915==    by 0x403E67: void std::__unguarded_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1862)
+==6915==    by 0x40360C: void std::__final_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1881)
+==6915==    by 0x4026F8: void std::__sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1966)
+==6915==    by 0x401AE4: void std::sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess>(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess) (stl_algo.h:4729)
+==6915==    by 0x401032: find_binomial_coefficient(long long, long long, long long) (406.cpp:106)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Address 0x5ab5d10 is 16 bytes before a block of size 20,640 alloc'd
+==6915==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x4040B8: __gnu_cxx::new_allocator<binoData>::allocate(unsigned long, void const*) (new_allocator.h:104)
+==6915==    by 0x403945: std::allocator_traits<std::allocator<binoData> >::allocate(std::allocator<binoData>&, unsigned long) (alloc_traits.h:491)
+==6915==    by 0x402F6D: std::_Vector_base<binoData, std::allocator<binoData> >::_M_allocate(unsigned long) (stl_vector.h:170)
+==6915==    by 0x401FF3: binoData* std::vector<binoData, std::allocator<binoData> >::_M_allocate_and_copy<std::move_iterator<binoData*> >(unsigned long, std::move_iterator<binoData*>, std::move_iterator<binoData*>) (stl_vector.h:1224)
+==6915==    by 0x4016D6: std::vector<binoData, std::allocator<binoData> >::reserve(unsigned long) (vector.tcc:75)
+==6915==    by 0x400D74: find_binomial_coefficient(long long, long long, long long) (406.cpp:90)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915== 
+==6915== Invalid write of size 8
+==6915==    at 0x4047C4: void std::__unguarded_linear_insert<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess>) (stl_algo.h:1825)
+==6915==    by 0x403E67: void std::__unguarded_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1862)
+==6915==    by 0x40360C: void std::__final_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1881)
+==6915==    by 0x4026F8: void std::__sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1966)
+==6915==    by 0x401AE4: void std::sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess>(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess) (stl_algo.h:4729)
+==6915==    by 0x401032: find_binomial_coefficient(long long, long long, long long) (406.cpp:106)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Address 0x5ab5d18 is 8 bytes before a block of size 20,640 alloc'd
+==6915==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x4040B8: __gnu_cxx::new_allocator<binoData>::allocate(unsigned long, void const*) (new_allocator.h:104)
+==6915==    by 0x403945: std::allocator_traits<std::allocator<binoData> >::allocate(std::allocator<binoData>&, unsigned long) (alloc_traits.h:491)
+==6915==    by 0x402F6D: std::_Vector_base<binoData, std::allocator<binoData> >::_M_allocate(unsigned long) (stl_vector.h:170)
+==6915==    by 0x401FF3: binoData* std::vector<binoData, std::allocator<binoData> >::_M_allocate_and_copy<std::move_iterator<binoData*> >(unsigned long, std::move_iterator<binoData*>, std::move_iterator<binoData*>) (stl_vector.h:1224)
+==6915==    by 0x4016D6: std::vector<binoData, std::allocator<binoData> >::reserve(unsigned long) (vector.tcc:75)
+==6915==    by 0x400D74: find_binomial_coefficient(long long, long long, long long) (406.cpp:90)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915== 
+==6915== Invalid write of size 8
+==6915==    at 0x4047FC: void std::__unguarded_linear_insert<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess>) (stl_algo.h:1829)
+==6915==    by 0x403E67: void std::__unguarded_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1862)
+==6915==    by 0x40360C: void std::__final_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1881)
+==6915==    by 0x4026F8: void std::__sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1966)
+==6915==    by 0x401AE4: void std::sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess>(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess) (stl_algo.h:4729)
+==6915==    by 0x401032: find_binomial_coefficient(long long, long long, long long) (406.cpp:106)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Address 0x5ab5cc0 is 16 bytes before a block of size 8 free'd
+==6915==    at 0x4C2F24B: operator delete(void*) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x403F21: __gnu_cxx::new_allocator<long>::deallocate(long*, unsigned long) (new_allocator.h:110)
+==6915==    by 0x403733: std::allocator_traits<std::allocator<long> >::deallocate(std::allocator<long>&, long*, unsigned long) (alloc_traits.h:517)
+==6915==    by 0x4028AB: std::_Vector_base<long, std::allocator<long> >::_M_deallocate(long*, unsigned long) (stl_vector.h:178)
+==6915==    by 0x402207: std::vector<long, std::allocator<long> >::_M_default_append(unsigned long) (vector.tcc:578)
+==6915==    by 0x4017F2: std::vector<long, std::allocator<long> >::resize(unsigned long) (stl_vector.h:676)
+==6915==    by 0x400DA6: find_binomial_coefficient(long long, long long, long long) (406.cpp:92)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Block was alloc'd at
+==6915==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x404223: __gnu_cxx::new_allocator<long>::allocate(unsigned long, void const*) (new_allocator.h:104)
+==6915==    by 0x403A3A: std::allocator_traits<std::allocator<long> >::allocate(std::allocator<long>&, unsigned long) (alloc_traits.h:491)
+==6915==    by 0x403115: std::_Vector_base<long, std::allocator<long> >::_M_allocate(unsigned long) (stl_vector.h:170)
+==6915==    by 0x402BF8: std::vector<long, std::allocator<long> >::_M_fill_insert(__gnu_cxx::__normal_iterator<long*, std::vector<long, std::allocator<long> > >, unsigned long, long const&) (vector.tcc:491)
+==6915==    by 0x401DD3: std::vector<long, std::allocator<long> >::insert(__gnu_cxx::__normal_iterator<long const*, std::vector<long, std::allocator<long> > >, unsigned long, long const&) (stl_vector.h:1054)
+==6915==    by 0x40158A: std::vector<long, std::allocator<long> >::resize(unsigned long, long const&) (stl_vector.h:696)
+==6915==    by 0x400D57: find_binomial_coefficient(long long, long long, long long) (406.cpp:88)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915== 
+==6915== Invalid write of size 8
+==6915==    at 0x404803: void std::__unguarded_linear_insert<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess>) (stl_algo.h:1829)
+==6915==    by 0x403E67: void std::__unguarded_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1862)
+==6915==    by 0x40360C: void std::__final_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1881)
+==6915==    by 0x4026F8: void std::__sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1966)
+==6915==    by 0x401AE4: void std::sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess>(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess) (stl_algo.h:4729)
+==6915==    by 0x401032: find_binomial_coefficient(long long, long long, long long) (406.cpp:106)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Address 0x5ab5cc8 is 8 bytes before a block of size 8 free'd
+==6915==    at 0x4C2F24B: operator delete(void*) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x403F21: __gnu_cxx::new_allocator<long>::deallocate(long*, unsigned long) (new_allocator.h:110)
+==6915==    by 0x403733: std::allocator_traits<std::allocator<long> >::deallocate(std::allocator<long>&, long*, unsigned long) (alloc_traits.h:517)
+==6915==    by 0x4028AB: std::_Vector_base<long, std::allocator<long> >::_M_deallocate(long*, unsigned long) (stl_vector.h:178)
+==6915==    by 0x402207: std::vector<long, std::allocator<long> >::_M_default_append(unsigned long) (vector.tcc:578)
+==6915==    by 0x4017F2: std::vector<long, std::allocator<long> >::resize(unsigned long) (stl_vector.h:676)
+==6915==    by 0x400DA6: find_binomial_coefficient(long long, long long, long long) (406.cpp:92)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Block was alloc'd at
+==6915==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x404223: __gnu_cxx::new_allocator<long>::allocate(unsigned long, void const*) (new_allocator.h:104)
+==6915==    by 0x403A3A: std::allocator_traits<std::allocator<long> >::allocate(std::allocator<long>&, unsigned long) (alloc_traits.h:491)
+==6915==    by 0x403115: std::_Vector_base<long, std::allocator<long> >::_M_allocate(unsigned long) (stl_vector.h:170)
+==6915==    by 0x402BF8: std::vector<long, std::allocator<long> >::_M_fill_insert(__gnu_cxx::__normal_iterator<long*, std::vector<long, std::allocator<long> > >, unsigned long, long const&) (vector.tcc:491)
+==6915==    by 0x401DD3: std::vector<long, std::allocator<long> >::insert(__gnu_cxx::__normal_iterator<long const*, std::vector<long, std::allocator<long> > >, unsigned long, long const&) (stl_vector.h:1054)
+==6915==    by 0x40158A: std::vector<long, std::allocator<long> >::resize(unsigned long, long const&) (stl_vector.h:696)
+==6915==    by 0x400D57: find_binomial_coefficient(long long, long long, long long) (406.cpp:88)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915== 
+==6915== Invalid write of size 8
+==6915==    at 0x40480B: void std::__unguarded_linear_insert<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess>) (stl_algo.h:1829)
+==6915==    by 0x403E67: void std::__unguarded_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1862)
+==6915==    by 0x40360C: void std::__final_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1881)
+==6915==    by 0x4026F8: void std::__sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1966)
+==6915==    by 0x401AE4: void std::sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess>(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess) (stl_algo.h:4729)
+==6915==    by 0x401032: find_binomial_coefficient(long long, long long, long long) (406.cpp:106)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Address 0x5ab5cd0 is 0 bytes inside a block of size 8 free'd
+==6915==    at 0x4C2F24B: operator delete(void*) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x403F21: __gnu_cxx::new_allocator<long>::deallocate(long*, unsigned long) (new_allocator.h:110)
+==6915==    by 0x403733: std::allocator_traits<std::allocator<long> >::deallocate(std::allocator<long>&, long*, unsigned long) (alloc_traits.h:517)
+==6915==    by 0x4028AB: std::_Vector_base<long, std::allocator<long> >::_M_deallocate(long*, unsigned long) (stl_vector.h:178)
+==6915==    by 0x402207: std::vector<long, std::allocator<long> >::_M_default_append(unsigned long) (vector.tcc:578)
+==6915==    by 0x4017F2: std::vector<long, std::allocator<long> >::resize(unsigned long) (stl_vector.h:676)
+==6915==    by 0x400DA6: find_binomial_coefficient(long long, long long, long long) (406.cpp:92)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Block was alloc'd at
+==6915==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x404223: __gnu_cxx::new_allocator<long>::allocate(unsigned long, void const*) (new_allocator.h:104)
+==6915==    by 0x403A3A: std::allocator_traits<std::allocator<long> >::allocate(std::allocator<long>&, unsigned long) (alloc_traits.h:491)
+==6915==    by 0x403115: std::_Vector_base<long, std::allocator<long> >::_M_allocate(unsigned long) (stl_vector.h:170)
+==6915==    by 0x402BF8: std::vector<long, std::allocator<long> >::_M_fill_insert(__gnu_cxx::__normal_iterator<long*, std::vector<long, std::allocator<long> > >, unsigned long, long const&) (vector.tcc:491)
+==6915==    by 0x401DD3: std::vector<long, std::allocator<long> >::insert(__gnu_cxx::__normal_iterator<long const*, std::vector<long, std::allocator<long> > >, unsigned long, long const&) (stl_vector.h:1054)
+==6915==    by 0x40158A: std::vector<long, std::allocator<long> >::resize(unsigned long, long const&) (stl_vector.h:696)
+==6915==    by 0x400D57: find_binomial_coefficient(long long, long long, long long) (406.cpp:88)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915== 
+--6915-- REDIR: 0x5770bb0 (libc.so.6:strchrnul) redirected to 0x4c34da0 (strchrnul)
+--6915-- REDIR: 0x576e8c0 (libc.so.6:__GI_memcpy) redirected to 0x4c32b00 (__GI_memcpy)
+--6915-- REDIR: 0x5765b70 (libc.so.6:strlen) redirected to 0x4c30f60 (strlen)
+--6915-- REDIR: 0x5769800 (libc.so.6:__GI_mempcpy) redirected to 0x4c34fa0 (__GI_mempcpy)
+--6915-- REDIR: 0x575e940 (libc.so.6:free) redirected to 0x4c2ed80 (free)
+==6915== 
+==6915== HEAP SUMMARY:
+==6915==     in use at exit: 72,704 bytes in 1 blocks
+==6915==   total heap usage: 17 allocs, 16 frees, 96,488 bytes allocated
+==6915== 
+==6915== Searching for pointers to 1 not-freed blocks
+==6915== Checked 121,560 bytes
+==6915== 
+==6915== LEAK SUMMARY:
+==6915==    definitely lost: 0 bytes in 0 blocks
+==6915==    indirectly lost: 0 bytes in 0 blocks
+==6915==      possibly lost: 0 bytes in 0 blocks
+==6915==    still reachable: 72,704 bytes in 1 blocks
+==6915==         suppressed: 0 bytes in 0 blocks
+==6915== Reachable blocks (those to which a pointer was found) are not shown.
+==6915== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==6915== 
+==6915== ERROR SUMMARY: 1889 errors from 11 contexts (suppressed: 0 from 0)
+==6915== 
+==6915== 70 errors in context 1 of 11:
+==6915== Invalid write of size 8
+==6915==    at 0x40480B: void std::__unguarded_linear_insert<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess>) (stl_algo.h:1829)
+==6915==    by 0x403E67: void std::__unguarded_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1862)
+==6915==    by 0x40360C: void std::__final_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1881)
+==6915==    by 0x4026F8: void std::__sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1966)
+==6915==    by 0x401AE4: void std::sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess>(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess) (stl_algo.h:4729)
+==6915==    by 0x401032: find_binomial_coefficient(long long, long long, long long) (406.cpp:106)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Address 0x5ab5cd0 is 0 bytes inside a block of size 8 free'd
+==6915==    at 0x4C2F24B: operator delete(void*) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x403F21: __gnu_cxx::new_allocator<long>::deallocate(long*, unsigned long) (new_allocator.h:110)
+==6915==    by 0x403733: std::allocator_traits<std::allocator<long> >::deallocate(std::allocator<long>&, long*, unsigned long) (alloc_traits.h:517)
+==6915==    by 0x4028AB: std::_Vector_base<long, std::allocator<long> >::_M_deallocate(long*, unsigned long) (stl_vector.h:178)
+==6915==    by 0x402207: std::vector<long, std::allocator<long> >::_M_default_append(unsigned long) (vector.tcc:578)
+==6915==    by 0x4017F2: std::vector<long, std::allocator<long> >::resize(unsigned long) (stl_vector.h:676)
+==6915==    by 0x400DA6: find_binomial_coefficient(long long, long long, long long) (406.cpp:92)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Block was alloc'd at
+==6915==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x404223: __gnu_cxx::new_allocator<long>::allocate(unsigned long, void const*) (new_allocator.h:104)
+==6915==    by 0x403A3A: std::allocator_traits<std::allocator<long> >::allocate(std::allocator<long>&, unsigned long) (alloc_traits.h:491)
+==6915==    by 0x403115: std::_Vector_base<long, std::allocator<long> >::_M_allocate(unsigned long) (stl_vector.h:170)
+==6915==    by 0x402BF8: std::vector<long, std::allocator<long> >::_M_fill_insert(__gnu_cxx::__normal_iterator<long*, std::vector<long, std::allocator<long> > >, unsigned long, long const&) (vector.tcc:491)
+==6915==    by 0x401DD3: std::vector<long, std::allocator<long> >::insert(__gnu_cxx::__normal_iterator<long const*, std::vector<long, std::allocator<long> > >, unsigned long, long const&) (stl_vector.h:1054)
+==6915==    by 0x40158A: std::vector<long, std::allocator<long> >::resize(unsigned long, long const&) (stl_vector.h:696)
+==6915==    by 0x400D57: find_binomial_coefficient(long long, long long, long long) (406.cpp:88)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915== 
+==6915== 
+==6915== 70 errors in context 2 of 11:
+==6915== Invalid write of size 8
+==6915==    at 0x404803: void std::__unguarded_linear_insert<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess>) (stl_algo.h:1829)
+==6915==    by 0x403E67: void std::__unguarded_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1862)
+==6915==    by 0x40360C: void std::__final_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1881)
+==6915==    by 0x4026F8: void std::__sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1966)
+==6915==    by 0x401AE4: void std::sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess>(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess) (stl_algo.h:4729)
+==6915==    by 0x401032: find_binomial_coefficient(long long, long long, long long) (406.cpp:106)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Address 0x5ab5cc8 is 8 bytes before a block of size 8 free'd
+==6915==    at 0x4C2F24B: operator delete(void*) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x403F21: __gnu_cxx::new_allocator<long>::deallocate(long*, unsigned long) (new_allocator.h:110)
+==6915==    by 0x403733: std::allocator_traits<std::allocator<long> >::deallocate(std::allocator<long>&, long*, unsigned long) (alloc_traits.h:517)
+==6915==    by 0x4028AB: std::_Vector_base<long, std::allocator<long> >::_M_deallocate(long*, unsigned long) (stl_vector.h:178)
+==6915==    by 0x402207: std::vector<long, std::allocator<long> >::_M_default_append(unsigned long) (vector.tcc:578)
+==6915==    by 0x4017F2: std::vector<long, std::allocator<long> >::resize(unsigned long) (stl_vector.h:676)
+==6915==    by 0x400DA6: find_binomial_coefficient(long long, long long, long long) (406.cpp:92)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Block was alloc'd at
+==6915==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x404223: __gnu_cxx::new_allocator<long>::allocate(unsigned long, void const*) (new_allocator.h:104)
+==6915==    by 0x403A3A: std::allocator_traits<std::allocator<long> >::allocate(std::allocator<long>&, unsigned long) (alloc_traits.h:491)
+==6915==    by 0x403115: std::_Vector_base<long, std::allocator<long> >::_M_allocate(unsigned long) (stl_vector.h:170)
+==6915==    by 0x402BF8: std::vector<long, std::allocator<long> >::_M_fill_insert(__gnu_cxx::__normal_iterator<long*, std::vector<long, std::allocator<long> > >, unsigned long, long const&) (vector.tcc:491)
+==6915==    by 0x401DD3: std::vector<long, std::allocator<long> >::insert(__gnu_cxx::__normal_iterator<long const*, std::vector<long, std::allocator<long> > >, unsigned long, long const&) (stl_vector.h:1054)
+==6915==    by 0x40158A: std::vector<long, std::allocator<long> >::resize(unsigned long, long const&) (stl_vector.h:696)
+==6915==    by 0x400D57: find_binomial_coefficient(long long, long long, long long) (406.cpp:88)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915== 
+==6915== 
+==6915== 70 errors in context 3 of 11:
+==6915== Invalid write of size 8
+==6915==    at 0x4047FC: void std::__unguarded_linear_insert<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess>) (stl_algo.h:1829)
+==6915==    by 0x403E67: void std::__unguarded_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1862)
+==6915==    by 0x40360C: void std::__final_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1881)
+==6915==    by 0x4026F8: void std::__sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1966)
+==6915==    by 0x401AE4: void std::sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess>(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess) (stl_algo.h:4729)
+==6915==    by 0x401032: find_binomial_coefficient(long long, long long, long long) (406.cpp:106)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Address 0x5ab5cc0 is 16 bytes before a block of size 8 free'd
+==6915==    at 0x4C2F24B: operator delete(void*) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x403F21: __gnu_cxx::new_allocator<long>::deallocate(long*, unsigned long) (new_allocator.h:110)
+==6915==    by 0x403733: std::allocator_traits<std::allocator<long> >::deallocate(std::allocator<long>&, long*, unsigned long) (alloc_traits.h:517)
+==6915==    by 0x4028AB: std::_Vector_base<long, std::allocator<long> >::_M_deallocate(long*, unsigned long) (stl_vector.h:178)
+==6915==    by 0x402207: std::vector<long, std::allocator<long> >::_M_default_append(unsigned long) (vector.tcc:578)
+==6915==    by 0x4017F2: std::vector<long, std::allocator<long> >::resize(unsigned long) (stl_vector.h:676)
+==6915==    by 0x400DA6: find_binomial_coefficient(long long, long long, long long) (406.cpp:92)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Block was alloc'd at
+==6915==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x404223: __gnu_cxx::new_allocator<long>::allocate(unsigned long, void const*) (new_allocator.h:104)
+==6915==    by 0x403A3A: std::allocator_traits<std::allocator<long> >::allocate(std::allocator<long>&, unsigned long) (alloc_traits.h:491)
+==6915==    by 0x403115: std::_Vector_base<long, std::allocator<long> >::_M_allocate(unsigned long) (stl_vector.h:170)
+==6915==    by 0x402BF8: std::vector<long, std::allocator<long> >::_M_fill_insert(__gnu_cxx::__normal_iterator<long*, std::vector<long, std::allocator<long> > >, unsigned long, long const&) (vector.tcc:491)
+==6915==    by 0x401DD3: std::vector<long, std::allocator<long> >::insert(__gnu_cxx::__normal_iterator<long const*, std::vector<long, std::allocator<long> > >, unsigned long, long const&) (stl_vector.h:1054)
+==6915==    by 0x40158A: std::vector<long, std::allocator<long> >::resize(unsigned long, long const&) (stl_vector.h:696)
+==6915==    by 0x400D57: find_binomial_coefficient(long long, long long, long long) (406.cpp:88)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915== 
+==6915== 
+==6915== 152 errors in context 4 of 11:
+==6915== Invalid write of size 8
+==6915==    at 0x4047C4: void std::__unguarded_linear_insert<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess>) (stl_algo.h:1825)
+==6915==    by 0x403E67: void std::__unguarded_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1862)
+==6915==    by 0x40360C: void std::__final_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1881)
+==6915==    by 0x4026F8: void std::__sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1966)
+==6915==    by 0x401AE4: void std::sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess>(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess) (stl_algo.h:4729)
+==6915==    by 0x401032: find_binomial_coefficient(long long, long long, long long) (406.cpp:106)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Address 0x5ab5d18 is 8 bytes before a block of size 20,640 alloc'd
+==6915==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x4040B8: __gnu_cxx::new_allocator<binoData>::allocate(unsigned long, void const*) (new_allocator.h:104)
+==6915==    by 0x403945: std::allocator_traits<std::allocator<binoData> >::allocate(std::allocator<binoData>&, unsigned long) (alloc_traits.h:491)
+==6915==    by 0x402F6D: std::_Vector_base<binoData, std::allocator<binoData> >::_M_allocate(unsigned long) (stl_vector.h:170)
+==6915==    by 0x401FF3: binoData* std::vector<binoData, std::allocator<binoData> >::_M_allocate_and_copy<std::move_iterator<binoData*> >(unsigned long, std::move_iterator<binoData*>, std::move_iterator<binoData*>) (stl_vector.h:1224)
+==6915==    by 0x4016D6: std::vector<binoData, std::allocator<binoData> >::reserve(unsigned long) (vector.tcc:75)
+==6915==    by 0x400D74: find_binomial_coefficient(long long, long long, long long) (406.cpp:90)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915== 
+==6915== 
+==6915== 152 errors in context 5 of 11:
+==6915== Invalid write of size 8
+==6915==    at 0x4047BC: void std::__unguarded_linear_insert<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess>) (stl_algo.h:1825)
+==6915==    by 0x403E67: void std::__unguarded_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1862)
+==6915==    by 0x40360C: void std::__final_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1881)
+==6915==    by 0x4026F8: void std::__sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1966)
+==6915==    by 0x401AE4: void std::sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess>(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess) (stl_algo.h:4729)
+==6915==    by 0x401032: find_binomial_coefficient(long long, long long, long long) (406.cpp:106)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Address 0x5ab5d10 is 16 bytes before a block of size 20,640 alloc'd
+==6915==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x4040B8: __gnu_cxx::new_allocator<binoData>::allocate(unsigned long, void const*) (new_allocator.h:104)
+==6915==    by 0x403945: std::allocator_traits<std::allocator<binoData> >::allocate(std::allocator<binoData>&, unsigned long) (alloc_traits.h:491)
+==6915==    by 0x402F6D: std::_Vector_base<binoData, std::allocator<binoData> >::_M_allocate(unsigned long) (stl_vector.h:170)
+==6915==    by 0x401FF3: binoData* std::vector<binoData, std::allocator<binoData> >::_M_allocate_and_copy<std::move_iterator<binoData*> >(unsigned long, std::move_iterator<binoData*>, std::move_iterator<binoData*>) (stl_vector.h:1224)
+==6915==    by 0x4016D6: std::vector<binoData, std::allocator<binoData> >::reserve(unsigned long) (vector.tcc:75)
+==6915==    by 0x400D74: find_binomial_coefficient(long long, long long, long long) (406.cpp:90)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915== 
+==6915== 
+==6915== 152 errors in context 6 of 11:
+==6915== Invalid write of size 8
+==6915==    at 0x4047B5: void std::__unguarded_linear_insert<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess>) (stl_algo.h:1825)
+==6915==    by 0x403E67: void std::__unguarded_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1862)
+==6915==    by 0x40360C: void std::__final_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1881)
+==6915==    by 0x4026F8: void std::__sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1966)
+==6915==    by 0x401AE4: void std::sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess>(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess) (stl_algo.h:4729)
+==6915==    by 0x401032: find_binomial_coefficient(long long, long long, long long) (406.cpp:106)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Address 0x5ab5d08 is 24 bytes before a block of size 20,640 alloc'd
+==6915==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x4040B8: __gnu_cxx::new_allocator<binoData>::allocate(unsigned long, void const*) (new_allocator.h:104)
+==6915==    by 0x403945: std::allocator_traits<std::allocator<binoData> >::allocate(std::allocator<binoData>&, unsigned long) (alloc_traits.h:491)
+==6915==    by 0x402F6D: std::_Vector_base<binoData, std::allocator<binoData> >::_M_allocate(unsigned long) (stl_vector.h:170)
+==6915==    by 0x401FF3: binoData* std::vector<binoData, std::allocator<binoData> >::_M_allocate_and_copy<std::move_iterator<binoData*> >(unsigned long, std::move_iterator<binoData*>, std::move_iterator<binoData*>) (stl_vector.h:1224)
+==6915==    by 0x4016D6: std::vector<binoData, std::allocator<binoData> >::reserve(unsigned long) (vector.tcc:75)
+==6915==    by 0x400D74: find_binomial_coefficient(long long, long long, long long) (406.cpp:90)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915== 
+==6915== 
+==6915== 222 errors in context 7 of 11:
+==6915== Invalid read of size 8
+==6915==    at 0x4047C0: void std::__unguarded_linear_insert<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess>) (stl_algo.h:1825)
+==6915==    by 0x403E67: void std::__unguarded_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1862)
+==6915==    by 0x40360C: void std::__final_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1881)
+==6915==    by 0x4026F8: void std::__sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1966)
+==6915==    by 0x401AE4: void std::sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess>(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess) (stl_algo.h:4729)
+==6915==    by 0x401032: find_binomial_coefficient(long long, long long, long long) (406.cpp:106)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Address 0x5ab5d18 is 8 bytes before a block of size 20,640 alloc'd
+==6915==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x4040B8: __gnu_cxx::new_allocator<binoData>::allocate(unsigned long, void const*) (new_allocator.h:104)
+==6915==    by 0x403945: std::allocator_traits<std::allocator<binoData> >::allocate(std::allocator<binoData>&, unsigned long) (alloc_traits.h:491)
+==6915==    by 0x402F6D: std::_Vector_base<binoData, std::allocator<binoData> >::_M_allocate(unsigned long) (stl_vector.h:170)
+==6915==    by 0x401FF3: binoData* std::vector<binoData, std::allocator<binoData> >::_M_allocate_and_copy<std::move_iterator<binoData*> >(unsigned long, std::move_iterator<binoData*>, std::move_iterator<binoData*>) (stl_vector.h:1224)
+==6915==    by 0x4016D6: std::vector<binoData, std::allocator<binoData> >::reserve(unsigned long) (vector.tcc:75)
+==6915==    by 0x400D74: find_binomial_coefficient(long long, long long, long long) (406.cpp:90)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915== 
+==6915== 
+==6915== 222 errors in context 8 of 11:
+==6915== Invalid read of size 8
+==6915==    at 0x4047B8: void std::__unguarded_linear_insert<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess>) (stl_algo.h:1825)
+==6915==    by 0x403E67: void std::__unguarded_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1862)
+==6915==    by 0x40360C: void std::__final_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1881)
+==6915==    by 0x4026F8: void std::__sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1966)
+==6915==    by 0x401AE4: void std::sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess>(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess) (stl_algo.h:4729)
+==6915==    by 0x401032: find_binomial_coefficient(long long, long long, long long) (406.cpp:106)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Address 0x5ab5d10 is 16 bytes before a block of size 20,640 alloc'd
+==6915==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x4040B8: __gnu_cxx::new_allocator<binoData>::allocate(unsigned long, void const*) (new_allocator.h:104)
+==6915==    by 0x403945: std::allocator_traits<std::allocator<binoData> >::allocate(std::allocator<binoData>&, unsigned long) (alloc_traits.h:491)
+==6915==    by 0x402F6D: std::_Vector_base<binoData, std::allocator<binoData> >::_M_allocate(unsigned long) (stl_vector.h:170)
+==6915==    by 0x401FF3: binoData* std::vector<binoData, std::allocator<binoData> >::_M_allocate_and_copy<std::move_iterator<binoData*> >(unsigned long, std::move_iterator<binoData*>, std::move_iterator<binoData*>) (stl_vector.h:1224)
+==6915==    by 0x4016D6: std::vector<binoData, std::allocator<binoData> >::reserve(unsigned long) (vector.tcc:75)
+==6915==    by 0x400D74: find_binomial_coefficient(long long, long long, long long) (406.cpp:90)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915== 
+==6915== 
+==6915== 222 errors in context 9 of 11:
+==6915== Invalid read of size 8
+==6915==    at 0x4047B2: void std::__unguarded_linear_insert<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess>) (stl_algo.h:1825)
+==6915==    by 0x403E67: void std::__unguarded_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1862)
+==6915==    by 0x40360C: void std::__final_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1881)
+==6915==    by 0x4026F8: void std::__sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1966)
+==6915==    by 0x401AE4: void std::sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess>(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess) (stl_algo.h:4729)
+==6915==    by 0x401032: find_binomial_coefficient(long long, long long, long long) (406.cpp:106)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Address 0x5ab5d08 is 24 bytes before a block of size 20,640 alloc'd
+==6915==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x4040B8: __gnu_cxx::new_allocator<binoData>::allocate(unsigned long, void const*) (new_allocator.h:104)
+==6915==    by 0x403945: std::allocator_traits<std::allocator<binoData> >::allocate(std::allocator<binoData>&, unsigned long) (alloc_traits.h:491)
+==6915==    by 0x402F6D: std::_Vector_base<binoData, std::allocator<binoData> >::_M_allocate(unsigned long) (stl_vector.h:170)
+==6915==    by 0x401FF3: binoData* std::vector<binoData, std::allocator<binoData> >::_M_allocate_and_copy<std::move_iterator<binoData*> >(unsigned long, std::move_iterator<binoData*>, std::move_iterator<binoData*>) (stl_vector.h:1224)
+==6915==    by 0x4016D6: std::vector<binoData, std::allocator<binoData> >::reserve(unsigned long) (vector.tcc:75)
+==6915==    by 0x400D74: find_binomial_coefficient(long long, long long, long long) (406.cpp:90)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915== 
+==6915== 
+==6915== 252 errors in context 10 of 11:
+==6915== Invalid read of size 4
+==6915==    at 0x4013ED: binoLess::operator()(binoData const&, binoData const&) (406.cpp:30)
+==6915==    by 0x404D65: bool __gnu_cxx::__ops::_Val_comp_iter<binoLess>::operator()<binoData, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > > >(binoData&, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >) (predefined_ops.h:169)
+==6915==    by 0x40478A: void std::__unguarded_linear_insert<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess>) (stl_algo.h:1823)
+==6915==    by 0x403E67: void std::__unguarded_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1862)
+==6915==    by 0x40360C: void std::__final_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1881)
+==6915==    by 0x4026F8: void std::__sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1966)
+==6915==    by 0x401AE4: void std::sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess>(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess) (stl_algo.h:4729)
+==6915==    by 0x401032: find_binomial_coefficient(long long, long long, long long) (406.cpp:106)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Address 0x5ab5d08 is 24 bytes before a block of size 20,640 alloc'd
+==6915==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x4040B8: __gnu_cxx::new_allocator<binoData>::allocate(unsigned long, void const*) (new_allocator.h:104)
+==6915==    by 0x403945: std::allocator_traits<std::allocator<binoData> >::allocate(std::allocator<binoData>&, unsigned long) (alloc_traits.h:491)
+==6915==    by 0x402F6D: std::_Vector_base<binoData, std::allocator<binoData> >::_M_allocate(unsigned long) (stl_vector.h:170)
+==6915==    by 0x401FF3: binoData* std::vector<binoData, std::allocator<binoData> >::_M_allocate_and_copy<std::move_iterator<binoData*> >(unsigned long, std::move_iterator<binoData*>, std::move_iterator<binoData*>) (stl_vector.h:1224)
+==6915==    by 0x4016D6: std::vector<binoData, std::allocator<binoData> >::reserve(unsigned long) (vector.tcc:75)
+==6915==    by 0x400D74: find_binomial_coefficient(long long, long long, long long) (406.cpp:90)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915== 
+==6915== 
+==6915== 305 errors in context 11 of 11:
+==6915== Invalid read of size 8
+==6915==    at 0x4013D1: binoLess::operator()(binoData const&, binoData const&) (406.cpp:29)
+==6915==    by 0x404D65: bool __gnu_cxx::__ops::_Val_comp_iter<binoLess>::operator()<binoData, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > > >(binoData&, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >) (predefined_ops.h:169)
+==6915==    by 0x40478A: void std::__unguarded_linear_insert<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Val_comp_iter<binoLess>) (stl_algo.h:1823)
+==6915==    by 0x403E67: void std::__unguarded_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1862)
+==6915==    by 0x40360C: void std::__final_insertion_sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1881)
+==6915==    by 0x4026F8: void std::__sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess> >(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__ops::_Iter_comp_iter<binoLess>) (stl_algo.h:1966)
+==6915==    by 0x401AE4: void std::sort<__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess>(__gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, __gnu_cxx::__normal_iterator<binoData*, std::vector<binoData, std::allocator<binoData> > >, binoLess) (stl_algo.h:4729)
+==6915==    by 0x401032: find_binomial_coefficient(long long, long long, long long) (406.cpp:106)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915==  Address 0x5ab5d18 is 8 bytes before a block of size 20,640 alloc'd
+==6915==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6915==    by 0x4040B8: __gnu_cxx::new_allocator<binoData>::allocate(unsigned long, void const*) (new_allocator.h:104)
+==6915==    by 0x403945: std::allocator_traits<std::allocator<binoData> >::allocate(std::allocator<binoData>&, unsigned long) (alloc_traits.h:491)
+==6915==    by 0x402F6D: std::_Vector_base<binoData, std::allocator<binoData> >::_M_allocate(unsigned long) (stl_vector.h:170)
+==6915==    by 0x401FF3: binoData* std::vector<binoData, std::allocator<binoData> >::_M_allocate_and_copy<std::move_iterator<binoData*> >(unsigned long, std::move_iterator<binoData*>, std::move_iterator<binoData*>) (stl_vector.h:1224)
+==6915==    by 0x4016D6: std::vector<binoData, std::allocator<binoData> >::reserve(unsigned long) (vector.tcc:75)
+==6915==    by 0x400D74: find_binomial_coefficient(long long, long long, long long) (406.cpp:90)
+==6915==    by 0x40126C: main (406.cpp:132)
+==6915== 
+==6915== ERROR SUMMARY: 1889 errors from 11 contexts (suppressed: 0 from 0)
