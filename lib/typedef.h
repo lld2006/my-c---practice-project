@@ -1,11 +1,11 @@
 #include <vector>
 using namespace std;
-typedef long long int i64;
-typedef unsigned long long int u64;
-typedef pair<int, int> IntPair;
-typedef pair<i64, i64> I64Pair;
-typedef vector<int> IntVec ;
-typedef vector<IntPair> IntPairVec;
-typedef vector<I64Pair> I64PairVec;
+using i64 = long long int;
+using u64 = unsigned long long int;
+using IntPair = pair<int, int>;
+using I64Pair = pair<i64, i64>;
+using IntVec = vector<int>;
+using IntPairVec = vector<IntPair>;
+using I64PairVec = vector<I64Pair>;
 
 

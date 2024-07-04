@@ -11,7 +11,7 @@
 
 using namespace std;
 void sievePrimes(int limit, vector<int>& vecr);
-bool isPrime( i64 i );
+// it is very slow to see if p divides into num.
 bool isPrime(u64 num, vector<int>& primes);
 //this is a costly factorization method, but if we 
 //do not need to factor a lot of numbers it is OK.
@@ -42,7 +42,9 @@ void factor_table_max( int nmax, vector<int>& ftable);
 bool tonelli_shank(i64 prime, i64 residue, i64& sol); 
 int  jacobi(int a,int m);
 bool strong_pseudo_test(i64 p);
-i64  mult64mod(u64 a, u64 b, u64 mod);
+// The old mult64mod is not working in a consistent manner. Now change the 
+// multiplication to summation, it should work in most cases.
+i64  mult64mod(i64 a, i64 b, i64 mod);
 i64  powermodule(i64 base, i64 expo, i64 module);
 i64  totient(int n, vector<int>& primes);
 i64  totient_with_factor(const IntPairVec& vp);

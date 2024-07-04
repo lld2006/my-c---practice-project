@@ -1,63 +1,94 @@
 #ifndef GINT_H
 #define GINT_H
-#include <string>
-#include <cstdio>
-#include <vector>
-#include <cassert>
 #include "../lib/typedef.h"
+#include <cassert>
+#include <cstdio>
+#include <string>
+#include <vector>
 
 using namespace std;
-
-class GeneralInteger
-{
+constexpr int kNum = 10000;
+constexpr int dLen = 4;
+class BigInt {
 public:
-  //constructors
-  GeneralInteger(const i64 num);
-  GeneralInteger(const string& string);
-  GeneralInteger(const vector<int>& nvec);
-  //copy constructor
-  GeneralInteger(const GeneralInteger& gi):number(gi.number) { };
-  //operator overloadings
-  GeneralInteger& operator=(const GeneralInteger& gi);
-  bool operator< (const GeneralInteger& gi) const;
-  GeneralInteger& operator+=(const GeneralInteger& g );
-  GeneralInteger operator+(const GeneralInteger& g) ;
-  bool operator==(const GeneralInteger& g) const;
+  // this expedites the calculation since it makes full use of int32.
+  // not sure if it is better to use int64
+  const static int kMod = kNum;
+  const static int DLEN = dLen;
 
-  //accessors
-  vector<int>& getNumber() {return number;}
-  int getNthDigit (const int& n) const 
-    {
-        assert( n>= 0 && n < static_cast<int>(number.size()));
-        if(n >= static_cast<int>(number.size()))
-            return 0;
-        else
-            return number[n];
-    };
-  int numberDigit() const 
-  {
-      assert(!number.empty());
-      return number.size();
+  // default constructors
+  BigInt() = default;
+
+  // from integer
+  BigInt(i64 num) {
+    do {
+      blocks_.push_back(num % kMod);
+      num /= kMod;
+    } while (num);
   }
-  void print(int endl = 0)const
-  {
-    for( int riter = static_cast<int>(number.size()-1); riter >= 0;  --riter){
-        assert(number[riter] >= 0 && number[riter] < 10);
-        printf("%d", number[riter]);
+
+  // from string
+  BigInt(const string &s) {
+    int d_length = (s.size() + DLEN - 1) / DLEN;
+    blocks_.reserve(d_length);
+    // we need to iterate backwards such that the last four digis in digits[0].
+    for (int low_end = s.size() - 1; low_end >= 0; low_end -= DLEN) {
+      int value = 0;
+      int high_end = max(low_end - DLEN + 1, 0);
+      for (int j = high_end; j <= low_end; ++j) {
+        value = value * 10 + s[j] - '0';
+      }
+      blocks_.push_back(value);
     }
-    if(endl){printf("\n");}
   }
-  int modulus(const int num) const;
-  void truncate(const unsigned int size);
-  GeneralInteger minus(const GeneralInteger& g1)const;
-  GeneralInteger multiply(const GeneralInteger& g1)const;
-  GeneralInteger power(int n);
-  GeneralInteger divide(const GeneralInteger& denom, GeneralInteger& remainder) const;
-  GeneralInteger divide(int den);
-  i64 to_i64() const;
-  void clear0();
+
+  // copy constructor
+  BigInt(const BigInt &gi) : blocks_(gi.blocks_) {};
+  // operator overloadings
+  BigInt &operator=(const BigInt &gi);
+
+  bool operator==(const BigInt &g) const;
+
+  bool operator<(const BigInt &gi) const;
+  bool operator<=(const BigInt &gi) const;
+  bool operator>(const BigInt &gi) const;
+  bool operator>=(const BigInt &gi) const;
+
+  BigInt operator+(const BigInt &g);
+  BigInt &operator+=(const BigInt &g);
+
+  BigInt operator*(const BigInt &right) const;
+  BigInt &operator*=(const BigInt &g1);
+
+  BigInt operator/(const BigInt &right) const;
+  BigInt operator/(int num) const;
+  BigInt &operator/=(const BigInt &g1);
+
+  // TODO, use conversion is better!!!
+  BigInt divide(const BigInt &denom,
+                        BigInt &remainder) const;
+  // int modulus(const int mod) const;
+  // void truncate(const unsigned int size);
+  // BigInt minus(const BigInt &g1) const;
+
+  BigInt power(int n);
+  // this is the way for print a large integer.
+  operator std::string() const {
+    string s;
+    s.reserve(blocks_.size() * 4);
+    for (int i = blocks_.size() - 1; i >= 0; --i) {
+      auto tmp = std::to_string(blocks_[i]);
+      s += tmp;
+    }
+    return s;
+  }
+
+  std::string to_string() {
+    std::string s(*this);
+    return s;
+  }
+
 private:
-  vector<int> number;  //A_0, A_1, A_2,...,A_n-2, A_n-1;
-  // clear trivial heading 0s
+  vector<int> blocks_; // B_0, B_1, B_2,...,B_n-2, B_n-1;
 };
 #endif

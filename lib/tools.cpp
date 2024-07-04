@@ -7,12 +7,41 @@
 #include "typedef.h"
 #include "tools.h"
 #include "int2.h"
-#include <tr1/unordered_set>
+#include <unordered_set>
 #include <sys/time.h>
 #include <bitset>
 using namespace std;
 //here I tried some other possibility like char or short
 //but bool type has the best performance 
+namespace {
+    using i64 = long long int;
+
+//pi is a very small prime number 
+//number is now less than 2^32;
+//p-1 = odd *2^power_of_two
+bool strong_pseudo_test_int(i64 pi, i64 odd, i64 power_of_two, i64 p) 
+{
+    if( pi == p) return true;
+    bool is_strong_pseudo_prime = true;
+    i64 result = powermodule(pi, odd, p);
+    if(result == 1) 
+        return is_strong_pseudo_prime;
+    else if (result == p-1) 
+        return is_strong_pseudo_prime;
+    else{
+        i64 prod = result;
+        // the last one should be 1, and the number before the
+        // the first 1 should be negative 1
+        for(unsigned int j = 1; j < power_of_two; ++j){
+            prod = mult64mod(prod, prod, p);
+            if(prod == p-1) 
+                return is_strong_pseudo_prime;
+        }
+    }
+    return !is_strong_pseudo_prime;
+}
+
+}
 void primeWithin( vector<int>& vecr, const int limit)
 {
     if(limit == 1) return;
@@ -46,21 +75,6 @@ void sievePrimes(int limit , vector<int>& primes)
     primeWithin(primes, limit);
 }
 
-
-//without prime list
-bool isPrime( i64 num )
-{
-    if(num == 1) return false;
-    if( num == 2 || num == 3) return true;
-    else if( num % 2 == 0) return false;
-
-    int root = sqrt((double) num )+1;
-    for (int i = 3 ; i <=  root; i+=2){
-        if( num % i == 0) return false;
-    }
-    return true;
-}
-
 //with prime list
 bool isPrime(u64 num, vector<int>& primes){
     if( num < 2 ) return false;
@@ -86,7 +100,7 @@ bool isPrime(u64 num, vector<int>& primes){
 //the original version of this function is kind of brute force. 
 //I will try the unordered map way
 i64 pollard_rho(i64 n, int n0, int debug){
-    typedef std::tr1::unordered_set<i64> hashset;
+    typedef std::unordered_set<i64> hashset;
     hashset hset;
 
     i64 limit = 2000;
@@ -238,15 +252,15 @@ bool isPermutation(i64 im, i64 in)
     return true;
 }
 
-bool isPalindromic(i64 num, int base) //base generally 10
+// not bad!
+bool isPalindromic(i64 num, int base)
 {
     int nr = 0;
     if(num % base == 0) return false;
-    while(nr < num){
+    while(num > 0){
         nr *= base;
         int res = num % base;
         nr += res;
-        if(nr >= num) break;
         num /= base;
     }
     return (num == nr);
@@ -497,26 +511,6 @@ void factor_table_max( int nmax, vector<int>& ftable)
                 ftable[j] = i; //overwrite to find the largest factor
     }
 }
-/* 
-i64 powermodule2(i64 base, i64 expo, i64 module){
-    i64 result = 1;
-    i64 cbase = base;
-    while(expo){
-       int remainder = expo & 1; 
-       if(remainder){
-            --expo;
-            result = product_mod(result, cbase, module);
-            assert(result >= 0);
-       }
-       else{
-            expo /= 2;
-            cbase = product_mod(cbase, cbase, module);
-            assert(cbase >= 0);
-       }
-    }
-    return result;
-}
-*/
 //quadratic reciprocity 
 //quadratic_residue_test(int num, int prime)
 /*  
@@ -555,50 +549,9 @@ bool witness(i64 xa, i64 xn)
     return 0;
 }
 
-
-i64 product_mod(i64 n1, i64 n2, i64 mod)
-{
-    assert(mod < 1e15); 
-    i64 low = 1000000000LL;
-    assert(n1 <= low && n2 <= low)
-        return (n1*n2)%mod;
-    //GeneralInteger g1(n1), g2(n2), gx(1);
-    //GeneralInteger denom(mod), remainder(1);
-    //gx = g1 * g2;
-    //gx.divide(denom, remainder);
-    //return remainder.to_i64();
-}
-    //multiplier bound at 1e9 
-    //result bound at 1e15;
 */
-//pi is a very small prime number 
-//number is now less than 2^32;
-bool strong_pseudo_test_int(i64 pi, i64 d, i64 s, i64 p) 
-{
-    if( pi == p) return true;
-//itype powermodule(itype base, itype expo, itype module){
-    bool isComposite = false;
-    bool isPrime = true;
-    i64 result = powermodule(pi, d, p);
-    if(result == 1) 
-        return isPrime;
-    else if (result == p-1) 
-        return isPrime;
-    else{
-        i64 prod = result;
-        for(unsigned int j = 1; j < s; ++j){
-            // lesson !!!! the following two lines are incorrect!
-            // mult64mod should be used, I did not find the bug!
-            //prod *= prod; 
-            //prod %= p;
-            prod = mult64mod(prod, prod, p);
-            if(prod == p-1) 
-                return isPrime;
-        }
-    }
-    return isComposite;
-}
 
+// what is the upper limit with 6 smallest primes?
 bool strong_pseudo_test(i64 p)
 {
     if( p == 2) return true;
@@ -607,8 +560,8 @@ bool strong_pseudo_test(i64 p)
     vector<int> vp = {2,3,5,7,11,13};
     i64 p1 = p - 1;
     int o2 = 0;
-    while (p1 % 2 == 0){
-        p1/=2;
+    while (!(p1 & 1)){
+        p1>>=1;
         ++o2;
     }
     for(unsigned int i = 0; i <vp.size(); ++i){
@@ -618,22 +571,22 @@ bool strong_pseudo_test(i64 p)
     return true;
 }
 
-i64 mult64mod(u64 a, u64 b, u64 mod)
-{
-    assert(mod <(unsigned long long) 1LL<<63);
-    double dn = mod;
-    double da = a;
-    double db = b;
-    double dp = da*db;
-    double dq = dp/dn;
-    u64 qpp = dq + 0.5;
-    u64 rp = a*b-qpp*mod;
-    unsigned long r;
-    if(rp & 0x8000000000000000)
-        r =  rp+mod;
-    else
-        r = rp;
-    return r;
+i64 mult64mod (i64 a, i64 b, i64 mod) {
+    a %= mod;
+    b %= mod;
+    i64 ret = 0;
+    i64 tmp = a;
+    while (b) {
+        if (b & 1){
+            ret += tmp;
+            if (ret > mod) ret -= mod;
+        }
+        tmp <<= 1;
+        if (tmp > mod) tmp -= mod;
+        b >>= 1;
+    }
+    assert( ret < mod && ret >= 0);
+    return ret;
 }
 
 i64 powermodule(i64 base, i64 expo, i64 module){
