@@ -47,6 +47,10 @@ BigInt &BigInt::operator*=(const BigInt &g1) {
   return *this;
 }
 
+BigInt BigInt::operator* (const BigInt& multiplier) const {
+ return BigInt(0);
+}
+
 // this operator+= need to be enhanced use resize instead of current method
 // resize to maximum size instead of push_back
 BigInt &BigInt::operator+=(const BigInt &g1) {
@@ -156,106 +160,97 @@ BigInt BigInt::power(int n) {
   return ret;
 }
 
-// leave remainder in the interface
-// BigInt BigInt::divide (const BigInt &denom,
-//                                       BigInt &remainder) const {
-//   auto& n_vector = blocks_;   // u_0, u_1, ..., u_m+n-1
-//   auto& d_vector(denom.blocks_); // v_0, v_1, ..., v_n-1
-//   vector<int> qres;
-//   // normalize to make the denominator first digit large! d0 <= 5
-//   // if the blocks_ator first digit is large, then by this opeartion
-//   // it should be small enough that the division in the loop is less
-//   // then 10 times of v_n-1
-//   int d0 = kMod / (d_vector.back() + 1);
-//   int sn = n_vector.size();
-//   int sd = d_vector.size();
-//   assert(d0 >= 1);
-//   if (d0 == 1)
-//     n_vector.push_back(0);
-//   else {
-//     BigInt gd(d0);
-//     numerator = numerator.multiply(gd);
-//   }
-//   if (numerator.blocks_Digit() == blocks_Digit())
-//     numerator.Digits().push_back(0);
-//   BigInt gd(d0);
-//   denominator = denominator.multiply(gd);
-//   // denominator size not changed
-//   assert(denominator.blocks_Digit() == denom.blocks_Digit());
-//   int j = sn - sd;
-//   while (j >= 0) {
-//     int nt = numerator.getNthDigit(j + sd) * 10;
-//     nt += numerator.getNthDigit(j + sd - 1);
-//     int qtilde = nt / denominator.getNthDigit(sd - 1);
-//     int rtilde = nt - qtilde * denominator.getNthDigit(sd - 1);
-//     bool needAdjust = true && denominator.blocks_Digit() > 1;
-//     while (needAdjust) {
-//       needAdjust =
-//           (qtilde >= 10) || qtilde * denominator.getNthDigit(sd - 2) >
-//                                 10 * rtilde + numerator.getNthDigit(j + sd -
-//                                 2);
-//       if (needAdjust) {
-//         --qtilde;
-//         rtilde += denominator.getNthDigit(sd - 1);
-//       }
-//     }
-//     int carry = 0;
-//     vector<int> &nv = numerator.getblocks_();
-//     vector<int> &dv = denominator.getblocks_();
-//     for (int k = 0; k < sd; ++k) {
-//       nv[k + j] -= (qtilde * dv[k] + carry);
-//       if (nv[k + j] < 0) {
-//         carry = (-nv[k + j] + 9) / 10;
-//         assert(carry >= 0);
-//         nv[k + j] += carry * 10;
-//         assert(nv[k + j] >= 0);
-//       } else {
-//         carry = 0;
-//       }
-//     }
-//     nv[j + sd] -= carry;
-//     if (nv[j + sd] >= 0) {
-//       qres.push_back(qtilde);
-//       --j;
-//     } else {
-//       nv[j + sd] += 10;
-//       int carry = 0;
-//       qres.push_back(qtilde - 1);
-//       for (int k = 0; k < sd; ++k) {
-//         nv[k + j] += dv[k] + carry;
-//         if (nv[k + j] >= 10) {
-//           carry = nv[k + j] / 10;
-//           nv[k + j] -= 10 * carry;
-//         } else {
-//           carry = 0;
-//         }
-//       }
-//       nv[j + sd] += carry;
-//       assert(nv[j + sd] >= 10);
-//       nv[j + sd] -= 10;
-//       --j;
-//     }
-//   }
-//   reverse(qres.begin(), qres.end());
-//   vector<int> &nv = numerator.getblocks_();
-//   int carry = 0;
-//   for (unsigned int i = 0; i < nv.size(); ++i) {
-//     nv[i] += carry;
-//     if (nv[i] >= 10) {
-//       carry = nv[i] / 10;
-//       nv[i] %= 10;
-//     } else {
-//       carry = 0;
-//     }
-//   }
-//   numerator = numerator.divide(d0);
-//
-//   BigInt gret(qres);
-//   gret.clear0();
-//   remainder.blocks_ = numerator.blocks_;
-//   remainder.clear0();
-//   return gret;
-// }
+BigInt BigInt::divide (const BigInt &divisor,
+                                      BigInt &remainder) const {
+  // dividend: u_0, u_1, ..., u_m+n-1
+  // divisor:  v_0, v_1, ..., v_n-1
+  int kZero = '0';
+  // normalize to make the divisor's most significant digit  v_n-1 >= 5
+  assert(divisor.blocks_.size() > 0);
+  int most_significant = divisor.blocks_.back();
+  while(most_significant > 10) most_significant/=10;
+  int norm = 10 / (most_significant+ 1);
+  assert(norm >= 1);
+  BigInt dividend = *this;
+  dividend *= norm; 
+  remainder *= norm;
+  std::string su = this->to_string();
+  std::string sv = divisor.to_string();
+  int u_size = su.size();
+  int v_size = sv.size();
+  int j = u_size - v_size;
+  
+  while (j >= 0) {
+    int nt = (j + sd) * 10;
+    nt += numerator.getNthDigit(j + sd - 1);
+    int qtilde = nt / denominator.getNthDigit(sd - 1);
+    int rtilde = nt - qtilde * denominator.getNthDigit(sd - 1);
+    bool needAdjust = blocks_() > 1;
+    while (needAdjust) {
+      needAdjust =
+          (qtilde >= 10) || qtilde * denominator.getNthDigit(sd - 2) >
+                                10 * rtilde + numerator.getNthDigit(j + sd -
+                                2);
+      if (needAdjust) {
+        --qtilde;
+        rtilde += denominator.getNthDigit(sd - 1);
+      }
+    }
+    int carry = 0;
+    vector<int> &nv = numerator.getblocks_();
+    vector<int> &dv = denominator.getblocks_();
+    for (int k = 0; k < sd; ++k) {
+      nv[k + j] -= (qtilde * dv[k] + carry);
+      if (nv[k + j] < 0) {
+        carry = (-nv[k + j] + 9) / 10;
+        assert(carry >= 0);
+        nv[k + j] += carry * 10;
+        assert(nv[k + j] >= 0);
+      } else {
+        carry = 0;
+      }
+    }
+    nv[j + sd] -= carry;
+    if (nv[j + sd] >= 0) {
+      qres.push_back(qtilde);
+      --j;
+    } else {
+      nv[j + sd] += 10;
+      int carry = 0;
+      qres.push_back(qtilde - 1);
+      for (int k = 0; k < sd; ++k) {
+        nv[k + j] += dv[k] + carry;
+        if (nv[k + j] >= 10) {
+          carry = nv[k + j] / 10;
+          nv[k + j] -= 10 * carry;
+        } else {
+          carry = 0;
+        }
+      }
+      nv[j + sd] += carry;
+      assert(nv[j + sd] >= 10);
+      nv[j + sd] -= 10;
+      --j;
+    }
+  }
+  reverse(qres.begin(), qres.end());
+  vector<int> &nv = numerator.getblocks_();
+  int carry = 0;
+  for (unsigned int i = 0; i < nv.size(); ++i) {
+    nv[i] += carry;
+    if (nv[i] >= 10) {
+      carry = nv[i] / 10;
+      nv[i] %= 10;
+    } else {
+      carry = 0;
+    }
+  }
+  numerator = numerator.divide(d0);
+
+  BigInt gret(qres);
+  remainder.blocks_ = numerator.blocks_;
+  return gret;
+}
 BigInt BigInt::operator/(int den) const {
   assert(den > 0 && den < 10);
   vector<int> result;

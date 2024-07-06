@@ -57,7 +57,7 @@ public:
   BigInt operator+(const BigInt &g);
   BigInt &operator+=(const BigInt &g);
 
-  BigInt operator*(const BigInt &right) const;
+  BigInt operator*(const BigInt &multiplier) const;
   BigInt &operator*=(const BigInt &g1);
 
   BigInt operator/(const BigInt &right) const;
@@ -83,7 +83,7 @@ public:
     return s;
   }
 
-  std::string to_string() {
+  std::string to_string() const {
     std::string s(*this);
     return s;
   }
