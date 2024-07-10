@@ -10,7 +10,7 @@
 //TODO FFT for two polynomial multiplication
 
 using namespace std;
-void sievePrimes(int limit, vector<int>& vecr);
+std::vector<int> sievePrimes(int limit);
 // it is very slow to see if p divides into num.
 bool isPrime(u64 num, vector<int>& primes);
 //this is a costly factorization method, but if we 
@@ -46,9 +46,9 @@ bool strong_pseudo_test(i64 p);
 // multiplication to summation, it should work in most cases.
 i64  mult64mod(i64 a, i64 b, i64 mod);
 i64  powermodule(i64 base, i64 expo, i64 module);
-i64  totient(int n, vector<int>& primes);
+i64  dumb_totient(int n, vector<int>& primes);
 i64  totient_with_factor(const IntPairVec& vp);
-void totient_using_table(vector<int>& vt, int nmax);
+vector<int> totient_sieve(int nmax);
 void farey_sequence(vector<IntPair>& vf, int nlimit, bool ascending);
 i64 chinese_remainder_theorem(const vector<i64>& vp, const vector<i64>& vr);
 int find_multiplicative_order(i64 nbase, i64 prime, int power, const vector<int>& vfac);

@@ -5,21 +5,7 @@ using namespace std;
 int main()
 {
     int target = 100000000;
-    //int root = sqrt(target);
-    vector<int> primes;
-    primeWithin(primes, target);
-    vector<int> vtot;
-    vtot.resize(target+1);
-    for(unsigned int i = 0; i < vtot.size(); ++i){
-        vtot[i] = i;
-    }
-    for(unsigned int i = 0; i < primes.size(); ++i){
-        unsigned int px = primes[i];
-        for(unsigned int j = px*2; j < vtot.size(); j +=px){
-            vtot[j] /= px;
-            vtot[j] *= (px-1);
-        }
-    }
+    vector<int> vtot = totient_sieve(target);
 
     int nmin = 0;
     double dmin = 10000;

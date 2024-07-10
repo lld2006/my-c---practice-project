@@ -65,8 +65,7 @@ public:
   BigInt &operator/=(const BigInt &g1);
 
   // TODO, use conversion is better!!!
-  BigInt divide(const BigInt &denom,
-                        BigInt &remainder) const;
+  BigInt divide(const BigInt &denom, BigInt &remainder) const;
   // int modulus(const int mod) const;
   // void truncate(const unsigned int size);
   // BigInt minus(const BigInt &g1) const;
@@ -90,5 +89,15 @@ public:
 
 private:
   vector<int> blocks_; // B_0, B_1, B_2,...,B_n-2, B_n-1;
+  int NumberOfDigits() const {
+    int n_digits = blocks_.size() * 4;
+    int n_back = blocks_.back();
+    int cnt = 0;
+    while (n_back) {
+      n_back /= 10;
+      ++cnt;
+    }
+    return n_digits - 4 + cnt;
+  }
 };
 #endif
