@@ -3,6 +3,7 @@
 #include <vector>
 #include <set>
 
+// this problem is topological sort.
 using namespace std;
 int main()
 {

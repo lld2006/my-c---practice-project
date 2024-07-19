@@ -158,102 +158,102 @@ BigInt BigInt::power(int n) {
   return ret;
 }
 
-// BigInt BigInt::divide(const BigInt &divisor, BigInt &remainder) const {
-//   // dividend: u_0, u_1, ..., u_m+n-1
-//   // divisor:  v_0, v_1, ..., v_n-1
-//   int kZero = '0';
-//   int dividend_size = NumberOfDigits();
-//   // normalize to make the divisor's most significant digit  v_n-1 >= 5
-//   assert(divisor.blocks_.size() > 0);
-//   int most_significant = divisor.blocks_.back();
-//   while (most_significant > 10)
-//     most_significant /= 10;
-//   int norm = 10 / (most_significant + 1);
-//   assert(norm >= 1);
-//   BigInt dividend = *this;
-//   dividend *= norm;
-//   remainder *= norm;
-//   std::string su = this->to_string();
-//   std::string sv = divisor.to_string();
-//   int u_size = su.size();
-//   int v_size = sv.size();
-//   if (u_size == dividend_size) {
-//     su.push_back('0');
-//     ++u_size;
-//   }
-// 
-//   int j = u_size - v_size - 1;
-//   while (j >= 0) {
-//     int nt = (su[j + v_size] - kZero) * 10;
-//     nt += sv[j + v_size - 1) - kZero;
-//     int qtilde = nt / (sv[v_size - 1]-kZero);
-//     int rtilde = nt - qtilde * (sv[v_size - 1]-kZero);
-//     while (true) {
-//       bool needAdjust =
-//           (qtilde >= 10) || qtilde * (sv[v_size - 2] - kZero) >
-//                                 10 * rtilde + (su[j + v_size - 2] - kZero);
-//       if (needAdjust) {
-//         --qtilde;
-//         rtilde += sv[v_size- 1]-kZero;
-//       } else{
-//         break;
-//       }
-//     }
-//     int carry = 0;
-//     vector<int> &nv = numerator.getblocks_();
-//     vector<int> &dv = denominator.getblocks_();
-//     for (int k = 0; k < v_size; ++k) {
-//       nv[k + j] -= (qtilde * dv[k] + carry);
-//       if (nv[k + j] < 0) {
-//         carry = (-nv[k + j] + 9) / 10;
-//         assert(carry >= 0);
-//         nv[k + j] += carry * 10;
-//         assert(nv[k + j] >= 0);
-//       } else {
-//         carry = 0;
-//       }
-//     }
-//     nv[j + v_size] -= carry;
-//     if (nv[j + v_size] >= 0) {
-//       qres.push_back(qtilde);
-//       --j;
-//     } else {
-//       nv[j + v_size] += 10;
-//       int carry = 0;
-//       qres.push_back(qtilde - 1);
-//       for (int k = 0; k < v_size; ++k) {
-//         nv[k + j] += dv[k] + carry;
-//         if (nv[k + j] >= 10) {
-//           carry = nv[k + j] / 10;
-//           nv[k + j] -= 10 * carry;
-//         } else {
-//           carry = 0;
-//         }
-//       }
-//       nv[j + v_size] += carry;
-//       assert(nv[j + v_size] >= 10);
-//       nv[j + v_size] -= 10;
-//       --j;
-//     }
-//   }
-//   reverse(qres.begin(), qres.end());
-//   vector<int> &nv = numerator.getblocks_();
-//   int carry = 0;
-//   for (unsigned int i = 0; i < nv.size(); ++i) {
-//     nv[i] += carry;
-//     if (nv[i] >= 10) {
-//       carry = nv[i] / 10;
-//       nv[i] %= 10;
-//     } else {
-//       carry = 0;
-//     }
-//   }
-//   numerator = numerator.divide(d0);
-// 
-//   BigInt gret(qres);
-//   remainder.blocks_ = numerator.blocks_;
-//   return gret;
-// }
+BigInt BigInt::divide(const BigInt &divisor, BigInt &remainder) const {
+  // dividend: u_0, u_1, ..., u_m+n-1
+  // divisor:  v_0, v_1, ..., v_n-1
+  int kZero = '0';
+  int dividend_size = NumberOfDigits();
+  // normalize to make the divisor's most significant digit  v_n-1 >= 5
+  assert(divisor.blocks_.size() > 0);
+  int most_significant = divisor.blocks_.back();
+  while (most_significant > 10)
+    most_significant /= 10;
+  int norm = 10 / (most_significant + 1);
+  assert(norm >= 1);
+  BigInt dividend = *this;
+  dividend *= norm;
+  remainder *= norm;
+  std::string su = this->to_string();
+  std::string sv = divisor.to_string();
+  int u_size = su.size();
+  int v_size = sv.size();
+  if (u_size == dividend_size) {
+    su.push_back('0');
+    ++u_size;
+  }
+
+  int j = u_size - v_size - 1;
+  while (j >= 0) {
+    int nt = (su[j + v_size] - kZero) * 10;
+     nt += sv[j + v_size - 1) - kZero;
+     int qtilde = nt / (sv[v_size - 1]-kZero);
+     int rtilde = nt - qtilde * (sv[v_size - 1]-kZero);
+     while (true) {
+      bool needAdjust =
+          (qtilde >= 10) || qtilde * (sv[v_size - 2] - kZero) >
+                                10 * rtilde + (su[j + v_size - 2] - kZero);
+      if (needAdjust) {
+        --qtilde;
+        rtilde += sv[v_size - 1] - kZero;
+      } else {
+        break;
+      }
+     }
+     int carry = 0;
+     vector<int> &nv = numerator.getblocks_();
+     vector<int> &dv = denominator.getblocks_();
+     for (int k = 0; k < v_size; ++k) {
+      nv[k + j] -= (qtilde * dv[k] + carry);
+      if (nv[k + j] < 0) {
+        carry = (-nv[k + j] + 9) / 10;
+        assert(carry >= 0);
+        nv[k + j] += carry * 10;
+        assert(nv[k + j] >= 0);
+      } else {
+        carry = 0;
+      }
+     }
+     nv[j + v_size] -= carry;
+     if (nv[j + v_size] >= 0) {
+      qres.push_back(qtilde);
+      --j;
+     } else {
+      nv[j + v_size] += 10;
+      int carry = 0;
+      qres.push_back(qtilde - 1);
+      for (int k = 0; k < v_size; ++k) {
+        nv[k + j] += dv[k] + carry;
+        if (nv[k + j] >= 10) {
+          carry = nv[k + j] / 10;
+          nv[k + j] -= 10 * carry;
+        } else {
+          carry = 0;
+        }
+      }
+      nv[j + v_size] += carry;
+      assert(nv[j + v_size] >= 10);
+      nv[j + v_size] -= 10;
+      --j;
+     }
+  }
+  reverse(qres.begin(), qres.end());
+  vector<int> &nv = numerator.getblocks_();
+  int carry = 0;
+  for (unsigned int i = 0; i < nv.size(); ++i) {
+    nv[i] += carry;
+    if (nv[i] >= 10) {
+      carry = nv[i] / 10;
+      nv[i] %= 10;
+    } else {
+      carry = 0;
+    }
+  }
+  numerator = numerator.divide(d0);
+
+  BigInt gret(qres);
+  remainder.blocks_ = numerator.blocks_;
+  return gret;
+}
 BigInt BigInt::operator/(int den) const {
   assert(den > 0 && den < 10);
   vector<int> result;

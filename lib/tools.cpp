@@ -43,7 +43,7 @@ bool strong_pseudo_test_int(i64 pi, i64 odd, i64 power_of_two, i64 p) {
 
 } // namespace
 
-vector<int> primeWithin( const int limit) {
+vector<int> primeWithin(const int limit) {
   std::vector<int> primes;
   if (limit == 1)
     return primes;
@@ -59,7 +59,8 @@ vector<int> primeWithin( const int limit) {
     for (int i = (iprime * iprime - 1) / 2; i < odd; i += iprime)
       vec[i] = false;
     // find next prime
-    while (!vec[++ip]);
+    while (!vec[++ip])
+      ;
 
     iprime = 2 * ip + 1;
   }
@@ -155,33 +156,6 @@ i64 pollard_rho(i64 n, int n0, int debug) {
   }
   // printf("hashset size %d\n", static_cast<int>(hset.size()));
   return 0;
-}
-
-// prime factors, less than or equal to num.
-// check each prime number to square root
-void factor(i64 num, I64PairVec &ifac, const IntVec &prime) {
-  // special case, not prime factor for 1
-  ifac.clear();
-  if (num == 1) {
-    ifac.push_back(IntPair(1, 1));
-    return;
-  }
-  i64 n1 = num;
-  int ubound = sqrt((double)num);
-  for (unsigned int i = 0; i < prime.size(); ++i) {
-    int nth = 0;
-    if (n1 % prime[i] == 0) {
-      while (n1 % prime[i] == 0) {
-        n1 /= prime[i];
-        ++nth;
-      }
-      ifac.push_back(IntPair(prime[i], nth));
-    }
-    if (n1 == 1 || prime[i] > ubound)
-      break;
-  }
-  if (n1 > 1)
-    ifac.push_back(I64Pair(n1, 1));
 }
 
 // the factors are from small to large
@@ -432,23 +406,25 @@ bool tonelli_shank(i64 prime, i64 residue, i64 &sol) {
     return true;
   }
 }
-//
-void factor_table_min(int nmax, vector<int> &ftable) {
+// factor_table_min is now renamed as min_factor_sieve
+vector<int> min_factor_sieve(int nmax) {
+  vector<int> ftable;
   ftable.resize(nmax + 1);
   for (unsigned int i = 1; i < ftable.size(); ++i)
-    ftable[i] = i;
+    ftable[i] = i & 1 ? i : 2;
 
   int root = sqrt(nmax);
 
-  for (int i = 2; i <= root; ++i) {
+  for (int i = 3; i <= root; i += 2) {
     if (ftable[i] < static_cast<int>(i))
       continue;
-    for (unsigned int j = i * i; j < ftable.size(); j += i) {
-      // an equal sign up here with size, should be bug. now fixed
-      if (ftable[j] > static_cast<int>(i))
+    // i is a prime now.
+    for (unsigned int j = i * i; j < ftable.size(); j += i << 1) {
+      if (ftable[j] == j) // no smallest factor found yet.
         ftable[j] = i;
     }
   }
+  return ftable;
 }
 // no even number in the table
 void factor_using_table_odd(i64 n, IntPairVec &vpairs,
@@ -483,9 +459,9 @@ void factor_using_table_odd(i64 n, IntPairVec &vpairs,
 
 // just for even numbers, need to double the space is not a good
 // idea. let me try
-void factor_table_min_odd(int nmax, vector<int> &ftable) {
+vector<int> factor_table_min_odd(int nmax) {
   int nsize = (nmax + 1) / 2; // the numbers are 1 3 5 7 ...
-  ftable.resize(nsize);
+  vector<int> ftable(nsize);
   for (unsigned int i = 0; i < ftable.size(); ++i)
     ftable[i] = (i << 1) + 1;
 
@@ -638,21 +614,7 @@ void farey_sequence(vector<IntPair> &vf, int nlimit, bool ascending) {
     vf.push_back(IntPair(a, b));
   }
 }
-// this is a slow version of totient calculation. but sometimes
-// we just need some such kind of simple calculations
-i64 dumb_totient(int n, vector<int> &primes) {
-  assert(n < primes.back());
-  if (n == 1)
-    return 1;
-  int prod = n;
-  for (unsigned int i = 0; i < primes.size(); ++i) {
-    if (n % primes[i] == 0) {
-      prod *= (primes[i] - 1);
-      prod /= primes[i];
-    }
-  }
-  return prod;
-}
+
 void prime_generate_sq2(i64 p, int &a, int &b) {
   assert((p - 1) % 4 == 0);
   i64 result = 0;
@@ -680,32 +642,42 @@ void prime_generate_sq2(i64 p, int &a, int &b) {
     swap(a, b);
 }
 
-i64 totient_with_factor(const IntPairVec &vfac) {
-  i64 prod = 1;
-  for (unsigned int i = 0; i < vfac.size(); ++i) {
-    i64 px = vfac[i].first;
-    i64 npow = vfac[i].second;
-    prod *= (px - 1);
-    prod *= power(px, npow - 1);
-  }
-  return prod;
-}
-
 // sieve version for totient
-std::vector<int> totient_sieve(int nmax) {
-  // initialization
+std::vector<int> TotientFunctions::totient_sieve_0(int nmax) {
   std::vector<int> totients(nmax + 1);
-  for (unsigned int i = 0; i < totients.size(); ++i) {
-    totients[i] = i;
-  }
-  // sieving
-  for (unsigned int i = 3; i < totients.size(); i+=2) {
+  // assign the coprime counts to n for totients[n]
+  // but since even numbers will be divided by 2 anyway,
+  // so it is handled at the very beginning.
+  for (unsigned int i = 0; i < totients.size(); ++i)
+    totients[i] = i & 1 ? i : i >> 1;
+
+  // sieving start from 3, since prime 2 has been handled.
+  for (unsigned int i = 3; i < totients.size(); i += 2) {
     if (totients[i] != i)
       continue;
     totients[i] = i - 1;
     for (unsigned int j = i << 1; j < totients.size(); j += i) {
-      totients[j] /= i;
-      totients[j] *= (i - 1);
+      totients[j] -= totients[j] / i;
+    }
+  }
+  return totients;
+}
+
+std::vector<int> TotientFunctions::totient_sieve_1(int nmax) {
+  // smallest_factor_sieve
+  std::vector<int> spf = min_factor_sieve(nmax);
+  std::vector<int> totients(nmax + 1);
+  for (unsigned int i = 0; i < totients.size(); ++i)
+    totients[i] = i;
+
+  for (unsigned int i = 2; i < totients.size(); ++i) {
+    if (spf[i] == i) { // it is a prime
+      totients[i] = i - 1;
+    } else {
+      int p = spf[i];
+      int m = i / p;
+      int factor = (spf[m] == p) ? p : p - 1;
+      totients[i] = totients[m] * factor;
     }
   }
   return totients;
@@ -830,13 +802,15 @@ int find_multiplicative_order(i64 nbase, i64 prime, int np,
   return result;
 }
 
-i64 product_mod(i64 n1, i64 n2, i64 mod) { // maybe not correct if overflow
+// should be only used when overflow would not happen.
+i64 product_mod(i64 n1, i64 n2, i64 mod) {
   n1 %= mod;
   n2 %= mod;
   n1 *= n2;
   n1 %= mod;
   return n1 >= 0 ? n1 : n1 + mod;
 }
+
 vector<i64> matrix_multiplication(const vector<i64> &A, const vector<i64> &B,
                                   i64 nmod, int dim) {
   vector<i64> C;
